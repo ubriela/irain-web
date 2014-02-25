@@ -94,7 +94,7 @@
                 i++; 
                 if(i >= obj.geocast_query.x_min_cords.length) 
                     clearInterval(interval);
-            }, 1000);         
+            }, 300);         
         }
         
       
@@ -196,6 +196,7 @@
             
         }
        
+      
        
 
        
@@ -214,7 +215,38 @@
     <div style="width: 100%;overflow:auto;">
 
         <div style="float:left;">
-            <input type="button" value="Retrieve JSON" onClick="GeoCast_Query('http://geocrowd2.cloudapp.net/geocast/37.80198523110427,-122.41419297781249')">
+
+            <form name="input" action="firstPhp.php" onsubmit="Query(); return false">
+                Latitude <input type="text" name="lat">
+                Longitude <input type="text" name="lng">
+                <input type="submit" value="GeoCastQuery">
+            </form>
+
+            <script>
+                function Query()
+                {
+                    // alert("a: " + document.forms["input"]["lat"].value+ "!")
+                    url = 'http://geocrowd2.cloudapp.net/geocast/' + document.forms["input"]["lat"].value 
+                        + "," + document.forms["input"]["lng"].value;
+                    GeoCast_Query(url);
+        
+        
+                    var touch_point = new google.maps.LatLng(document.forms["input"]["lat"].value , document.forms["input"]["lng"].value);
+                    var marker = new google.maps.Marker({
+                        map: map,
+                        position: touch_point,
+                        icon: 'http://labs.google.com/ridefinder/images/mm_20_blue.png'
+                    });
+                    var infoWindow = new google.maps.InfoWindow;    
+                    bindInfoWindow(marker, map, infoWindow, 
+                    document.forms["input"]["lat"].value+";"+document.forms["input"]["lng"].value);
+                    marker.setMap(map);
+               
+                }
+            </script>  
+
+
+
 
             </input>      
         </div>
