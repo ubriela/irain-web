@@ -52,7 +52,14 @@
                     alert(json);
                 else{
                     obj = JSON.parse(json);
-                    Overlay_GeoCast_Region();
+                    if(obj.hasOwnProperty('error')){
+                        alert ("The selected location is outside of the dataset");
+                    }
+                    else{
+                  
+                        Overlay_GeoCast_Region();
+                    }
+                   
                 }
             });
         }
@@ -190,6 +197,8 @@
                 url = 'http://geocrowd2.cloudapp.net/geocast/' + event.latLng.lat() + "," + event.latLng.lng();
                 GeoCast_Query(url);
                 alert( 'Lat: ' + event.latLng.lat() + ' and Longitude is: ' + event.latLng.lng() );
+                var center = new google.maps.LatLng(event.latLng.lat(), event.latLng.lng());
+                map.panTo(center);
             });
             
         }
@@ -229,16 +238,17 @@
        
                     var coor = document.forms["input"]["coordinate"].value;
                     var lat_lng = coor.split(",");
-                    var touch_point = new google.maps.LatLng(lat_lng[0],lat_lng[1]);
+                    var task_point = new google.maps.LatLng(lat_lng[0],lat_lng[1]);
                     var marker = new google.maps.Marker({
                         map: map,
-                        position: touch_point,
+                        position: task_point,
                         icon: 'http://labs.google.com/ridefinder/images/mm_20_blue.png'
                     });
                     var infoWindow = new google.maps.InfoWindow;    
                     bindInfoWindow(marker, map, infoWindow, 
                     document.forms["input"]["coordinate"].value);
                     marker.setMap(map);
+                    map.panTo(task_point);
                
                 }
             </script>  
