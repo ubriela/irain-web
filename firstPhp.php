@@ -99,7 +99,7 @@
         
       
         function add_geocast_cell(i){
-          polygon = new Array();  
+            polygon = new Array();  
             Array_region = new Array();
             Array_polygon = new Array();
                 
@@ -215,8 +215,7 @@
         <div style="float:left;">
 
             <form name="input" action="firstPhp.php" onsubmit="Query(); return false">
-                Latitude <input type="text" name="lat">
-                Longitude <input type="text" name="lng">
+                Coordinates <input type="text" name="coordinate">
                 <input type="submit" value="GeoCastQuery">
             </form>
 
@@ -224,12 +223,13 @@
                 function Query()
                 {
                     // alert("a: " + document.forms["input"]["lat"].value+ "!")
-                    url = 'http://geocrowd2.cloudapp.net/geocast/' + document.forms["input"]["lat"].value 
-                        + "," + document.forms["input"]["lng"].value;
+                    url = 'http://geocrowd2.cloudapp.net/geocast/' + document.forms["input"]["coordinate"].value;
                     GeoCast_Query(url);
         
-        
-                    var touch_point = new google.maps.LatLng(document.forms["input"]["lat"].value , document.forms["input"]["lng"].value);
+       
+                    var coor = document.forms["input"]["coordinate"].value;
+                    var lat_lng = coor.split(",");
+                    var touch_point = new google.maps.LatLng(lat_lng[0],lat_lng[1]);
                     var marker = new google.maps.Marker({
                         map: map,
                         position: touch_point,
@@ -237,7 +237,7 @@
                     });
                     var infoWindow = new google.maps.InfoWindow;    
                     bindInfoWindow(marker, map, infoWindow, 
-                    document.forms["input"]["lat"].value+";"+document.forms["input"]["lng"].value);
+                    document.forms["input"]["coordinate"].value);
                     marker.setMap(map);
                
                 }
