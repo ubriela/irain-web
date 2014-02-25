@@ -99,9 +99,7 @@
         
       
         function add_geocast_cell(i){
-          
-                
-            polygon = new Array();  
+          polygon = new Array();  
             Array_region = new Array();
             Array_polygon = new Array();
                 
