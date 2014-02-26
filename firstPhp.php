@@ -13,7 +13,7 @@
         var infoWindow;
         function load() {
             map = new google.maps.Map(document.getElementById("map"), {
-                center: new google.maps.LatLng(37.73282,-122.443964),
+                center: new google.maps.LatLng(37.76822,-122.44297),
                 zoom: 12,
                 mapTypeId: 'roadmap'
              
@@ -201,13 +201,12 @@
                 Gowalla_vertices[3] = new google.maps.LatLng(37.83266118,-122.51350164);
            
                 Gowalla_vertices[4] = new google.maps.LatLng(37.71127146,-122.51350164);
-                Gowalla_boundary = new google.maps.Polygon({
+                Gowalla_boundary = new google.maps.Polyline({
                     path:Gowalla_vertices,
                     strokeColor:"#FF0000",
                     strokeOpacity:0.8,
-                    strokeWeight:2,
-                    fillColor:"#0000FF",
-                    fillOpacity:0
+                    strokeWeight:2
+                   
                 });
                 Gowalla_boundary.setMap(map);
             }
@@ -234,14 +233,12 @@
                 Yelp_vertices[3] = new google.maps.LatLng(33.806805,-112.875481);
                 Yelp_vertices[4] = new google.maps.LatLng(32.8768481,-112.875481);
                 
-                Yelp_boundary = new google.maps.Polygon({
+                Yelp_boundary = new google.maps.Polyline({
                     path:Yelp_vertices,
                     strokeColor:"#FFFF00",
                     strokeOpacity:0.8,
-                    strokeWeight:2,
-                    fillColor:"#0000FF",
-                    fillOpacity:0
-                });
+                    strokeWeight:2
+                 });
                 Yelp_boundary.setMap(map);
             }
             else {
