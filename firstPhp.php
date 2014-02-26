@@ -188,29 +188,47 @@
         var Yelp_vertices = new Array();
        
         /*
-         * Gowalla_Boundary is to show/hide boundary of the Gowalla dataset
+         * Show_Boundary is to show/hide boundary of the dataset
          */
-        function Gowalla_Boundary(){
+        function Show_Boundary(){
+            var Gowalla_Button = document.getElementById("Boundary");
+            var json_boundary ;
+            var boundary='blank';
+            var url1 ='http://geocrowd2.cloudapp.net/dataset';
            
-            var Gowalla_Button = document.getElementById("Gowalla");
-            if (Gowalla_Button.value=="Show Gowalla Boundary") {
-                Gowalla_Button.value = "Hide Gowalla Boundary";
-                Gowalla_vertices[0] = new google.maps.LatLng(37.71127146,-122.51350164);
-                Gowalla_vertices[1] = new google.maps.LatLng(37.71127146,-122.3627126);
-                Gowalla_vertices[2] = new google.maps.LatLng(37.83266118,-122.3627126);
-                Gowalla_vertices[3] = new google.maps.LatLng(37.83266118,-122.51350164);
+            if (Gowalla_Button.value=="Show Boundary") {
+                $.getJSON('http://whateverorigin.org/get?url=' + encodeURIComponent(url1) + '&callback=?',
+                function(data){
+                    json_boundary = data.contents;
+                    boundary = JSON.parse(json_boundary);
+                    Gowalla_Button.value = "Hide Boundary";
+                    Gowalla_vertices[0] = new google.maps.LatLng(boundary.boundaries[0],boundary.boundaries[1]);
+                    Gowalla_vertices[1] = new google.maps.LatLng(boundary.boundaries[0],boundary.boundaries[3]);
+                    Gowalla_vertices[2] = new google.maps.LatLng(boundary.boundaries[2],boundary.boundaries[3]);
+                    Gowalla_vertices[3] = new google.maps.LatLng(boundary.boundaries[2],boundary.boundaries[1]);
            
-                Gowalla_vertices[4] = new google.maps.LatLng(37.71127146,-122.51350164);
-                Gowalla_boundary = new google.maps.Polyline({
-                    path:Gowalla_vertices,
-                    strokeColor:"#FF0000",
-                    strokeOpacity:0.8,
-                    strokeWeight:2
+                    Gowalla_vertices[4] = new google.maps.LatLng(boundary.boundaries[0],boundary.boundaries[1]);
+                    Gowalla_boundary = new google.maps.Polyline({
+                        path:Gowalla_vertices,
+                        strokeColor:"#FF0000",
+                        strokeOpacity:0.8,
+                        strokeWeight:2
                    
+                    });
+                    Gowalla_boundary.setMap(map);
+                    infoWindow = new google.maps.InfoWindow();
+                    google.maps.event.addListener(Gowalla_boundary, 'click', function(event) {
+                        var boundaryinfo = 'dataset:<br>' + boundary.dataset + '<br>workers counts:<br>'+boundary.worker_count;
+                        infoWindow.setContent(boundaryinfo);   
+                        infoWindow.setPosition(event.latLng);
+                        infoWindow.open(map);
+                    });
+                   
+               
                 });
-                Gowalla_boundary.setMap(map);
+               
             }
-            else {Gowalla_Button.value = "Show Gowalla Boundary";
+            else {Gowalla_Button.value = "Show Boundary";
                 Gowalla_boundary.setMap(null);
             }
                 
@@ -218,37 +236,7 @@
            
         }
         
-        /*
-         * Yelp_Boundary is to show/hide boundary of the Yelp dataset
-         */
-        function Yelp_Boundary(){
-           
-            var Yelp_Button = document.getElementById("Yelp");
-            if (Yelp_Button.value=="Show Yelp Boundary") {
-                Yelp_Button.value = "Hide Yelp Boundary";
-                
-                Yelp_vertices[0] = new google.maps.LatLng(32.8768481,-112.875481);
-                Yelp_vertices[1] = new google.maps.LatLng(32.8768481,-111.671219 );
-                Yelp_vertices[2] = new google.maps.LatLng(33.806805,-111.671219 );
-                Yelp_vertices[3] = new google.maps.LatLng(33.806805,-112.875481);
-                Yelp_vertices[4] = new google.maps.LatLng(32.8768481,-112.875481);
-                
-                Yelp_boundary = new google.maps.Polyline({
-                    path:Yelp_vertices,
-                    strokeColor:"#FFFF00",
-                    strokeOpacity:0.8,
-                    strokeWeight:2
-                 });
-                Yelp_boundary.setMap(map);
-            }
-            else {
-                Yelp_Button.value = "Show Yelp Boundary";
-                Yelp_boundary.setMap(null);
-            }
-                
-           
-           
-        }
+          
         
         /*
          * Query function is trigerred when the GeoCastQuery button is clicked.
@@ -357,13 +345,10 @@
                 <input type="submit" name="submit" value="Visualize" />
             </form>
 
-            <input type="button" value="Show Gowalla Boundary" id="Gowalla"
-                   onClick="Gowalla_Boundary()">
+            <input type="button" value="Show Boundary" id="Boundary"
+                   onClick="Show_Boundary()">
             <br>
-            <input type="button" value="Show Yelp Boundary" id="Yelp"
-                   onClick="Yelp_Boundary()">
 
-            </input>      
 
 
 
@@ -375,17 +360,17 @@
         </div>
         <div style="float:left;">
             <form name="input" action="firstPhp.php" onsubmit="Query(); return false">
-               Setting Menu Come Here<br>         
-               Setting Menu Come Here<br>
-               Setting Menu Come Here<br>
-               Setting Menu Come Here<br>
-               Setting Menu Come Here<br>
-               Setting Menu Come Here<br>
-               Setting Menu Come Here<br>
-               Setting Menu Come Here<br>
-               
+                Setting Menu Come Here<br>         
+                Setting Menu Come Here<br>
+                Setting Menu Come Here<br>
+                Setting Menu Come Here<br>
+                Setting Menu Come Here<br>
+                Setting Menu Come Here<br>
+                Setting Menu Come Here<br>
+                Setting Menu Come Here<br>
 
-                
+
+
             </form>
         </div>
     </div>
