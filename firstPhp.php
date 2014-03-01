@@ -54,17 +54,15 @@
                 json = data.contents;
              
                 if (json=="blank")
-                    alert(json);
+                    alert("Service is now unavailable");
                 else{
                     obj = JSON.parse(json);
                     if(obj.hasOwnProperty('error')){
                         alert ("The selected location is outside of the dataset");
                     }
                     else{
-                  
                         Overlay_GeoCast_Region();
                     }
-                   
                 }
             });
         }
@@ -76,13 +74,6 @@
          *amount of miliseconds
          */
         function Overlay_GeoCast_Region(){
-            /*var marker = new google.maps.Marker({
-                map: map,
-                position: new google.maps.LatLng(obj.spatial_task.location[0], obj.spatial_task.location[1]),
-                icon: 'http://labs.google.com/ridefinder/images/mm_20_blue.png'
-            });
-           
-            marker.setMap(map);            */
             i=-1;
             var interval = setInterval(function() { 
                 add_geocast_cell(i);
@@ -94,10 +85,10 @@
         
       
         /*
-         * add_geocast_cell is to add a specific cell in the list. Its take
+         * add_geocast_cell is to add a specific cell in the list. It takes
          * as a parameter a number i indicating the order of the cell in the cell list.
          * The eventlistenr at the bottom of the function is to display a cell info
-         * whenever it is clicked
+         * whenever it is clicked. This is called within the Overlay_GeoCast_Region function
          */
         function add_geocast_cell(i){
             polygon = new Array();  
@@ -156,13 +147,14 @@
            
         }
         
-        /*bindInfoWindow is to specify action to be performed when an event
+        
+        /*The following function is to specify action to be performed when an event
          *happened on a marker.
          *
          *When a marker is clicked, the geocast_query for the task the marker
          *represent will be issued and visuallized on map 
          */
-        function bindInfoWindow(marker, map, infoWindow, html) {    
+        function Marker_Click_Actions(marker, map, infoWindow, html) {    
             json = "blank";
             google.maps.event.addListener(marker, 'mouseover', function() {
                 infoWindow.setContent(html);
@@ -239,13 +231,14 @@
           
         
         /*
+         * This is for 1first function: input coordinates to a text box, hit button
+         * and visualize
          * Query function is trigerred when the GeoCastQuery button is clicked.
          * It takes the coordinate input by the users and then visualize geocast query
          * for task at that specific location
          */
         function Query()
         {
-            // alert("a: " + document.forms["input"]["lat"].value+ "!")
             url = 'http://geocrowd2.cloudapp.net/geocast/' + document.forms["input"]["coordinate"].value;
             GeoCast_Query(url);
         
@@ -259,7 +252,7 @@
                 icon: 'http://labs.google.com/ridefinder/images/mm_20_blue.png'
             });
             var infoWindow = new google.maps.InfoWindow;    
-            bindInfoWindow(marker, map, infoWindow, 
+            Marker_Click_Actions(marker, map, infoWindow, 
             document.forms["input"]["coordinate"].value);
             marker.setMap(map);
             map.panTo(task_point);
@@ -268,6 +261,8 @@
                 
               
         /*
+         *this is for the 2nd function: select a task from dropdown list,
+         *hit button and visuallize
          * Visualize_Task_Seleclted is triggered when user click on Visualize
          * button after choosing a coordinate from a dropdown list.
          * The function will then visualize geocast query
@@ -288,7 +283,7 @@
                 icon: 'http://labs.google.com/ridefinder/images/mm_20_blue.png'
             });
             var infoWindow = new google.maps.InfoWindow;    
-            bindInfoWindow(marker, map, infoWindow, 
+            Marker_Click_Actions(marker, map, infoWindow, 
             document.forms["input"]["coordinate"].value);
             marker.setMap(map);
             map.panTo(task_point);
@@ -324,11 +319,14 @@
                
             </script>  
 
+
+
             <form action="firstPhp.php" method="post" name="Tasks_History" onsubmit="Visualize_Task_Selected(); return false">
                 <select name="task_name" id="task_name">
                     <option selected="selected">Please Choose One:</option>
                     <?php
 // define file
+                    //the following code segment is to load coordinates from txt file to a drop down list
                     $file = 'test.txt';
 
                     $handle = @fopen($file, 'r');
