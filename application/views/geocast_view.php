@@ -1,6 +1,5 @@
 <script>
     var $datasets = <?php echo json_encode($datasets); ?>;
-    <?php 
 </script>
 
 <body onload="load()">
