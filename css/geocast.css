@@ -1,7 +1,7 @@
 /*=============== Datasets styling ======================*/
 #dataset .ui-selecting { background: #FECA40; }
 #dataset .ui-selected { background: green; color: white; font-weight: bold}
-#dataset { list-style-type: none; margin: 0; padding: 0; width: 240px; }
+#dataset { list-style-type: none; margin: 0; padding: 0; width: 270px; }
 #dataset li { margin: 3px; padding: 0.4em; font-size: 1.2em; height: 14px; }
 
 /*=============== Common styling ======================*/  
@@ -24,7 +24,7 @@ label {
     overflow: hidden;
     position: absolute;
     top: 5px;
-    left: 250px;
+    left: 280px;
     height: 100%;
 }
 
@@ -35,7 +35,7 @@ div#tabs {
     top: 150px;
     left: 5px;
     height: 100%;
-    width: 240px;
+    width: 270px;
     margin: 0;
     padding: 0;
     text-align:left;
