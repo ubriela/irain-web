@@ -1,38 +1,43 @@
 
+button {
+    color: blue;
+    font-weight: bold;
+}
 /*=============== Map styling ======================*/
 
 #map_canvas {
-	height: 100% !important;
-	width: 80%
+	height: 100%;
+	width: 80%;
 	overflow: hidden;
-	position: relative;
+	position: absolute;
+        top: 5px;
+        left: 250px;
+	height: 100%;
 }
 
 /*============================== Left panel ==================*/
 
 div#tabs {
 	position: absolute;
-    top: 5px;
-    left: 2%;
-	overflow:none; 
-	height:100%;
-	width:20%;
+        top: 0px;
+        left: 5px;
+	height: 100%;
+	width: 240px;
 	margin: 0;
 	padding: 0;
 	text-align:left;
-	margin-top: 60px;
+	margin-top: 5px;
 	font-size: 16px; 
 	color: rgb(0, 0, 0);
 }
 
 div#auto-row {
-	overflow:none; 
 	height:50%;
-	width:10%;
+	width:200px;
 	margin: 0;
 	padding: 0;
 	text-align:left;
-	font-size: 14px; 
+	font-size: 16px; 
 	color: rgb(0, 0, 0);
 }
 

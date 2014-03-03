@@ -14,7 +14,7 @@
 | path to your installation.
 |
 */
-$config['base_url']	= 'http://localhost:801/Geocast/';
+$config['base_url']	= 'http://localhost/geocast/';
 
 /*
 |--------------------------------------------------------------------------
