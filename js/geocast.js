@@ -1,7 +1,7 @@
 var map = null;
 var infoWindow;
 function load() {
-	map = new google.maps.Map(document.getElementById("map"), {
+	map = new google.maps.Map(document.getElementById("map_canvas"), {
 		center : new google.maps.LatLng(37.76822, -122.44297),
 		zoom : 12,
 		mapTypeId : 'roadmap'
@@ -277,4 +277,115 @@ function Visualize_Task_Selected() {
 	marker.setMap(map);
 	map.panTo(task_point);
 
+}
+
+
+$(function() {
+	$( "#tabs" ).tabs();
+});
+
+
+/////////// HIEN
+
+google.maps.event.addDomListener(window, 'load', init);
+
+function get_tasks() {
+	$.ajax({
+		url : 'main/tasks',
+		data : '',
+		type : "GET",
+		dataType : "xml",
+		success : callbackTasks
+	});
+}
+
+function init() {
+	get_tasks();
+	
+	completeTable = document.createElement("table");
+	completeTable.setAttribute("class", "popupBox");
+	completeTable.setAttribute("style", "display: true");
+	autoRow = document.getElementById("auto-row");
+	autoRow.appendChild(completeTable);
+}
+
+// populate spreadsheet
+function callbackTasks(responseXML) {
+
+	// right table
+	clearTable();
+
+	parseMessages(responseXML);
+}
+
+function clearTable() {
+	if (completeTable.getElementsByTagName("tr").length > 0) {
+		completeTable.style.display = 'none';
+		for (loop = completeTable.childNodes.length - 1; loop >= 0; loop--) {
+			completeTable.removeChild(completeTable.childNodes[loop]);
+		}
+	}
+}
+
+function parseMessages(responseXML) {
+
+	// no matches returned
+	if (responseXML == null) {
+		return false;
+	} else {
+
+		var tasks = responseXML.getElementsByTagName("tasks")[0];
+
+		if (tasks.childNodes.length > 0) {
+			completeTable.setAttribute("bordercolor", "black");
+			completeTable.setAttribute("border", "1");
+
+			for (loop = 0; loop < tasks.childNodes.length; loop++) {
+				var task = tasks.childNodes[loop];
+				var lat = task.getElementsByTagName("lat")[0].childNodes[0].nodeValue;
+				var lng = task.getElementsByTagName("lng")[0].childNodes[0].nodeValue;
+				appendTask(lat, lng)
+			}
+		}
+	}
+}
+
+function appendTask(lat, lng) {
+
+	var row;
+	var cell;
+	var linkElement;
+
+	if (isIE) {
+		completeTable.style.display = 'block';
+		row = completeTable.insertRow(completeTable.rows.length);
+		cell = row.insertCell(0);
+	} else {
+		completeTable.style.display = 'table';
+		row = document.createElement("tr");
+		cell = document.createElement("td");
+		row.appendChild(cell);
+		completeTable.appendChild(row);
+	}
+
+	cell.className = "popupCell";
+
+	linkElement = document.createElement("a");
+	linkElement.className = "popupItem";
+	linkElement.setAttribute("href", "javascript:cm_markerClicked('" + index
+			+ "')");
+	linkElement.setAttribute("onClick", "changeLinkColor(this)");
+	linkElement.setAttribute("id","popupItem" + index);
+	linkElement.setAttribute("title", "Play video");
+	linkElement.appendChild(document.createTextNode(lat + "," + lng));
+	cell.appendChild(linkElement);
+}
+
+var currentLink = null;
+function changeLinkColor(link){
+    if(currentLink!=null){
+        currentLink.style.color = link.style.color; //You may put any color you want
+    }
+    link.style.color = 'blue';
+    currentLink = link;
 }
