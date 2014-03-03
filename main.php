@@ -4,7 +4,7 @@
     </script>
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
     <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
-    <title>Google Maps Example</title>
+    <title>Geocast Admin</title>
     <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false"></script>
     <script src="//code.jquery.com/jquery-1.10.2.js"></script>
     <script type="text/javascript">
@@ -54,7 +54,7 @@
                 json = data.contents;
              
                 if (json=="blank")
-                    alert("Service is now unavailable");
+                    alert("Crowdsourcing service is now unavailable");
                 else{
                     obj = JSON.parse(json);
                     if(obj.hasOwnProperty('error')){
@@ -132,12 +132,12 @@
             infoWindow = new google.maps.InfoWindow();
             google.maps.event.addListener(Array_region[i], 'click', function(event){
                 var info = 'Order added: ' + (i+1);
-                info+= '<br>Cell Utility:<br>' + obj.geocast_query.utilities[i][0];
-                info+= '<br>Current GeoCast Utility:<br>' + obj.geocast_query.utilities[i][1];
-                info+= '<br>Compactness:<br>' + obj.geocast_query.compactnesses[i];
-                info+= '<br>Distance:<br>' + obj.geocast_query.distances[i];
-                info+= '<br>Area:<br>' + obj.geocast_query.areas[i];
-                info+= '<br>Worker Counts:<br>' + obj.geocast_query.worker_counts[i];
+                info+= '</br><b>Cell Utility:</b>' + obj.geocast_query.utilities[i][0];
+                info+= '</br><b>Current GeoCast Utility:</b>' + obj.geocast_query.utilities[i][1];
+                info+= '</br><b>Compactness:</b>' + obj.geocast_query.compactnesses[i];
+                info+= '</br><b>Distance:</b>' + obj.geocast_query.distances[i];
+                info+= '</br><b>Area:</b>' + obj.geocast_query.areas[i];
+                info+= '</br><b>Worker Counts:</b>' + obj.geocast_query.worker_counts[i];
                 
                 infoWindow.setContent(info);
                 infoWindow.setPosition(event.latLng);
@@ -175,9 +175,7 @@
        
        
         var Gowalla_boundary;
-        var Yelp_boundary;
         var Gowalla_vertices = new Array();
-        var Yelp_vertices = new Array();
        
         /*
          * Show_Boundary is to show/hide boundary of the dataset
@@ -242,7 +240,6 @@
             url = 'http://geocrowd2.cloudapp.net/geocast/' + document.forms["input"]["coordinate"].value;
             GeoCast_Query(url);
         
-       
             var coor = document.forms["input"]["coordinate"].value;
             var lat_lng = coor.split(",");
             var task_point = new google.maps.LatLng(lat_lng[0],lat_lng[1]);
@@ -319,15 +316,13 @@
                
             </script>  
 
-
-
-            <form action="firstPhp.php" method="post" name="Tasks_History" onsubmit="Visualize_Task_Selected(); return false">
+            <form action="main.php" method="post" name="Tasks_History" onsubmit="Visualize_Task_Selected(); return false">
                 <select name="task_name" id="task_name">
                     <option selected="selected">Please Choose One:</option>
                     <?php
-// define file
+					// define file
                     //the following code segment is to load coordinates from txt file to a drop down list
-                    $file = 'test.txt';
+                    $file = 'tasks.txt';
 
                     $handle = @fopen($file, 'r');
                     if ($handle) {
@@ -367,21 +362,11 @@
                 Setting Menu Come Here<br>
                 Setting Menu Come Here<br>
 
-
-
             </form>
         </div>
     </div>
 
 
-
-
-
-
-
 </body>
-
-
-
 
 </html>
