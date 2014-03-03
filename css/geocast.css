@@ -1,44 +1,57 @@
+/*=============== Datasets styling ======================*/
+#dataset .ui-selecting { background: #FECA40; }
+#dataset .ui-selected { background: green; color: white; font-weight: bold}
+#dataset { list-style-type: none; margin: 0; padding: 0; width: 240px; }
+#dataset li { margin: 3px; padding: 0.4em; font-size: 1.2em; height: 14px; }
 
+/*=============== Common styling ======================*/  
 button {
     color: blue;
     font-weight: bold;
 }
+
+label {
+    color: #222222;
+    font-size: 16px;;
+    font-weight: bold;
+    font-family: Verdana,Arial,sans-serif;
+}
 /*=============== Map styling ======================*/
 
 #map_canvas {
-	height: 100%;
-	width: 80%;
-	overflow: hidden;
-	position: absolute;
-        top: 5px;
-        left: 250px;
-	height: 100%;
+    height: 100%;
+    width: 80%;
+    overflow: hidden;
+    position: absolute;
+    top: 5px;
+    left: 250px;
+    height: 100%;
 }
 
 /*============================== Left panel ==================*/
 
 div#tabs {
-	position: absolute;
-        top: 0px;
-        left: 5px;
-	height: 100%;
-	width: 240px;
-	margin: 0;
-	padding: 0;
-	text-align:left;
-	margin-top: 5px;
-	font-size: 16px; 
-	color: rgb(0, 0, 0);
+    position: absolute;
+    top: 150px;
+    left: 5px;
+    height: 100%;
+    width: 240px;
+    margin: 0;
+    padding: 0;
+    text-align:left;
+    margin-top: 5px;
+    font-size: 16px; 
+    color: rgb(0, 0, 0);
 }
 
 div#auto-row {
-	height:50%;
-	width:200px;
-	margin: 0;
-	padding: 0;
-	text-align:left;
-	font-size: 16px; 
-	color: rgb(0, 0, 0);
+    height:50%;
+    width:200px;
+    margin: 0;
+    padding: 0;
+    text-align:left;
+    font-size: 16px; 
+    color: rgb(0, 0, 0);
 }
 
 a {
@@ -53,7 +66,7 @@ a:hover {
 .popupBox {
     position: relative;
     white-space: nowrap;
-	width: 10%;
+    width: 10%;
 }
 
 #auto-row .popupBox .popupCell {

@@ -1,3 +1,5 @@
+var DATASET_URL = 'http://geocrowd2.cloudapp.net/dataset';
+var GEOCAST_URL = 'http://geocrowd2.cloudapp.net/geocast/'
 var map = null;
 var infoWindow;
 var isIE;
@@ -8,13 +10,13 @@ var allMarkers = [];
 var cellPolygons = new Array();
 var cells = new Array();
 //var polygon = new Array();
-var point0;
-var point1;
-var point2;
-var point3;
 
 var cellIdx = -1;
 var json = "blank";
+
+var datasetIdx = 0;
+var bounds = new Array();
+var boundRect;
 
 function load() {
     map = new google.maps.Map(document.getElementById("map_canvas"), {
@@ -44,7 +46,8 @@ function load() {
 /*GeoCast_Query  takes as parametter the url which is used to retrieve 
  *a json file containning information of the geocast query
  */
-function retrieveGeocastInfo(url) {
+function retrieveGeocastInfo(latlng) {
+    var url = GEOCAST_URL + $datasets.names[datasetIdx] + "/" + latlng;
     $.getJSON('http://whateverorigin.org/get?url=' + encodeURIComponent(url)
             + '&callback=?', function(data) {
                 json = data.contents;
@@ -87,19 +90,19 @@ function drawGeocastRegion() {
 function drawGeocastCell(i) {
     polygon = new Array();
 
-    point0 = new google.maps.LatLng(obj.geocast_query.x_min_cords[i],
+    var point0 = new google.maps.LatLng(obj.geocast_query.x_min_cords[i],
             obj.geocast_query.y_min_cords[i]);
     polygon[0] = point0;
 
-    point1 = new google.maps.LatLng(obj.geocast_query.x_min_cords[i],
+    var point1 = new google.maps.LatLng(obj.geocast_query.x_min_cords[i],
             obj.geocast_query.y_max_cords[i]);
     polygon[1] = point1;
 
-    point2 = new google.maps.LatLng(obj.geocast_query.x_max_cords[i],
+    var point2 = new google.maps.LatLng(obj.geocast_query.x_max_cords[i],
             obj.geocast_query.y_max_cords[i]);
     polygon[2] = point2;
 
-    point3 = new google.maps.LatLng(obj.geocast_query.x_max_cords[i],
+    var point3 = new google.maps.LatLng(obj.geocast_query.x_max_cords[i],
             obj.geocast_query.y_min_cords[i]);
     polygon[3] = point3;
 
@@ -158,9 +161,9 @@ function drawATask(marker, map, infoWindow, html) {
         infoWindow.close(map, marker);
     });
     google.maps.event.addListener(marker, 'click', function(event) {
-        url = 'http://geocrowd2.cloudapp.net/geocast/' + event.latLng.lat()
+        latlng = event.latLng.lat()
                 + "," + event.latLng.lng();
-        retrieveGeocastInfo(url);
+        retrieveGeocastInfo(latlng);
         alert('Lat: ' + event.latLng.lat() + ' and Longitude is: '
                 + event.latLng.lng());
         var center = new google.maps.LatLng(event.latLng.lat(), event.latLng
@@ -172,47 +175,46 @@ function drawATask(marker, map, infoWindow, html) {
 /*
  * Show_Boundary is to show/hide boundary of the dataset
  */
-var boundary;
-var bound_vertices = new Array();
-function showBoundary() {
+function showBoundary(showBound) {
     var button = document.getElementById("boundary");
-    var json_boundary;
-    var url1 = 'http://geocrowd2.cloudapp.net/dataset';
 
-    if (button.value == "Show Boundary") {
-        $.getJSON('http://whateverorigin.org/get?url='
-                + encodeURIComponent(url1) + '&callback=?', function(data) {
-            json_boundary = data.contents;
-            boundary = JSON.parse(json_boundary);
-            button.value = "Hide Boundary";
-            bound_vertices[0] = new google.maps.LatLng(
-                    boundary.boundaries[0], boundary.boundaries[1]);
-            bound_vertices[1] = new google.maps.LatLng(
-                    boundary.boundaries[0], boundary.boundaries[3]);
-            bound_vertices[2] = new google.maps.LatLng(
-                    boundary.boundaries[2], boundary.boundaries[3]);
-            bound_vertices[3] = new google.maps.LatLng(
-                    boundary.boundaries[2], boundary.boundaries[1]);
+    if (button.value == "Show Boundary" || showBound == true) {
+        button.value = "Hide Boundary";
+        boundRect = new google.maps.Rectangle({
+            bounds: bounds,
+            fillOpacity : 0,
+            strokeColor: "#FF0000",
+            strokeOpacity: 1,
+            strokeWeight: 2
 
-            bound_vertices[4] = new google.maps.LatLng(
-                    boundary.boundaries[0], boundary.boundaries[1]);
-            boundary = new google.maps.Polyline({
-                path: bound_vertices,
-                strokeColor: "#FF0000",
-                strokeOpacity: 0.8,
-                strokeWeight: 2
+        });
+        map.fitBounds(bounds);
+        
+        // boundary
+        var vertices = [
+            new google.maps.LatLng(bounds.ta.d, bounds.ga.d),
+            new google.maps.LatLng(bounds.ta.d, bounds.ga.b),
+            new google.maps.LatLng(bounds.ta.b, bounds.ga.b),
+            new google.maps.LatLng(bounds.ta.b, bounds.ga.d),
+            new google.maps.LatLng(bounds.ta.d, bounds.ga.d),
+        ];
+        boundary = new google.maps.Polyline({
+            path:vertices,
+            strokeColor:"#FF0000",
+            strokeOpacity:0.8,
+            strokeWeight:2
+        });
+        boundary.setMap(map);
 
-            });
-            boundary.setMap(map);
-            infoWindow = new google.maps.InfoWindow();
-            google.maps.event.addListener(boundary, 'click', function(
-                    event) {
-                var boundaryinfo = 'dataset:<br>' + boundary.dataset
-                        + '<br>workers counts:<br>' + boundary.worker_count;
-                infoWindow.setContent(boundaryinfo);
-                infoWindow.setPosition(event.latLng);
-                infoWindow.open(map);
-            });
+        // info
+        infoWindow = new google.maps.InfoWindow();
+        google.maps.event.addListener(boundary, 'click', function(
+                event) {
+            var boundaryinfo = 'Dataset:' + $datasets.names[datasetIdx]
+                    + '<br>#Workers:' + $datasets.worker_counts[datasetIdx];
+            infoWindow.setContent(boundaryinfo);
+            infoWindow.setPosition(event.latLng);
+            infoWindow.open(map);
         });
 
     } else {
@@ -230,9 +232,8 @@ function showBoundary() {
  * for task at that specific location
  */
 function drawTestTask() {
-    url = 'http://geocrowd2.cloudapp.net/geocast/'
-            + document.forms["input"]["coordinate"].value;
-    retrieveGeocastInfo(url);
+    latlng = document.forms["input"]["coordinate"].value;
+    retrieveGeocastInfo(latlng);
 
     var coor = document.forms["input"]["coordinate"].value;
     var lat_lng = coor.split(",");
@@ -259,8 +260,7 @@ function drawTestTask() {
  * for task at the selected location
  */
 function drawSelectedTask(latlng) {
-    url = 'http://geocrowd2.cloudapp.net/geocast/' + latlng;
-    retrieveGeocastInfo(url);
+    retrieveGeocastInfo(latlng);
 
     var lat_lng = latlng.split(",");
     var task_point = new google.maps.LatLng(lat_lng[0], lat_lng[1]);
@@ -285,7 +285,7 @@ function clearMap() {
     for (var n = 0; n < cellPolygons.length; n++)
         cellPolygons[n].setMap(null);
     cellPolygons = [];
-    
+
     cellIdx = -1;
 }
 
@@ -319,7 +319,7 @@ function init() {
 function retrieveHistoryTasks() {
     $.ajax({
         url: 'tasks',
-        data: '',
+        data: 'dataset=' + $datasets.names[datasetIdx],
         type: "GET",
         dataType: "xml",
         success: callbackTasks
@@ -346,7 +346,7 @@ function clearTable() {
 /**
  * get lat/lng pairs from xml file
  * @param {type} responseXML
- */        
+ */
 function parseTasksFromXML(responseXML) {
 
     // no matches returned
@@ -421,3 +421,25 @@ function changeLinkColor(link) {
     link.style.fontWeight = 'bold';
     currentLink = link;
 }
+
+
+$(function() {
+    $("#dataset").selectable({
+        selected: function(event, ui) {
+            datasetIdx = ui.selected.value;
+            var boundary = $datasets.boundaries[datasetIdx];
+            boundary = boundary.split(",");
+
+            bounds = new google.maps.LatLngBounds(new google.maps.LatLng(parseFloat(boundary[0]),
+                    parseFloat(boundary[1])), new google.maps.LatLng(parseFloat(boundary[2]), parseFloat(boundary[3])));
+                    
+            showBoundary(true);
+            retrieveHistoryTasks();
+        }
+    }
+    );
+});
+
+$(document).ready(function () {
+    $('#dataset li:first').addClass('ui-selected');
+});

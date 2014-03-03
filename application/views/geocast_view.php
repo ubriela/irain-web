@@ -1,8 +1,29 @@
-<body onload="load()">
+<script>
+    var $datasets = <?php echo json_encode($datasets); ?>;
+    <?php 
+</script>
 
+<body onload="load()">
+    
+    <div>
+        <p>
+        <label for="dataset">Select dataset:</label>
+        </p>
+        <ol id="dataset">
+            <?php
+            //log_message('error', var_export($datasets->names, True));
+            if ($datasets) {
+                echo '<li class="ui-widget-content" value="0">' . $datasets->names[0] . '</li>' . "\n";
+                for ($i = 1; $i < count($datasets->names); $i++) {
+                    echo '<li class="ui-widget-content" value="' . $i . '">' . $datasets->names[$i] . '</li>' . "\n";
+                }
+            }
+            ?>
+        </ol>
+    </div>
     <div id="map_canvas"></div>
 
-    <div  id="tabs">
+    <div id="tabs">
         <ul>
             <p>
                 <b>Geocast Queries</b>
@@ -19,14 +40,14 @@
         </div>
         <div id="tabs-2">
             <form name="input" action="geocast_view.php.php"
-                  onsubmit="Query();
+                  onsubmit="drawTestTask();
                           return false">
                 Task (lat,lng) <input type="text" name="coordinate"><br>
                 <button type="submit" value="Submit">Submit</button>
             </form>
             <br>
             <input type="button" value="Show Boundary" id="boundary"
-                    onClick="showBoundary()"/>
+                   onClick="showBoundary('false')"/>
         </div>
     </div>
 </div>
