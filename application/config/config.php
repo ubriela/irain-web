@@ -14,7 +14,7 @@
 | path to your installation.
 |
 */
-$config['base_url']	= 'http://localhost/geocast/';
+$config['base_url']	= 'http://geocast.azurewebsites.net/';
 
 /*
 |--------------------------------------------------------------------------
