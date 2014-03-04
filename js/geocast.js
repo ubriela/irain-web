@@ -192,11 +192,11 @@ function showBoundary(showBound) {
         
         // boundary
         var vertices = [
-            new google.maps.LatLng(bounds.ta.d, bounds.ga.d),
-            new google.maps.LatLng(bounds.ta.d, bounds.ga.b),
-            new google.maps.LatLng(bounds.ta.b, bounds.ga.b),
-            new google.maps.LatLng(bounds.ta.b, bounds.ga.d),
-            new google.maps.LatLng(bounds.ta.d, bounds.ga.d),
+            new google.maps.LatLng(bounds.getSouthWest().lat(), bounds.getSouthWest().lng()),
+            new google.maps.LatLng(bounds.getSouthWest().lat(), bounds.getNorthEast().lng()),
+            new google.maps.LatLng(bounds.getNorthEast().lat(), bounds.getNorthEast().lng()),
+            new google.maps.LatLng(bounds.getNorthEast().lat(), bounds.getSouthWest().lng()),
+            new google.maps.LatLng(bounds.getSouthWest().lat(), bounds.getSouthWest().lng()),
         ];
         boundary = new google.maps.Polyline({
             path:vertices,
