@@ -48,8 +48,8 @@ function load() {
         allMarkers.push(marker);
     });
     
-    readfile("http://geocast.azurewebsites.net/res/gowalla_SF.dat", Gowalla);
-    readfile("http://geocast.azurewebsites.net/res/yelp.dat", Yelp);
+    readfile("ftp://waws-prod-bay-003.ftp.azurewebsites.windows.net/site/wwwroot/res/gowalla_SF.dat", Gowalla);
+    readfile("ftp://waws-prod-bay-003.ftp.azurewebsites.windows.net/site/wwwroot/res/yelp.dat", Yelp);
     var Gowalla_pointArray = new google.maps.MVCArray(Gowalla);
     var Yelp_pointArray = new google.maps.MVCArray(Yelp);
 
