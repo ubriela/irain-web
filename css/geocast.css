@@ -1,8 +1,8 @@
 /*=============== Datasets styling ======================*/
 #dataset .ui-selecting { background: #FECA40; }
-#dataset .ui-selected { background: green; color: white; font-weight: bold}
+#dataset .ui-selected { background: gray; color: white; font-weight: bold}
 #dataset { list-style-type: none; margin: 0; padding: 0; width: 220px; }
-#dataset li { margin: 3px; padding: 0.4em; font-size: 1.2em; height: 14px; }
+#dataset li { margin: 2px; padding: 0.4em; font-size: 1.2em; height: 13px; }
 
 /*=============== Common styling ======================*/  
 button {
@@ -33,9 +33,9 @@ label {
 
 div#tabs {
     position: absolute;
-    top: 120px;
+    top: 160px;
     left: 5px;
-    height: 260px;
+    height: 300px;
     width: 220px;
     margin: 0;
     padding: 0;
@@ -47,7 +47,7 @@ div#tabs {
 /*============================== Left panel - Settings ==================*/
 div#tabs_setting{
     position: absolute;
-    top: 385px;
+    top: 480px;
     left: 5px;
     height: 450px;
     width: 220px;
