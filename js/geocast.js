@@ -346,7 +346,7 @@ function init() {
 */
 function retrieveHistoryTasks() {
     $.ajax({
-        url: 'tasks',
+        url: 'geocast/tasks',
         data: 'dataset=' + $datasets.names[datasetIdx],
         type: "GET",
         dataType: "xml",

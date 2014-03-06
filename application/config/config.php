@@ -15,6 +15,8 @@
 |
 */
 //$config['base_url']	= 'http://localhost/GeoCast/geocast/';
+
+
 $config['base_url']	=  'http://geocast.azurewebsites.net/';
 
 /*
