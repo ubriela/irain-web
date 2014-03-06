@@ -19,6 +19,10 @@ var bounds = new Array();
 var boundRect;
 var delayTime = 100;
 
+var heatmap_Gowalla, heatmap_Yelp;
+var Gowalla =[];
+var Yelp =[];
+
 function load() {
     map = new google.maps.Map(document.getElementById("map_canvas"), {
         center: new google.maps.LatLng(37.76822, -122.44297),
@@ -41,6 +45,24 @@ function load() {
         marker.setMap(map);
         allMarkers.push(marker);
     });
+    
+    readfile("http://localhost/GeoCast/geocast/res/gowalla_SF.dat", Gowalla);
+    readfile("http://localhost/GeoCast/geocast/res/yelp.dat", Yelp);
+    var Gowalla_pointArray = new google.maps.MVCArray(Gowalla);
+    var Yelp_pointArray = new google.maps.MVCArray(Yelp);
+
+
+    heatmap_Gowalla = new google.maps.visualization.HeatmapLayer({
+        data: Gowalla_pointArray
+    });
+    heatmap_Yelp = new google.maps.visualization.HeatmapLayer({
+        data: Yelp_pointArray
+    });
+
+    heatmap_Gowalla.setMap(map);
+    heatmap_Yelp.setMap(map);
+ 
+    
 
 }
 
@@ -51,8 +73,8 @@ function set_delay(){
         alert ("Invalid input");
     }
     else{
-        delayTime = parseFloat(input_delay)*1000;
-        alert (delayTime);
+        delayTime = parseFloat(input_delay);
+       
     }
     
 }
@@ -387,8 +409,10 @@ function parseTasksFromXML(responseXML) {
         if (tasks.childNodes.length > 0) {
             completeTable.setAttribute("bordercolor", "black");
             completeTable.setAttribute("border", "1");
-
-            for (loop = 0; loop < tasks.childNodes.length; loop++) {
+            var max = 7;
+            if (tasks.childNodes.length <= 7)
+                max = tasks.childNodes.length;
+            for (loop = 0; loop < max; loop++) {
                 var task = tasks.childNodes[loop];
                 var lat = task.getElementsByTagName("lat")[0].childNodes[0].nodeValue;
                 var lng = task.getElementsByTagName("lng")[0].childNodes[0].nodeValue;
@@ -450,6 +474,44 @@ function changeLinkColor(link) {
     currentLink = link;
 }
 
+/*
+ * read workerlocation from .dat file to draw heatmap
+ */
+function readfile(filename, output)
+{
+               
+    var txtFile;
+    if (window.XMLHttpRequest)
+    {// code for IE7+, Firefox, Chrome, Opera, Safari
+        txtFile = new XMLHttpRequest();
+    }
+    else
+    {// code for IE6, IE5
+        txtFile = new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    txtFile.open("GET",filename,false);
+    txtFile.send();
+    var txtDoc=txtFile.responseText;
+    var lines = txtDoc.split("\r\n"); // values in lines[0], lines[1]...
+    var single_line = lines[0].split("\n");
+                
+    for (var i=0; i<single_line.length; i++){
+        var temp = single_line[i].split("-");
+        var lat_lng =  temp[0]+",-"+temp[1];
+                   
+        var coordinate = lat_lng.split(",");
+        output[i] = new google.maps.LatLng(parseFloat(coordinate[0]), parseFloat(coordinate[1]));
+    }
+}
+function toggleGowalla() {
+    heatmap_Gowalla.setMap(heatmap_Gowalla.getMap() ? null : map);
+                
+}
+
+function toggleYelp() {
+    heatmap_Yelp.setMap(heatmap_Yelp.getMap() ? null : map);
+                
+}
 
 $(function() {
     $("#dataset").selectable({

@@ -20,21 +20,22 @@ label {
 
 #map_canvas {
     height: 100%;
-    width: 63%;
-    overflow: hidden;
+    width: 80%;
+
     position: absolute;
     top: 5px;
     left: 230px;
     height: 100%;
+    padding: 0px;
 }
 
-/*============================== Left panel ==================*/
+/*============================== Left panel - Geocast Query demo ==================*/
 
 div#tabs {
     position: absolute;
-    top: 150px;
+    top: 120px;
     left: 5px;
-    height: 250px;
+    height: 260px;
     width: 220px;
     margin: 0;
     padding: 0;
@@ -43,13 +44,13 @@ div#tabs {
     font-size: 15px; 
     color: rgb(0, 0, 0);
 }
-/*============================== Right panel ==================*/
+/*============================== Left panel - Settings ==================*/
 div#tabs_setting{
     position: absolute;
-    top: 0px;
-    left: 955px;
-    height: 100%;
-    width: 195px;
+    top: 385px;
+    left: 5px;
+    height: 450px;
+    width: 220px;
     margin: 0;
     padding: 0;
     text-align:left;
@@ -61,6 +62,7 @@ div#tabs_setting{
 
 div#auto-row {
     height:50%;
+    left: 0px;
     width:200px;
     margin: 0;
     padding: 0;

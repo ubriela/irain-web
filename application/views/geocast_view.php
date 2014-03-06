@@ -48,9 +48,14 @@
                 Task (lat,lng) <input type="text" name="coordinate"><br>
                 <button type="submit" value="Submit">Submit</button>
             </form>
-            <br>
             <input type="button" value="Show Boundary" id="boundary"
                    onClick="showBoundary('false')"/>
+            <div id="panel">
+                <button onclick="toggleGowalla()">Gowalla Heatmap</button>
+                <button onclick="toggleYelp()">Yelp Heatmap</button>
+
+            </div>
+
         </div>
 
     </div>
@@ -86,7 +91,7 @@
         <div id="tabs_setting-2">
             <form name="GUI_delay" action="geocast_view.php"
                   onsubmit="set_delay();  return false">
-                Delay (In Seconds) <input type="text" style="width: 100px; padding: 2px"
+                Delay (In Miliseconds) <input type="text" style="width: 100px; padding: 2px"
                                           name="delay"><br>
                 <button type="submit" value="Submit">Update</button>
             </form>
