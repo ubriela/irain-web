@@ -6,10 +6,17 @@
 
     <!-- Library -->
     <link rel="stylesheet" type="text/css" href='<?php echo base_url("jquery-ui-1.10.4/themes/base/jquery-ui.css"); ?>'>
+    <link rel="stylesheet" href='<?php echo base_url("jquery-ui-1.10.4/jqwidgets/styles/jqx.base.css"); ?>' type="text/css" />
+    <link rel="stylesheet" href='<?php echo base_url("jquery-ui-1.10.4/jqwidgets/styles/jqx.summer.css"); ?>' type="text/css" />
 
     <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false"></script>
     <script type="text/javascript" src='<?php echo base_url("jquery-ui-1.10.4/jquery-1.10.2.js"); ?>'></script>
     <script type="text/javascript" src='<?php echo base_url("jquery-ui-1.10.4/ui/jquery-ui.js"); ?>'></script>
+    <script type="text/javascript" src='<?php echo base_url("jquery-ui-1.10.4/jqwidgets/jqxcore.js"); ?>'></script>
+    <script type="text/javascript" src='<?php echo base_url("jquery-ui-1.10.4/jqwidgets/jqxbuttons.js"); ?>'></script>
+    <script type="text/javascript" src='<?php echo base_url("jquery-ui-1.10.4/jqwidgets/jqxscrollbar.js"); ?>'></script>
+    <script type="text/javascript" src='<?php echo base_url("jquery-ui-1.10.4/jqwidgets/jqxlistbox.js"); ?>'></script>
+    <script type="text/javascript" src='<?php echo base_url("jquery-ui-1.10.4/jqwidgets/jqxdropdownlist.js"); ?>'></script>
 
 
     <!-- Customized -->

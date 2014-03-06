@@ -1,7 +1,7 @@
 /*=============== Datasets styling ======================*/
 #dataset .ui-selecting { background: #FECA40; }
 #dataset .ui-selected { background: green; color: white; font-weight: bold}
-#dataset { list-style-type: none; margin: 0; padding: 0; width: 270px; }
+#dataset { list-style-type: none; margin: 0; padding: 0; width: 220px; }
 #dataset li { margin: 3px; padding: 0.4em; font-size: 1.2em; height: 14px; }
 
 /*=============== Common styling ======================*/  
@@ -20,11 +20,11 @@ label {
 
 #map_canvas {
     height: 100%;
-    width: 80%;
+    width: 63%;
     overflow: hidden;
     position: absolute;
     top: 5px;
-    left: 280px;
+    left: 230px;
     height: 100%;
 }
 
@@ -34,15 +34,30 @@ div#tabs {
     position: absolute;
     top: 150px;
     left: 5px;
-    height: 100%;
-    width: 270px;
+    height: 250px;
+    width: 220px;
     margin: 0;
     padding: 0;
     text-align:left;
     margin-top: 5px;
-    font-size: 16px; 
+    font-size: 15px; 
     color: rgb(0, 0, 0);
 }
+/*============================== Right panel ==================*/
+div#tabs_setting{
+    position: absolute;
+    top: 0px;
+    left: 955px;
+    height: 100%;
+    width: 195px;
+    margin: 0;
+    padding: 0;
+    text-align:left;
+    margin-top: 5px;
+    font-size: 15px; 
+    color: rgb(0, 0, 0);
+}
+
 
 div#auto-row {
     height:50%;
