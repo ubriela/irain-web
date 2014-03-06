@@ -1,5 +1,7 @@
 var DATASET_URL = 'http://geocrowd2.cloudapp.net/dataset';
 var GEOCAST_URL = 'http://geocrowd2.cloudapp.net/geocast/'
+
+
 var map = null;
 var infoWindow;
 var isIE;
@@ -46,8 +48,8 @@ function load() {
         allMarkers.push(marker);
     });
     
-    readfile("http://localhost/GeoCast/geocast/res/gowalla_SF.dat", Gowalla);
-    readfile("http://localhost/GeoCast/geocast/res/yelp.dat", Yelp);
+    readfile("http://geocast.azurewebsites.net/res/gowalla_SF.dat", Gowalla);
+    readfile("http://geocast.azurewebsites.net/res/yelp.dat", Yelp);
     var Gowalla_pointArray = new google.maps.MVCArray(Gowalla);
     var Yelp_pointArray = new google.maps.MVCArray(Yelp);
 

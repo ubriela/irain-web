@@ -17,6 +17,10 @@
 //$config['base_url']	= 'http://localhost/GeoCast/geocast/';
 
 
+// Hien config
+//$config['base_url']	= 'http://localhost/geocast/';
+
+// Cloud config       
 $config['base_url']	=  'http://geocast.azurewebsites.net/';
 
 /*
