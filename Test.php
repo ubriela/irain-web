@@ -56,7 +56,7 @@
         function initialize() {
             var mapOptions = {
                 zoom: 13,
-                center: new google.maps.LatLng(33.257,-122.2033523),
+                center: new google.maps.LatLng(37.76822, -122.44297),
                 mapTypeId: 'roadmap'
             };
 
