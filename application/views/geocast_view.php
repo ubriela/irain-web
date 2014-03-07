@@ -23,8 +23,9 @@
     <div id="map_canvas"></div>
 
     <div id="panel">
-        <input type="button" onclick="toggleGowalla()" value="Show Heatmap"/>
-        <input type="button"  onclick="toggleYelp()" value="Show Heatmap"/>
+        <input type="button" onclick="toggleGowalla()" id ="gowalla_heatmap" value="Show Gowalla Heatmap"/>
+        <br>
+        <input type="button"  onclick="toggleYelp()" id ="yelp_heatmap" value="Show Yelp Heatmap"/>
     </div>
 
     <div id="tabs">
@@ -90,7 +91,7 @@
             <form name="GUI_delay" action="geocast_view.php"
                   onsubmit="set_delay();
                           return false">
-                Delay (In Miliseconds) <input type="text" style="width: 100px; padding: 2px"
+                Delay (In Seconds) <input type="text" style="width: 100px; padding: 2px"
                                               name="delay"><br>
                 <button type="submit" value="Submit">Update</button>
             </form>

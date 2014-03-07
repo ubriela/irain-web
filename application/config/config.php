@@ -14,6 +14,7 @@
 | path to your installation.
 |
 */
+//Hung config
 //$config['base_url']	= 'http://localhost/GeoCast/geocast/';
 
 

@@ -4,6 +4,7 @@ if (!defined('BASEPATH'))
     exit('No direct script access allowed');
 
 $DATASET_URL = 'http://geocrowd2.cloudapp.net/dataset';
+$gowalla_file = "http://geocast.azurewebsites.net/res/yelp.txt";
 
 class Geocast extends CI_Controller {
 

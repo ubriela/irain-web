@@ -48,8 +48,14 @@ function load() {
         allMarkers.push(marker);
     });
     
-    readfile("ftp://waws-prod-bay-003.ftp.azurewebsites.windows.net/site/wwwroot/res/gowalla_SF.dat", Gowalla);
-    readfile("ftp://waws-prod-bay-003.ftp.azurewebsites.windows.net/site/wwwroot/res/yelp.dat", Yelp);
+    //readfile("ftp://waws-prod-bay-003.ftp.azurewebsites.windows.net/site/wwwroot/res/gowalla_SF.dat", Gowalla);
+    //readfile("ftp://waws-prod-bay-003.ftp.azurewebsites.windows.net/site/wwwroot/res/yelp.dat", Yelp);
+    readfile("http://localhost/GeoCast/geocast/res/gowalla_SF.dat", Gowalla);
+    readfile("http://localhost/GeoCast/geocast/res/yelp.dat", Yelp);
+    //readfile("gowalla_SF.dat", Gowalla);
+    // readfile($gowalla_file);
+    
+    //readfile("yelp.dat", Yelp);
     var Gowalla_pointArray = new google.maps.MVCArray(Gowalla);
     var Yelp_pointArray = new google.maps.MVCArray(Yelp);
 
@@ -61,8 +67,8 @@ function load() {
         data: Yelp_pointArray
     });
 
-    heatmap_Gowalla.setMap(map);
-    heatmap_Yelp.setMap(map);
+//heatmap_Gowalla.setMap(map);
+//heatmap_Yelp.setMap(map);
  
     
 
@@ -507,13 +513,25 @@ function readfile(filename, output)
 }
 function toggleGowalla() {
     heatmap_Gowalla.setMap(heatmap_Gowalla.getMap() ? null : map);
+    var button = document.getElementById("gowalla_heatmap");
+    if (button.value == "Show Gowalla Heatmap")
+        button.value = "Hide Gowalla Heatmap";
+    else
+        button.value = "Show Gowalla Heatmap";
                 
 }
 
 function toggleYelp() {
     heatmap_Yelp.setMap(heatmap_Yelp.getMap() ? null : map);
+    var button = document.getElementById("yelp_heatmap");
+    if (button.value == "Show Yelp Heatmap")
+        button.value = "Hide Yelp Heatmap";
+    else
+        button.value = "Show Yelp Heatmap";
                 
 }
+
+  
 
 $(function() {
     $("#dataset").selectable({

@@ -30,63 +30,70 @@
                 {// code for IE6, IE5
                     txtFile = new ActiveXObject("Microsoft.XMLHTTP");
                 }
-                txtFile.open("GET",filename,false);
-                txtFile.send();
-                var txtDoc=txtFile.responseText;
-                var lines = txtDoc.split("\r\n"); // values in lines[0], lines[1]...
-                var single_line = lines[0].split("\n");
-                
-                for (var i=0; i<single_line.length; i++){
-                    var temp = single_line[i].split("-");
-                    var lat_lng =  temp[0]+",-"+temp[1];
-                   
-                    var coordinate = lat_lng.split(",");
-                    output[i] = new google.maps.LatLng(parseFloat(coordinate[0]), parseFloat(coordinate[1]));
-                }
-            }
-
+            txtFile.open("GET",filename,false);
+            txtFile.send();
+            var txtDoc=txtFile.responseText;
+            
+            var lines = txtDoc.split("\r\n"); // values in lines[0], lines[1]...
+            var single_line = lines[0].split("\n");
            
-            function initialize() {
-                var mapOptions = {
-                    zoom: 13,
-                    center: new google.maps.LatLng(33.257,-122.2033523),
-                    mapTypeId: 'roadmap'
-                };
                 
-                readfile("http://localhost/GeoCast/geocast/res/gowalla_SF.dat", Gowalla);
-                readfile("http://localhost/GeoCast/geocast/res/yelp.dat", Yelp);
-                //readfile();
-                
-
-                map = new google.maps.Map(document.getElementById('map-canvas'),
-                mapOptions);
-
-                var Gowalla_pointArray = new google.maps.MVCArray(Gowalla);
-                var Yelp_pointArray = new google.maps.MVCArray(Yelp);
-
-
-                heatmap_Gowalla = new google.maps.visualization.HeatmapLayer({
-                    data: Gowalla_pointArray
-                });
-                heatmap_Yelp = new google.maps.visualization.HeatmapLayer({
-                    data: Yelp_pointArray
-                });
-
-                heatmap_Gowalla.setMap(map);
-                heatmap_Yelp.setMap(map);
- 
+            for (var i=0; i<single_line.length; i++){
+                var temp = single_line[i].split("-");
+                var lat_lng =  temp[0]+",-"+temp[1];
+                   
+                var coordinate = lat_lng.split(",");
+                output[i] = new google.maps.LatLng(parseFloat(coordinate[0]), parseFloat(coordinate[1]));
             }
-
-            function toggleGowalla() {
-                heatmap_Gowalla.setMap(heatmap_Gowalla.getMap() ? null : map);
                 
-            }
-
-            function toggleYelp() {
-                heatmap_Yelp.setMap(heatmap_Yelp.getMap() ? null : map);
                 
-            }
-            google.maps.event.addDomListener(window, 'load', initialize);
+       
+                
+     
+        }
+
+
+        function initialize() {
+            var mapOptions = {
+                zoom: 13,
+                center: new google.maps.LatLng(33.257,-122.2033523),
+                mapTypeId: 'roadmap'
+            };
+
+            readfile("gowalla_SF.dat", Gowalla);
+            readfile("yelp.dat", Yelp);
+            //readfile();
+
+
+            map = new google.maps.Map(document.getElementById('map-canvas'),
+            mapOptions);
+
+            var Gowalla_pointArray = new google.maps.MVCArray(Gowalla);
+            var Yelp_pointArray = new google.maps.MVCArray(Yelp);
+
+
+            heatmap_Gowalla = new google.maps.visualization.HeatmapLayer({
+                data: Gowalla_pointArray
+            });
+            heatmap_Yelp = new google.maps.visualization.HeatmapLayer({
+                data: Yelp_pointArray
+            });
+
+            heatmap_Gowalla.setMap(map);
+            heatmap_Yelp.setMap(map);
+
+        }
+
+        function toggleGowalla() {
+            heatmap_Gowalla.setMap(heatmap_Gowalla.getMap() ? null : map);
+
+        }
+
+        function toggleYelp() {
+            heatmap_Yelp.setMap(heatmap_Yelp.getMap() ? null : map);
+
+        }
+        google.maps.event.addDomListener(window, 'load', initialize);
 
         </script>
     </head>
