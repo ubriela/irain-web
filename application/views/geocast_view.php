@@ -23,9 +23,7 @@
     <div id="map_canvas"></div>
 
     <div id="panel">
-        <input type="button" onclick="toggleGowalla()" id ="gowalla_heatmap" value="Show Gowalla Heatmap"/>
-        <br>
-        <input type="button"  onclick="toggleYelp()" id ="yelp_heatmap" value="Show Yelp Heatmap"/>
+        <input type="button" onclick="toggleHeatmap()" id ="heatmap" value="Show Heatmap"/>
     </div>
 
     <div id="tabs">

@@ -21,9 +21,8 @@ var bounds = new Array();
 var boundRect;
 var delayTime = 100;
 
-var heatmap_Gowalla, heatmap_Yelp;
-var Gowalla =[];
-var Yelp =[];
+var heatmapLayers = new Array();
+var dataLocs = new Array();
 
 function load() {
     map = new google.maps.Map(document.getElementById("map_canvas"), {
@@ -35,7 +34,7 @@ function load() {
     google.maps.event.addListener(map, 'dblclick', function(event) {
 
         var touch_point = new google.maps.LatLng(event.latLng.lat(),
-            event.latLng.lng());
+                event.latLng.lng());
         var marker = new google.maps.Marker({
             map: map,
             position: touch_point,
@@ -43,78 +42,62 @@ function load() {
         });
         infoWindow = new google.maps.InfoWindow;
         drawATask(marker, map, infoWindow, event.latLng.lat() + '-'
-            + event.latLng.lng());
+                + event.latLng.lng());
         marker.setMap(map);
         allMarkers.push(marker);
     });
-    
-    //readfile("ftp://waws-prod-bay-003.ftp.azurewebsites.windows.net/site/wwwroot/res/gowalla_SF.dat", Gowalla);
-    //readfile("ftp://waws-prod-bay-003.ftp.azurewebsites.windows.net/site/wwwroot/res/yelp.dat", Yelp);
-    readfile("http://localhost/GeoCast/geocast/res/gowalla_SF.dat", Gowalla);
-    readfile("http://localhost/GeoCast/geocast/res/yelp.dat", Yelp);
-    //readfile("gowalla_SF.dat", Gowalla);
-    // readfile($gowalla_file);
-    
-    //readfile("yelp.dat", Yelp);
-    var Gowalla_pointArray = new google.maps.MVCArray(Gowalla);
-    var Yelp_pointArray = new google.maps.MVCArray(Yelp);
 
-
-    heatmap_Gowalla = new google.maps.visualization.HeatmapLayer({
-        data: Gowalla_pointArray
-    });
-    heatmap_Yelp = new google.maps.visualization.HeatmapLayer({
-        data: Yelp_pointArray
-    });
-
-//heatmap_Gowalla.setMap(map);
-//heatmap_Yelp.setMap(map);
- 
-    
-
+    for (i = 0; i < $datasets.names.length; i++) {
+        dataLocs[i] = [];
+        downloadDataset(dataLocs[i], i)
+        var pointArray = new google.maps.MVCArray(dataLocs[i]);
+        heatmapLayers[i] = new google.maps.visualization.HeatmapLayer({
+            data: pointArray
+        });
+    }
 }
 
-function set_delay(){
+function set_delay() {
     var input_delay = latlng = document.forms["GUI_delay"]["delay"].value;
     if (isNaN(input_delay))
     {
-        alert ("Invalid input");
+        alert("Invalid input");
     }
-    else{
+    else {
         delayTime = parseFloat(input_delay);
-       
+
     }
-    
+
 }
 
 /*GeoCast_Query  takes as parametter the url which is used to retrieve 
-*a json file containning information of the geocast query
-*/
+ *a json file containning information of the geocast query
+ */
 function retrieveGeocastInfo(latlng) {
     var url = GEOCAST_URL + $datasets.names[datasetIdx] + "/" + latlng;
     $.getJSON('http://whateverorigin.org/get?url=' + encodeURIComponent(url)
-        + '&callback=?', function(data) {
-            json = data.contents;
+            + '&callback=?', function(data) {
+                json = data.contents;
 
-            if (json === "blank")
-                alert("Crowdsourcing service is now unavailable");
-            else {
-                obj = JSON.parse(json);
-                if (obj.hasOwnProperty('error')) {
-                    alert("The selected location is outside of the dataset");
-                } else {
-                    drawGeocastRegion();
+                if (json === "blank")
+                    alert("Crowdsourcing service is now unavailable");
+                else {
+                    obj = JSON.parse(json);
+                    if (obj.hasOwnProperty('error')) {
+                        alert("The selected location is outside of the dataset");
+                    } else {
+                        drawGeocastRegion();
+                    }
                 }
-            }
-        });
+            });
 }
 
 /*
-*Overlay_GeoCast_Region is to visualize how geocast cells are chosen by
-*iteratively overlay polygons on map.
-*This function used setInterval to repeatedly add cell after specific 
-*amount of miliseconds
-*/
+ *Overlay_GeoCast_Region is to visualize how geocast cells are chosen by
+ *iteratively overlay polygons on map.
+ *This function used setInterval to repeatedly add cell after specific 
+ *amount of miliseconds
+ */
 function drawGeocastRegion() {
     var i = -1;
     var interval = setInterval(function() {
@@ -126,28 +109,28 @@ function drawGeocastRegion() {
 }
 
 /*
-* add_geocast_cell is to add a specific cell in the list. It takes
-* as a parameter a number i indicating the order of the cell in the cell list.
-* The eventlistenr at the bottom of the function is to display a cell info
-* whenever it is clicked. This is called within the Overlay_GeoCast_Region function
-*/
+ * add_geocast_cell is to add a specific cell in the list. It takes
+ * as a parameter a number i indicating the order of the cell in the cell list.
+ * The eventlistenr at the bottom of the function is to display a cell info
+ * whenever it is clicked. This is called within the Overlay_GeoCast_Region function
+ */
 function drawGeocastCell(i) {
     polygon = new Array();
 
     var point0 = new google.maps.LatLng(obj.geocast_query.x_min_cords[i],
-        obj.geocast_query.y_min_cords[i]);
+            obj.geocast_query.y_min_cords[i]);
     polygon[0] = point0;
 
     var point1 = new google.maps.LatLng(obj.geocast_query.x_min_cords[i],
-        obj.geocast_query.y_max_cords[i]);
+            obj.geocast_query.y_max_cords[i]);
     polygon[1] = point1;
 
     var point2 = new google.maps.LatLng(obj.geocast_query.x_max_cords[i],
-        obj.geocast_query.y_max_cords[i]);
+            obj.geocast_query.y_max_cords[i]);
     polygon[2] = point2;
 
     var point3 = new google.maps.LatLng(obj.geocast_query.x_max_cords[i],
-        obj.geocast_query.y_min_cords[i]);
+            obj.geocast_query.y_min_cords[i]);
     polygon[3] = point3;
 
     polygon[4] = point0;
@@ -167,34 +150,34 @@ function drawGeocastCell(i) {
     // Add a listener for the click event to show cell info.
     infoWindow = new google.maps.InfoWindow();
     google.maps.event.addListener(cellPolygons[cellIdx], 'click',
-        function(event) {
-            var info = 'Order added: ' + (i + 1);
-            info += '</br><b>Cell Utility:</b>'
-            + obj.geocast_query.utilities[i][0];
-            info += '</br><b>Current GeoCast Utility:</b>'
-            + obj.geocast_query.utilities[i][1];
-            info += '</br><b>Compactness:</b>'
-            + obj.geocast_query.compactnesses[i];
-            info += '</br><b>Distance:</b>'
-            + obj.geocast_query.distances[i];
-            info += '</br><b>Area:</b>' + obj.geocast_query.areas[i];
-            info += '</br><b>Worker Counts:</b>'
-            + obj.geocast_query.worker_counts[i];
+            function(event) {
+                var info = 'Order added: ' + (i + 1);
+                info += '</br><b>Cell Utility:</b>'
+                        + obj.geocast_query.utilities[i][0];
+                info += '</br><b>Current GeoCast Utility:</b>'
+                        + obj.geocast_query.utilities[i][1];
+                info += '</br><b>Compactness:</b>'
+                        + obj.geocast_query.compactnesses[i];
+                info += '</br><b>Distance:</b>'
+                        + obj.geocast_query.distances[i];
+                info += '</br><b>Area:</b>' + obj.geocast_query.areas[i];
+                info += '</br><b>Worker Counts:</b>'
+                        + obj.geocast_query.worker_counts[i];
 
-            infoWindow.setContent(info);
-            infoWindow.setPosition(event.latLng);
+                infoWindow.setContent(info);
+                infoWindow.setPosition(event.latLng);
 
-            infoWindow.open(map);
-        });
+                infoWindow.open(map);
+            });
 
 }
 
 /*The following function is to specify action to be performed when an event
-*happened on a marker.
-*
-*When a marker is clicked, the geocast_query for the task the marker
-*represent will be issued and visuallized on map 
-*/
+ *happened on a marker.
+ *
+ *When a marker is clicked, the geocast_query for the task the marker
+ *represent will be issued and visuallized on map 
+ */
 function drawATask(marker, map, infoWindow, html) {
     json = "blank";
     google.maps.event.addListener(marker, 'mouseover', function() {
@@ -206,17 +189,17 @@ function drawATask(marker, map, infoWindow, html) {
     });
     google.maps.event.addListener(marker, 'click', function(event) {
         latlng = event.latLng.lat()
-        + "," + event.latLng.lng();
+                + "," + event.latLng.lng();
         retrieveGeocastInfo(latlng);
         var center = new google.maps.LatLng(event.latLng.lat(), event.latLng
-            .lng());
+                .lng());
         map.panTo(center);
     });
 }
 
 /*
-* Show_Boundary is to show/hide boundary of the dataset
-*/
+ * Show_Boundary is to show/hide boundary of the dataset
+ */
 function showBoundary(showBound) {
     var button = document.getElementById("boundary");
 
@@ -224,36 +207,36 @@ function showBoundary(showBound) {
         button.value = "Hide Boundary";
         boundRect = new google.maps.Rectangle({
             bounds: bounds,
-            fillOpacity : 0,
+            fillOpacity: 0,
             strokeColor: "#FF0000",
             strokeOpacity: 1,
             strokeWeight: 2
 
         });
         map.fitBounds(bounds);
-        
+
         // boundary
         var vertices = [
-        new google.maps.LatLng(bounds.getSouthWest().lat(), bounds.getSouthWest().lng()),
-        new google.maps.LatLng(bounds.getSouthWest().lat(), bounds.getNorthEast().lng()),
-        new google.maps.LatLng(bounds.getNorthEast().lat(), bounds.getNorthEast().lng()),
-        new google.maps.LatLng(bounds.getNorthEast().lat(), bounds.getSouthWest().lng()),
-        new google.maps.LatLng(bounds.getSouthWest().lat(), bounds.getSouthWest().lng()),
+            new google.maps.LatLng(bounds.getSouthWest().lat(), bounds.getSouthWest().lng()),
+            new google.maps.LatLng(bounds.getSouthWest().lat(), bounds.getNorthEast().lng()),
+            new google.maps.LatLng(bounds.getNorthEast().lat(), bounds.getNorthEast().lng()),
+            new google.maps.LatLng(bounds.getNorthEast().lat(), bounds.getSouthWest().lng()),
+            new google.maps.LatLng(bounds.getSouthWest().lat(), bounds.getSouthWest().lng()),
         ];
         boundary = new google.maps.Polyline({
-            path:vertices,
-            strokeColor:"#FF0000",
-            strokeOpacity:0.8,
-            strokeWeight:2
+            path: vertices,
+            strokeColor: "#FF0000",
+            strokeOpacity: 0.8,
+            strokeWeight: 2
         });
         boundary.setMap(map);
 
         // info
         infoWindow = new google.maps.InfoWindow();
         google.maps.event.addListener(boundary, 'click', function(
-            event) {
+                event) {
             var boundaryinfo = 'Dataset:' + $datasets.names[datasetIdx]
-            + '<br>#Workers:' + $datasets.worker_counts[datasetIdx];
+                    + '<br>#Workers:' + $datasets.worker_counts[datasetIdx];
             infoWindow.setContent(boundaryinfo);
             infoWindow.setPosition(event.latLng);
             infoWindow.open(map);
@@ -267,21 +250,21 @@ function showBoundary(showBound) {
 }
 
 /*
-* This is for 1first function: input coordinates to a text box, hit button
-* and visualize
-* Query function is trigerred when the GeoCastQuery button is clicked.
-* It takes the coordinate input by the users and then visualize geocast query
-* for task at that specific location
-*/
+ * This is for 1first function: input coordinates to a text box, hit button
+ * and visualize
+ * Query function is trigerred when the GeoCastQuery button is clicked.
+ * It takes the coordinate input by the users and then visualize geocast query
+ * for task at that specific location
+ */
 function drawTestTask() {
-    latlng = document.forms["input"]["coordinate"].value;    
-    latlng= latlng.split(" ").join("");
-    
+    latlng = document.forms["input"]["coordinate"].value;
+    latlng = latlng.split(" ").join("");
+
     var lat_lng = latlng.split(",");
     if (lat_lng.length == 2 //check if the input containt exact 2 parts seperated by ","
-        && !isNaN(lat_lng[0]) && !isNaN(lat_lng[1]) // check if 2 parts are numeric
-        && lat_lng[0]>=-90 && lat_lng[0]<=90  // check range of lattitude
-        && lat_lng[1]>=-180 && lat_lng[0]<=180){ // check range of longitude 
+            && !isNaN(lat_lng[0]) && !isNaN(lat_lng[1]) // check if 2 parts are numeric
+            && lat_lng[0] >= -90 && lat_lng[0] <= 90  // check range of lattitude
+            && lat_lng[1] >= -180 && lat_lng[0] <= 180) { // check range of longitude 
         retrieveGeocastInfo(latlng);
 
         var coor = document.forms["input"]["coordinate"].value;
@@ -294,7 +277,7 @@ function drawTestTask() {
         });
         var infoWindow = new google.maps.InfoWindow;
         drawATask(marker, map, infoWindow,
-            document.forms["input"]["coordinate"].value);
+                document.forms["input"]["coordinate"].value);
         marker.setMap(map);
         allMarkers.push(marker);
         map.panTo(task_point);
@@ -302,18 +285,18 @@ function drawTestTask() {
     else {
         alert("Invalid input");
     }
-    
+
 }
 
 
 /*
-*this is for the 2nd function: select a task from dropdown list,
-*hit button and visuallize
-* Visualize_Task_Seleclted is triggered when user click on Visualize
-* button after choosing a coordinate from a dropdown list.
-* The function will then visualize geocast query
-* for task at the selected location
-*/
+ *this is for the 2nd function: select a task from dropdown list,
+ *hit button and visuallize
+ * Visualize_Task_Seleclted is triggered when user click on Visualize
+ * button after choosing a coordinate from a dropdown list.
+ * The function will then visualize geocast query
+ * for task at the selected location
+ */
 function drawSelectedTask(latlng) {
     retrieveGeocastInfo(latlng);
 
@@ -326,7 +309,7 @@ function drawSelectedTask(latlng) {
     });
     var infoWindow = new google.maps.InfoWindow;
     drawATask(marker, map, infoWindow,
-        document.forms["input"]["coordinate"].value);
+            document.forms["input"]["coordinate"].value);
     marker.setMap(map);
     allMarkers.push(marker);
     map.panTo(task_point);
@@ -345,21 +328,21 @@ function clearMap() {
 }
 
 /**
-* The task tab on left
-* @returns {undefined}
-*/
+ * The task tab on left
+ * @returns {undefined}
+ */
 $(function() {
     $("#tabs").tabs();
 });
 $(function() {
     $("#tabs_setting").tabs();
-    
+
 });
 
 /***
-* create table to store history task list
-* @returns {undefined}
-*/
+ * create table to store history task list
+ * @returns {undefined}
+ */
 function init() {
     completeTable = document.createElement("table");
     completeTable.setAttribute("class", "popupBox");
@@ -371,9 +354,9 @@ function init() {
 }
 
 /**
-* query history task, call geocast/tasks function
-* @returns {undefined}
-*/
+ * query history task, call geocast/tasks function
+ * @returns {undefined}
+ */
 function retrieveHistoryTasks() {
     $.ajax({
         url: 'geocast/tasks',
@@ -402,9 +385,9 @@ function clearTable() {
 }
 
 /**
-* get lat/lng pairs from xml file
-* @param {type} responseXML
-*/
+ * get lat/lng pairs from xml file
+ * @param {type} responseXML
+ */
 function parseTasksFromXML(responseXML) {
 
     // no matches returned
@@ -431,12 +414,12 @@ function parseTasksFromXML(responseXML) {
 }
 
 /**
-* append a task to task table
-* 
-* @param {type} lat
-* @param {type} lng
-* @returns {undefined}
-*/
+ * append a task to task table
+ * 
+ * @param {type} lat
+ * @param {type} lng
+ * @returns {undefined}
+ */
 function appendTask(lat, lng) {
 
     var row;
@@ -467,15 +450,15 @@ function appendTask(lat, lng) {
 
 var currentLink = null;
 /**
-* change color of a task link when click on it
-* @param {type} link
-* @returns {undefined}
-*/
+ * change color of a task link when click on it
+ * @param {type} link
+ * @returns {undefined}
+ */
 function changeLinkColor(link) {
     if (currentLink !== null) {
         currentLink.style.color = link.style.color; //You may put any color you want
         currentLink.style.fontWeight = link.style.fontWeight;
-    ;
+        ;
     }
     link.style.color = 'blue';
     link.style.fontWeight = 'bold';
@@ -485,9 +468,8 @@ function changeLinkColor(link) {
 /*
  * read workerlocation from .dat file to draw heatmap
  */
-function readfile(filename, output)
+function downloadDataset(output, idx)
 {
-               
     var txtFile;
     if (window.XMLHttpRequest)
     {// code for IE7+, Firefox, Chrome, Opera, Safari
@@ -497,41 +479,28 @@ function readfile(filename, output)
     {// code for IE6, IE5
         txtFile = new ActiveXObject("Microsoft.XMLHTTP");
     }
-    txtFile.open("GET",filename,false);
+    txtFile.open("GET", "geocast/download_dataset?name=" + $datasets.names[idx], false);
     txtFile.send();
-    var txtDoc=txtFile.responseText;
-    var lines = txtDoc.split("\r\n"); // values in lines[0], lines[1]...
-    var single_line = lines[0].split("\n");
-                
-    for (var i=0; i<single_line.length; i++){
-        var temp = single_line[i].split("-");
-        var lat_lng =  temp[0]+",-"+temp[1];
-                   
-        var coordinate = lat_lng.split(",");
+    var txtDoc = txtFile.responseText;
+    var lines = txtDoc.split("\r\n");
+
+    for (var i = 0; i < lines.length; i++) {
+        var coordinate = lines[i].split("\t");
         output[i] = new google.maps.LatLng(parseFloat(coordinate[0]), parseFloat(coordinate[1]));
     }
 }
-function toggleGowalla() {
-    heatmap_Gowalla.setMap(heatmap_Gowalla.getMap() ? null : map);
-    var button = document.getElementById("gowalla_heatmap");
-    if (button.value == "Show Gowalla Heatmap")
-        button.value = "Hide Gowalla Heatmap";
+
+
+function toggleHeatmap() {  
+    heatmapLayers[datasetIdx].setMap(heatmapLayers[datasetIdx].getMap() ? null : map);
+    
+    var button = document.getElementById("heatmap");
+    if (button.value === "Show Heatmap")
+        button.value = "Hide Heatmap";
     else
-        button.value = "Show Gowalla Heatmap";
-                
+        button.value = "Show Heatmap";
 }
 
-function toggleYelp() {
-    heatmap_Yelp.setMap(heatmap_Yelp.getMap() ? null : map);
-    var button = document.getElementById("yelp_heatmap");
-    if (button.value == "Show Yelp Heatmap")
-        button.value = "Hide Yelp Heatmap";
-    else
-        button.value = "Show Yelp Heatmap";
-                
-}
-
-  
 
 $(function() {
     $("#dataset").selectable({
@@ -541,8 +510,8 @@ $(function() {
             boundary = boundary.split(",");
 
             bounds = new google.maps.LatLngBounds(new google.maps.LatLng(parseFloat(boundary[0]),
-                parseFloat(boundary[1])), new google.maps.LatLng(parseFloat(boundary[2]), parseFloat(boundary[3])));
-                    
+                    parseFloat(boundary[1])), new google.maps.LatLng(parseFloat(boundary[2]), parseFloat(boundary[3])));
+
             showBoundary(true);
             retrieveHistoryTasks();
         }
@@ -550,68 +519,68 @@ $(function() {
     );
 });
 
-$(document).ready(function () {
+$(document).ready(function() {
     $('#dataset li:first').addClass('ui-selected');
-    
+
     var Algos = ["Greedy", "Baseline"];
     var Ars = ["Linear", "Zipf", "Constant", "Step"];
     var Mars = ["0.1", "0.4", "0.7", "1.0"];
-    var US =["0.6", "0,7", "0.8", "0.9"];
+    var US = ["0.6", "0,7", "0.8", "0.9"];
     var Heuristic = ["hybrid", "utility", "compactness"];
-    var Subcells =["True", "False"];
-    
+    var Subcells = ["True", "False"];
+
     $("#jqxdropdownalgos").jqxDropDownList({
-        source: Algos, 
-        selectedIndex: 0, 
-        width: '160px', 
+        source: Algos,
+        selectedIndex: 0,
+        width: '160px',
         height: '25px',
-        autoDropDownHeight: true, 
+        autoDropDownHeight: true,
         theme: 'energyblue'
     });
-  
+
     $("#jqxdropdownars").jqxDropDownList({
-        source: Ars, 
-        selectedIndex: 0, 
-        width: '160px', 
+        source: Ars,
+        selectedIndex: 0,
+        width: '160px',
         height: '25px',
-        autoDropDownHeight: true, 
+        autoDropDownHeight: true,
         theme: 'energyblue'
     });
-    
+
     $("#jqxdropdownmars").jqxDropDownList({
-        source: Mars, 
-        selectedIndex: 0, 
-        width: '160px', 
+        source: Mars,
+        selectedIndex: 0,
+        width: '160px',
         height: '25px',
-        autoDropDownHeight: true,  
+        autoDropDownHeight: true,
         theme: 'energyblue'
     });
-    
+
     $("#jqxdropdownus").jqxDropDownList({
-        source: US, 
-        selectedIndex: 0, 
-        width: '160px', 
+        source: US,
+        selectedIndex: 0,
+        width: '160px',
         height: '25px',
-        autoDropDownHeight: true,  
+        autoDropDownHeight: true,
         theme: 'energyblue'
     });
-    
+
     $("#jqxdropdownheuristic").jqxDropDownList({
-        source: Heuristic, 
-        selectedIndex: 0, 
-        width: '160px', 
+        source: Heuristic,
+        selectedIndex: 0,
+        width: '160px',
         height: '25px',
-        autoDropDownHeight: true,  
+        autoDropDownHeight: true,
         theme: 'energyblue'
     });
-    
+
     $("#jqxdropdownsubcell").jqxDropDownList({
-        source: Subcells, 
-        selectedIndex: 0, 
-        width: '160px', 
+        source: Subcells,
+        selectedIndex: 0,
+        width: '160px',
         height: '25px',
-        autoDropDownHeight: true,  
+        autoDropDownHeight: true,
         theme: 'energyblue'
     });
-    
+
 });

@@ -61,5 +61,19 @@ class Geocast extends CI_Controller {
             echo "</tasks>";
         }
     }
+    
+    public function download_dataset() {
+        $this->load->helper('download');
+        
+        if (isset($_GET['name']))
+            $dataset = $_GET['name'];
+        else
+            return False;
+        
+        $file = 'res/' . $dataset . '.dat';
+        
+        $data = file_get_contents($file);
+        echo $data;
+    }
 
 }
