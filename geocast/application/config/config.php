@@ -22,7 +22,7 @@
 //$config['base_url']	= 'http://localhost/geocast/';
 
 // Cloud config       
-$config['base_url']	=  'http://geocast.azurewebsites.net/';
+$config['base_url']	=  'http://geocast.azurewebsites.net/geocast/';
 
 /*
 |--------------------------------------------------------------------------
