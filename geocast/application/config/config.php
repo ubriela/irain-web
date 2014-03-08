@@ -24,6 +24,8 @@
 // Cloud config       
 $config['base_url']	=  'http://geocast.azurewebsites.net/geocast/';
 
+
+
 /*
 |--------------------------------------------------------------------------
 | Index File
