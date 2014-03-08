@@ -81,17 +81,17 @@
             </div>
             Subcells: <div id='jqxdropdownsubcell'>
             </div>
-            <input type="button" value="Update" id="Update_Algorithm"
-                   onClick="Update_Algorithm()"/>
+            <button type="submit" id="Update_Algorithm"
+                    onClick="Update_Algorithm()"/>Update</button>
         </div>
 
         <div id="tabs_setting-2">
             <form name="GUI_delay" action="geocast_view.php"
                   onsubmit="set_delay();
                           return false">
-                Delay (In Seconds) <input type="text" style="width: 100px; padding: 2px"
+                Delay (In Seconds) <input type="text"
                                           name="delay"><br>
-                <button type="submit" value="Submit">Update</button>
+                <button type="input" value="Submit">Update</button>
             </form>
 
         </div>
