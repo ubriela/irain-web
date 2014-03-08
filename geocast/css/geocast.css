@@ -29,11 +29,16 @@ label {
     padding: 0px;
 }
 
+.toggle_button{
+    font-weight: bold;
+    font-family: Verdana,Arial,sans-serif;
+}
+
 /*============================== Left panel - Geocast Query demo ==================*/
 
 div#tabs {
     position: absolute;
-    top: 160px;
+    top: 170px;
     left: 5px;
     height: 300px;
     width: 220px;

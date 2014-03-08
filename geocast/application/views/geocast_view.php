@@ -22,10 +22,13 @@
     </div>
     <div id="map_canvas"></div>
 
-    <div id="panel">
-        <input type="button" onclick="toggleHeatmap()" id ="heatmap" value="Show Heatmap"/>
+    <div>
+        <input class="toggle_button" type="button" onclick="toggleHeatmap()" id ="heatmap" value="Show Heatmap"/>
     </div>
-
+    <div>
+        <input class="toggle_button" type="button" value="Show Boundary" id="boundary"
+               onClick="showBoundary('false')"/>
+    </div>
     <div id="tabs">
         <ul>
             <p>
@@ -41,7 +44,6 @@
             </div>
             <button type="button" value="Clear map" id="clear_map"
                     onClick="clearMap()">Clear Map</button>
-
         </div>
 
         <div id="tabs-2">
@@ -50,9 +52,7 @@
                           return false">
                 Task (lat,lng) <input type="text" name="coordinate"><br>
                 <button type="submit" value="Submit">Submit</button>
-            </form>
-            <input type="button" value="Show Boundary" id="boundary"
-                   onClick="showBoundary('false')"/>            
+            </form>          
         </div>
 
     </div>
@@ -81,7 +81,7 @@
             </div>
             Subcells: <div id='jqxdropdownsubcell'>
             </div>
-            <input type="button" value="Update_Algorithm" id="Update_Algorithm"
+            <input type="button" value="Update" id="Update_Algorithm"
                    onClick="Update_Algorithm()"/>
         </div>
 
@@ -90,7 +90,7 @@
                   onsubmit="set_delay();
                           return false">
                 Delay (In Seconds) <input type="text" style="width: 100px; padding: 2px"
-                                              name="delay"><br>
+                                          name="delay"><br>
                 <button type="submit" value="Submit">Update</button>
             </form>
 

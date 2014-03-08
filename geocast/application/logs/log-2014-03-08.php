@@ -6160,3 +6160,5 @@ ERROR - 2014-03-08 10:46:44 --> '37.7615082532	-122.4257665873
 37.8196620833	-122.4785041667
 37.7890894287	-122.4050138181
 37.80708742	-122.40989142'
+ERROR - 2014-03-08 12:54:45 --> Severity: Warning  --> file_get_contents(http://geocrowd2.cloudapp.net/dataset): failed to open stream: A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond.
+ C:\xampp\htdocs\geocast\application\controllers\geocast.php 26
