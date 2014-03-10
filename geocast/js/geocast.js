@@ -63,7 +63,7 @@ function set_delay() {
     }
     else {
         delayTime = parseFloat(input_delay);
-        $("#geocast_delay").notify("Delay time between showing geocast cells was updated", "success");
+        $("#geocast_delay").notify("Rendering delay time between geocast cells was updated", "success");
     }
 }
 
