@@ -69,17 +69,17 @@
         </ul>
 
         <div id="tabs_setting-1"  class="parameter_setting">
-            Algorithms: <div id='jqxdropdownalgos'>
+            Algorithm <div id='jqxdropdownalgos'>
             </div>
-            Ars: <div id='jqxdropdownars'>
+            Acceptance Rate (AR) <div id='jqxdropdownars'>
             </div>
-            Mars: <div id='jqxdropdownmars'>
+            Maximum AR: <div id='jqxdropdownmars'>
             </div>
-            Us: <div id='jqxdropdownus'>
+            Expected Utility: <div id='jqxdropdownus'>
             </div>
-            Heuristics: <div id='jqxdropdownheuristic'>
+            Heuristic <div id='jqxdropdownheuristic'>
             </div>
-            Subcells: <div id='jqxdropdownsubcell'>
+            Sub-cell Optimization: <div id='jqxdropdownsubcell'>
             </div>
             <button type="submit" id="Update_Algorithm"
                     onClick="updateParameters()"/>Update</button>

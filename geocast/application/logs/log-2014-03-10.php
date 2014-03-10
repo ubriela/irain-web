@@ -7,3 +7,23 @@ ERROR - 2014-03-10 00:36:39 -->
 ERROR - 2014-03-10 00:36:49 --> Severity: 4096  --> Object of class stdClass could not be converted to string C:\xampp\htdocs\geocast\application\controllers\geocast.php 27
 ERROR - 2014-03-10 00:36:49 --> '/dataset'
 ERROR - 2014-03-10 00:37:05 --> Severity: Notice  --> Undefined variable: CSP_URL C:\xampp\htdocs\geocast\application\views\geocast_view.php 3
+ERROR - 2014-03-10 01:13:10 --> Severity: Warning  --> file_get_contents(http://geocrowd2.cloudapp.net/dataset): failed to open stream: HTTP request failed!  C:\xampp\htdocs\geocast\application\controllers\geocast.php 25
+ERROR - 2014-03-10 01:13:22 --> Severity: Warning  --> file_get_contents(res/test.dat): failed to open stream: No such file or directory C:\xampp\htdocs\geocast\application\controllers\geocast.php 75
+ERROR - 2014-03-10 01:14:12 --> Severity: Warning  --> fopen(res/test.txt): failed to open stream: No such file or directory C:\xampp\htdocs\geocast\application\controllers\geocast.php 39
+ERROR - 2014-03-10 01:14:13 --> Severity: Warning  --> fopen(res/test.txt): failed to open stream: No such file or directory C:\xampp\htdocs\geocast\application\controllers\geocast.php 39
+ERROR - 2014-03-10 01:18:10 --> Severity: Warning  --> file_get_contents(res/test.dat): failed to open stream: No such file or directory C:\xampp\htdocs\geocast\application\controllers\geocast.php 75
+ERROR - 2014-03-10 01:18:49 --> Severity: Warning  --> fopen(res/test.txt): failed to open stream: No such file or directory C:\xampp\htdocs\geocast\application\controllers\geocast.php 39
+ERROR - 2014-03-10 01:18:57 --> Severity: Warning  --> fopen(res/test.txt): failed to open stream: No such file or directory C:\xampp\htdocs\geocast\application\controllers\geocast.php 39
+ERROR - 2014-03-10 01:19:12 --> Severity: Warning  --> fopen(res/test.txt): failed to open stream: No such file or directory C:\xampp\htdocs\geocast\application\controllers\geocast.php 39
+ERROR - 2014-03-10 01:19:13 --> Severity: Warning  --> fopen(res/test.txt): failed to open stream: No such file or directory C:\xampp\htdocs\geocast\application\controllers\geocast.php 39
+ERROR - 2014-03-10 01:19:18 --> Severity: Warning  --> fopen(res/test.txt): failed to open stream: No such file or directory C:\xampp\htdocs\geocast\application\controllers\geocast.php 39
+ERROR - 2014-03-10 01:19:20 --> Severity: Warning  --> fopen(res/test.txt): failed to open stream: No such file or directory C:\xampp\htdocs\geocast\application\controllers\geocast.php 39
+ERROR - 2014-03-10 01:19:21 --> Severity: Warning  --> fopen(res/test.txt): failed to open stream: No such file or directory C:\xampp\htdocs\geocast\application\controllers\geocast.php 39
+ERROR - 2014-03-10 01:19:21 --> Severity: Warning  --> fopen(res/test.txt): failed to open stream: No such file or directory C:\xampp\htdocs\geocast\application\controllers\geocast.php 39
+ERROR - 2014-03-10 01:19:42 --> Severity: Warning  --> fopen(res/test.txt): failed to open stream: No such file or directory C:\xampp\htdocs\geocast\application\controllers\geocast.php 39
+ERROR - 2014-03-10 01:19:43 --> Severity: Warning  --> fopen(res/test.txt): failed to open stream: No such file or directory C:\xampp\htdocs\geocast\application\controllers\geocast.php 39
+ERROR - 2014-03-10 01:24:36 --> Severity: Warning  --> file_get_contents(res/test.dat): failed to open stream: No such file or directory C:\xampp\htdocs\geocast\application\controllers\geocast.php 75
+ERROR - 2014-03-10 01:24:55 --> Severity: Warning  --> file_get_contents(res/test.dat): failed to open stream: No such file or directory C:\xampp\htdocs\geocast\application\controllers\geocast.php 75
+ERROR - 2014-03-10 01:25:02 --> Severity: Warning  --> file_get_contents(res/test.dat): failed to open stream: No such file or directory C:\xampp\htdocs\geocast\application\controllers\geocast.php 75
+ERROR - 2014-03-10 01:25:12 --> Severity: Warning  --> file_get_contents(res/test.dat): failed to open stream: No such file or directory C:\xampp\htdocs\geocast\application\controllers\geocast.php 75
+ERROR - 2014-03-10 01:25:18 --> Severity: Warning  --> file_get_contents(res/test.dat): failed to open stream: No such file or directory C:\xampp\htdocs\geocast\application\controllers\geocast.php 75
