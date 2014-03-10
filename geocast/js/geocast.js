@@ -523,7 +523,7 @@ $(document).ready(function() {
     var Algos = ["greedy"];
     var Ars = ["linear", "zipf"];
     var Mars = ["0.1", "0.4", "0.7", "1.0"];
-    var US = ["0.6", "0,7", "0.8", "0.9"];
+    var US = ["0.6", "0.7", "0.8", "0.9"];
     var Heuristic = ["hybrid", "utility", "compactness"];
     var Subcells = ["True", "False"];
 
@@ -563,13 +563,6 @@ $(document).ready(function() {
         autoDropDownHeight: true
     });
 });
-
-var Algos = ["greedy"];
-var Ars = ["linear", "zipf"];s
-var Mars = ["0.1", "0.4", "0.7", "1.0"];
-var US = ["0.6", "0.7", "0.8", "0.9"];
-var Heuristic = ["hybrid", "utility", "compactness"];
-var Subcells = ["True", "False"];
 
 
 function updateParameters() {
