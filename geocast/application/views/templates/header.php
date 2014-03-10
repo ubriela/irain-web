@@ -21,8 +21,11 @@
     <script type="text/javascript" src='<?php echo base_url("heatmap/heatmap.js"); ?>'></script>
     <script type="text/javascript" src='<?php echo base_url("heatmap/heatmap-gmaps.js"); ?>'></script>
 
+    <script type="text/javascript" src='<?php echo base_url("js/notify.min.js"); ?>'></script>  
+    
     <!-- Customized -->
     <link rel="stylesheet" type="text/css" href='<?php echo base_url("css/geocast.css"); ?>'>
 
-    <script type="text/javascript" src='<?php echo base_url("js/geocast.js"); ?>'></script>        
+    <script type="text/javascript" src='<?php echo base_url("js/geocast.js"); ?>'></script>
+    
 </head>

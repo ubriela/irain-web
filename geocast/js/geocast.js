@@ -63,9 +63,8 @@ function set_delay() {
     }
     else {
         delayTime = parseFloat(input_delay);
-
+        $("#geocast_delay").notify("Delay time between showing geocast cells was updated", "success");
     }
-
 }
 
 /*GeoCast_Query  takes as parametter the url which is used to retrieve 
@@ -279,6 +278,8 @@ function drawTestTask() {
         marker.setMap(map);
         allMarkers.push(marker);
         map.panTo(task_point);
+        
+        $("#geocast_test_submit").notify("The geocast region is shown on map", "success");
     }
     else {
         alert("Invalid input");
@@ -589,6 +590,11 @@ function updateParameters() {
         data: 'algo=' + algo + "&arf=" + ar + "&mar=" + mar + "&utl=" + utl + "&heuristic=" + heuristic + "&subcell=" + subcell,
         type: "GET",
         dataType: "xml",
-        success: callbackTasks
+        success: updateParametersNotify()
     });
+}
+
+// http://notifyjs.com/
+function updateParametersNotify() {
+    $("#update_params").notify("Updated parameters successfully", "success", { position:"left" });
 }

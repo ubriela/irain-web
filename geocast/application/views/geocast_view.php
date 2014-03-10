@@ -49,7 +49,7 @@
         <div id="tabs-2">
             <form name="input" action="geocast_view.php"
                   onsubmit="drawTestTask();
-                          return false">
+                          return false" id = "geocast_test_submit">
                 Task (lat,lng) <input type="text" name="coordinate"><br>
                 <button type="submit" value="Submit">Submit</button>
             </form>          
@@ -81,19 +81,18 @@
             </div>
             Sub-cell Optimization: <div id='jqxdropdownsubcell'>
             </div>
-            <button type="submit" id="Update_Algorithm"
+            <button type="submit" id="update_params"
                     onClick="updateParameters()"/>Update</button>
         </div>
 
         <div id="tabs_setting-2">
             <form name="GUI_delay" action="geocast_view.php"
                   onsubmit="set_delay();
-                          return false">
-                Delay (In Seconds) <input type="text"
+                          return false" id="geocast_delay">
+                Geocast Delay (In ms) <input type="text"
                                           name="delay"><br>
                 <button type="input" value="Submit">Update</button>
             </form>
-
         </div>
 
     </div>
