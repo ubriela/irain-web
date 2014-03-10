@@ -1,6 +1,4 @@
-var DATASET_URL = 'http://geocrowd2.cloudapp.net/dataset';
-var GEOCAST_URL = 'http://geocrowd2.cloudapp.net/geocast/'
-
+$CSP_URL = 'http://geocrowd2.cloudapp.net';
 
 var map = null;
 var infoWindow;
@@ -74,7 +72,7 @@ function set_delay() {
  *a json file containning information of the geocast query
  */
 function retrieveGeocastInfo(latlng) {
-    var url = GEOCAST_URL + $datasets.names[datasetIdx] + "/" + latlng;
+    var url = $CSP_URL + "/geocast/" + $datasets.names[datasetIdx] + "/" + latlng;
     $.getJSON('http://whateverorigin.org/get?url=' + encodeURIComponent(url)
             + '&callback=?', function(data) {
                 json = data.contents;
@@ -491,9 +489,9 @@ function downloadDataset(output, idx)
 }
 
 
-function toggleHeatmap() {  
+function toggleHeatmap() {
     heatmapLayers[datasetIdx].setMap(heatmapLayers[datasetIdx].getMap() ? null : map);
-    
+
     var button = document.getElementById("heatmap");
     if (button.value === "Show Heatmap")
         button.value = "Hide Heatmap";
@@ -522,8 +520,8 @@ $(function() {
 $(document).ready(function() {
     $('#dataset li:first').addClass('ui-selected');
 
-    var Algos = ["Greedy", "Baseline"];
-    var Ars = ["Linear", "Zipf", "Constant", "Step"];
+    var Algos = ["greedy"];
+    var Ars = ["linear", "zipf"];
     var Mars = ["0.1", "0.4", "0.7", "1.0"];
     var US = ["0.6", "0,7", "0.8", "0.9"];
     var Heuristic = ["hybrid", "utility", "compactness"];
@@ -532,55 +530,72 @@ $(document).ready(function() {
     $("#jqxdropdownalgos").jqxDropDownList({
         source: Algos,
         selectedIndex: 0,
-        width: '160px',
-        height: '25px',
-        autoDropDownHeight: true,
-        theme: 'energyblue'
+        autoDropDownHeight: true
     });
 
     $("#jqxdropdownars").jqxDropDownList({
         source: Ars,
         selectedIndex: 0,
-        width: '160px',
-        height: '25px',
-        autoDropDownHeight: true,
-        theme: 'energyblue'
+        autoDropDownHeight: true
     });
 
     $("#jqxdropdownmars").jqxDropDownList({
         source: Mars,
         selectedIndex: 0,
-        width: '160px',
-        height: '25px',
         autoDropDownHeight: true,
-        theme: 'energyblue'
     });
 
     $("#jqxdropdownus").jqxDropDownList({
         source: US,
         selectedIndex: 0,
-        width: '160px',
-        height: '25px',
-        autoDropDownHeight: true,
-        theme: 'energyblue'
+        autoDropDownHeight: true
     });
 
     $("#jqxdropdownheuristic").jqxDropDownList({
         source: Heuristic,
         selectedIndex: 0,
-        width: '160px',
-        height: '25px',
-        autoDropDownHeight: true,
-        theme: 'energyblue'
+        autoDropDownHeight: true
     });
 
     $("#jqxdropdownsubcell").jqxDropDownList({
         source: Subcells,
         selectedIndex: 0,
-        width: '160px',
-        height: '25px',
-        autoDropDownHeight: true,
-        theme: 'energyblue'
+        autoDropDownHeight: true
     });
-
 });
+
+var Algos = ["greedy"];
+var Ars = ["linear", "zipf"];s
+var Mars = ["0.1", "0.4", "0.7", "1.0"];
+var US = ["0.6", "0.7", "0.8", "0.9"];
+var Heuristic = ["hybrid", "utility", "compactness"];
+var Subcells = ["True", "False"];
+
+
+function updateParameters() {
+    var idx = $("#jqxdropdownalgos").jqxDropDownList('getSelectedIndex');
+    var algo = $('#jqxdropdownalgos').jqxDropDownList('getItem', idx).label;
+
+    idx = $("#jqxdropdownars").jqxDropDownList('getSelectedIndex');
+    var ar = $('#jqxdropdownars').jqxDropDownList('getItem', idx).label;
+
+    idx = $("#jqxdropdownmars").jqxDropDownList('getSelectedIndex');
+    var mar = $('#jqxdropdownmars').jqxDropDownList('getItem', idx).label;
+
+    idx = $("#jqxdropdownus").jqxDropDownList('getSelectedIndex');
+    var utl = $('#jqxdropdownus').jqxDropDownList('getItem', idx).label;
+
+    idx = $("#jqxdropdownheuristic").jqxDropDownList('getSelectedIndex');
+    var heuristic = $('#jqxdropdownheuristic').jqxDropDownList('getItem', idx).label;
+
+    idx = $("#jqxdropdownsubcell").jqxDropDownList('getSelectedIndex');
+    var subcell = $('#jqxdropdownsubcell').jqxDropDownList('getItem', idx).label;
+
+    $.ajax({
+        url: $CSP_URL + "/param/",
+        data: 'algo=' + algo + "&arf=" + ar + "&mar=" + mar + "&utl=" + utl + "&heuristic=" + heuristic + "&subcell=" + subcell,
+        type: "GET",
+        dataType: "xml",
+        success: callbackTasks
+    });
+}

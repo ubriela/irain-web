@@ -3,8 +3,7 @@
 if (!defined('BASEPATH'))
     exit('No direct script access allowed');
 
-$DATASET_URL = 'http://geocrowd2.cloudapp.net/dataset';
-$gowalla_file = "http://geocast.azurewebsites.net/res/yelp.txt";
+$CSP_URL = 'http://geocrowd2.cloudapp.net';
 
 class Geocast extends CI_Controller {
 
@@ -22,10 +21,11 @@ class Geocast extends CI_Controller {
      *
      */
     public function index() {
-        global $DATASET_URL;
-        $response = file_get_contents($DATASET_URL);
+        global $CSP_URL;
+        $response = file_get_contents($CSP_URL . '/dataset');
         $response = json_decode($response);
         $data['datasets'] = $response;
+        $data['CSP_URL'] = $CSP_URL;
         $this->load->view('templates/header');
         $this->load->view('geocast_view', $data);
         $this->load->view('templates/footer.php');
@@ -46,7 +46,7 @@ class Geocast extends CI_Controller {
             fclose($handle);
         }
 
-//		log_message('error', var_export($tasks, True));
+        // log_message('error', var_export($tasks, True));
         // prepare xml data
         if (!empty($tasks)) {
             header('Content-type: text/xml');
@@ -61,17 +61,17 @@ class Geocast extends CI_Controller {
             echo "</tasks>";
         }
     }
-    
+
     public function download_dataset() {
         $this->load->helper('download');
-        
+
         if (isset($_GET['name']))
             $dataset = $_GET['name'];
         else
             return False;
-        
+
         $file = 'res/' . $dataset . '.dat';
-        
+
         $data = file_get_contents($file);
         echo $data;
     }

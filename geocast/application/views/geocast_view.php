@@ -68,7 +68,7 @@
 
         </ul>
 
-        <div id="tabs_setting-1">
+        <div id="tabs_setting-1"  class="parameter_setting">
             Algorithms: <div id='jqxdropdownalgos'>
             </div>
             Ars: <div id='jqxdropdownars'>
@@ -82,7 +82,7 @@
             Subcells: <div id='jqxdropdownsubcell'>
             </div>
             <button type="submit" id="Update_Algorithm"
-                    onClick="Update_Algorithm()"/>Update</button>
+                    onClick="updateParameters()"/>Update</button>
         </div>
 
         <div id="tabs_setting-2">

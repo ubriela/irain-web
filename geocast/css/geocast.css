@@ -64,6 +64,13 @@ div#tabs_setting{
     color: rgb(0, 0, 0);
 }
 
+div.parameter_setting
+{
+    width: 160px,
+    height: 25px,
+    theme: 'energyblue'
+}
+
 
 div#auto-row {
     height:50%;
