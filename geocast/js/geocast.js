@@ -3,7 +3,7 @@ $CSP_URL = 'http://geocrowd2.cloudapp.net';
 var Algos = ["greedy"];
 var Ars = ["linear", "zipf"];
 var Mars = ["0.1", "0.4", "0.7", "1.0"];
-var US = ["0.8", "0.8", "0.7", "0.6"];
+var US = ["0.9", "0.8", "0.7", "0.6"];
 var Heuristic = ["distance", "utility", "compactness", "hybrid"];
 var Subcells = ["True", "False"];
 
@@ -512,6 +512,10 @@ $(function() {
     $("#dataset").selectable({
         selected: function(event, ui) {
             datasetIdx = ui.selected.value;
+            if ($datasets.names[datasetIdx] === "test") {
+                   $("#dataset").notify("This dataset is comming soon", "info");
+                   return;
+            }
             var boundary = $datasets.boundaries[datasetIdx];
             boundary = boundary.split(",");
 

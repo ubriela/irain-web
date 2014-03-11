@@ -90,7 +90,7 @@
                   onsubmit="set_delay();
                           return false" id="geocast_delay">
                 Geocast Delay (In ms) <input type="text"
-                                          name="delay"><br>
+                                             name="delay" value="100"><br>
                 <button type="input" value="Submit">Update</button>
             </form>
         </div>
