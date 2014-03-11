@@ -1,5 +1,12 @@
 $CSP_URL = 'http://geocrowd2.cloudapp.net';
 
+var Algos = ["greedy"];
+var Ars = ["linear", "zipf"];
+var Mars = ["0.1", "0.4", "0.7", "1.0"];
+var US = ["0.6", "0.7", "0.8", "0.9"];
+var Heuristic = ["distance", "utility", "compactness", "hybrid"];
+var Subcells = ["True", "False"];
+
 var map = null;
 var infoWindow;
 var isIE;
@@ -278,7 +285,7 @@ function drawTestTask() {
         marker.setMap(map);
         allMarkers.push(marker);
         map.panTo(task_point);
-        
+
         $("#geocast_test_submit").notify("The geocast region is shown on map", "success");
     }
     else {
@@ -521,13 +528,6 @@ $(function() {
 $(document).ready(function() {
     $('#dataset li:first').addClass('ui-selected');
 
-    var Algos = ["greedy"];
-    var Ars = ["linear", "zipf"];
-    var Mars = ["0.1", "0.4", "0.7", "1.0"];
-    var US = ["0.6", "0.7", "0.8", "0.9"];
-    var Heuristic = ["hybrid", "utility", "compactness"];
-    var Subcells = ["True", "False"];
-
     $("#jqxdropdownalgos").jqxDropDownList({
         source: Algos,
         selectedIndex: 0,
@@ -596,5 +596,5 @@ function updateParameters() {
 
 // http://notifyjs.com/
 function updateParametersNotify() {
-    $("#update_params").notify("Updated parameters successfully", "success", { position:"left" });
+    $("#update_params").notify("Updated parameters successfully", "success", {position: "left"});
 }
