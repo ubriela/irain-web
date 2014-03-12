@@ -3,7 +3,6 @@
 </script>
 
 <body onload="load()">
-
     <div>
         <p>
             <label for="dataset">Select dataset:</label>
@@ -12,9 +11,9 @@
             <?php
             //log_message('error', var_export($datasets->names, True));
             if ($datasets) {
-                echo '<li class="ui-widget-content" value="0">' . $datasets->names[0] . '</li>' . "\n";
-                for ($i = 1; $i < count($datasets->names); $i++) {
-                    echo '<li class="ui-widget-content" value="' . $i . '">' . $datasets->names[$i] . '</li>' . "\n";
+                echo '<li class="ui-widget-content" value="0">' . $datasets->names2[0] . '</li>' . "\n";
+                for ($i = 1; $i < count($datasets->names2); $i++) {
+                    echo '<li class="ui-widget-content" value="' . $i . '">' . $datasets->names2[$i] . '</li>' . "\n";
                 }
             }
             ?>
@@ -34,8 +33,8 @@
             <p>
                 <b>Geocast Queries</b>
             </p>
-            <li><a href="#tabs-2">Test</a></li>
             <li><a href="#tabs-1">History</a></li>
+            <li><a href="#tabs-2">Test</a></li>
 
         </ul>
 

@@ -48,15 +48,16 @@
 $active_group = 'default';
 $active_record = TRUE;
 
-$db['default']['hostname'] = 'localhost';
-$db['default']['username'] = '';
-$db['default']['password'] = '';
-$db['default']['database'] = '';
-$db['default']['dbdriver'] = 'mysql';
+$db['default']['hostname'] = '137.135.59.188';
+$db['default']['username'] = 'MediaQ';
+$db['default']['password'] = 'pc4passlr';
+$db['default']['database'] = 'MediaQ_V2';
+$db['default']['dbdriver'] = 'mysqli';
+$db['default']['[port'] = '3306';
 $db['default']['dbprefix'] = '';
 $db['default']['pconnect'] = TRUE;
 $db['default']['db_debug'] = TRUE;
-$db['default']['cache_on'] = FALSE;
+$db['default']['cache_on'] = TRUE;
 $db['default']['cachedir'] = '';
 $db['default']['char_set'] = 'utf8';
 $db['default']['dbcollat'] = 'utf8_general_ci';

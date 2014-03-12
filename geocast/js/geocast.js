@@ -239,8 +239,8 @@ function showBoundary(showBound) {
         infoWindow = new google.maps.InfoWindow();
         google.maps.event.addListener(boundary, 'click', function(
                 event) {
-            var boundaryinfo = 'Dataset:' + $datasets.names[datasetIdx]
-                    + '<br>#Workers:' + $datasets.worker_counts[datasetIdx];
+            var boundaryinfo = '<b>Dataset:</b>' + $datasets.names[datasetIdx]
+                    + '<\br><b>#Workers:</b>' + $datasets.worker_counts[datasetIdx];
             infoWindow.setContent(boundaryinfo);
             infoWindow.setPosition(event.latLng);
             infoWindow.open(map);
@@ -488,10 +488,10 @@ function downloadDataset(output, idx)
     txtFile.open("GET", "geocast/download_dataset?name=" + $datasets.names[idx], false);
     txtFile.send();
     var txtDoc = txtFile.responseText;
-    var lines = txtDoc.split("\r\n");
+    var lines = txtDoc.split("\n");
 
     for (var i = 0; i < lines.length; i++) {
-        var coordinate = lines[i].split("\t");
+        var coordinate = lines[i].split(",");
         output[i] = new google.maps.LatLng(parseFloat(coordinate[0]), parseFloat(coordinate[1]));
     }
 }

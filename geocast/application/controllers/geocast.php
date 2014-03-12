@@ -14,6 +14,7 @@ class Geocast extends CI_Controller {
             'url'
         ));
         $this->load->library('form_validation');
+        $this->load->model('task_model', '', True);
     }
 
     /**
@@ -34,16 +35,25 @@ class Geocast extends CI_Controller {
     public function tasks() {
         //the following code segment is to load coordinates from txt file
         $dataset = $_GET['dataset'];
-        $file = 'res/' . $dataset . '.txt';
-
-        $handle = @fopen($file, 'r');
         $tasks = array();
-        if ($handle) {
-            while (!feof($handle)) {
-                $line = fgets($handle, 4096);
-                $tasks[] = $line;
+        if ($dataset == 'gowallala') {
+            $data = $this->task_model->history_tasks();
+            foreach ($data as $item) {
+                $task = round($item['Lat'], 6, PHP_ROUND_HALF_DOWN) . ',' . round($item['Lng'], 6, PHP_ROUND_HALF_DOWN);
+                log_message('error', var_export($task, True));
+                $tasks[] = $task;
             }
-            fclose($handle);
+        } else {
+            $file = 'res/' . $dataset . '.txt';
+
+            $handle = @fopen($file, 'r');
+            if ($handle) {
+                while (!feof($handle)) {
+                    $line = fgets($handle, 4096);
+                    $tasks[] = $line;
+                }
+                fclose($handle);
+            }
         }
 
         // log_message('error', var_export($tasks, True));
@@ -54,8 +64,8 @@ class Geocast extends CI_Controller {
             foreach ($tasks as $task) {
                 $item = explode(',', $task);
                 echo "<task>";
-                echo "<lat>" . $item[0] . "</lat>";
-                echo "<lng>" . $item[1] . "</lng>";
+                echo "<lat>" . round($item[0], 6, PHP_ROUND_HALF_DOWN) . "</lat>";
+                echo "<lng>" . round($item[1], 6, PHP_ROUND_HALF_DOWN) . "</lng>";
                 echo "</task>";
             }
             echo "</tasks>";
