@@ -9,8 +9,8 @@
             <p>
                 <b>Prepared datasets</b>
             </p>
-            <li><a href="#tabs_dataset-2">(1) Release Clean Datasets</a></li>
-            <li><a href="#tabs_dataset-1">(2) Select A Dataset</a></li>
+            <li><a href="#tabs_dataset-1">(1) Release Clean Datasets</a></li>
+            <li><a href="#tabs_dataset-2">(2) Select A Dataset</a></li>
         </ul>
 
         <div id="tabs_dataset-1">

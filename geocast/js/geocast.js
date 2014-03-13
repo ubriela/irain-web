@@ -587,37 +587,37 @@ $(document).ready(function() {
         source: Algos,
         selectedIndex: 0,
         autoDropDownHeight: true
-    }).width("140px");
+    }).width("160px");
 
     $("#jqxdropdownars").jqxDropDownList({
         source: Ars,
         selectedIndex: 0,
         autoDropDownHeight: true
-    }).width("140px");
+    }).width("160px");
 
     $("#jqxdropdownmars").jqxDropDownList({
         source: Mars,
         selectedIndex: 0,
         autoDropDownHeight: true,
-    }).width("140px");
+    }).width("160px");
 
     $("#jqxdropdownus").jqxDropDownList({
         source: US,
         selectedIndex: 0,
         autoDropDownHeight: true
-    }).width("140px");
+    }).width("160px");
 
     $("#jqxdropdownheuristic").jqxDropDownList({
         source: Heuristic,
         selectedIndex: 0,
         autoDropDownHeight: true
-    }).width("140px");
+    }).width("160px");
 
     $("#jqxdropdownsubcell").jqxDropDownList({
         source: Subcells,
         selectedIndex: 0,
         autoDropDownHeight: true
-    }).width("140px");
+    }).width("160px");
 });
 
 
