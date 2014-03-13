@@ -172,7 +172,7 @@
     </div>
 
     <button type="button" value="Clear map" id="clear_map" style="left: 35px;top:480px;position:relative;"
-            onClick="clearMap()">Clear Map</button> 
+            onClick="clearMap()">Clear Map</button>
 
     <div id="usage">
         <iframe src="geocast/instruction" frameborder="2" width="220" height="100%"></iframe>

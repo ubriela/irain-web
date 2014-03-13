@@ -6,11 +6,12 @@ button {
     color: blue;
     width : 130px;
     height: 30px;    
+    font-size: 13px;
     font-family: Verdana,Arial,sans-serif;
 }
 
 .toggle_button {
-        position: relative;
+    position: relative;
     margin-top:5px;
     font-weight: bold;
     color: blue;
@@ -97,7 +98,7 @@ div#body_container{
     width: 780px;
     margin: 0px auto;
     color: black;
-    
+
     position: absolute;
     top: 240px;
     left: 230px;
