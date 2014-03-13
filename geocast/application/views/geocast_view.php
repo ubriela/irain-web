@@ -9,8 +9,8 @@
             <p>
                 <b>Prepared datasets</b>
             </p>
-            <li><a href="#tabs_dataset-1">(1) Release Clean Datasets</a></li>
-            <li><a href="#tabs_dataset-2">(2) Select A Dataset</a></li>
+            <li><a href="#tabs_dataset-2">(1) Release Clean Datasets</a></li>
+            <li><a href="#tabs_dataset-1">(2) Select A Dataset</a></li>
         </ul>
 
         <div id="tabs_dataset-1">
@@ -36,19 +36,64 @@
         </div>
 
         <div id="tabs_dataset-2">
-            <div>
-                Dataset
-                <div id='jqxdropdowndatasets'></div>
-            </div>
-                </br>
-            <div>
-                <input class="toggle_button" type="button" onclick="toggleHeatmap()" id ="heatmap" value="Show Heatmap"/>
+            <div class="enclosed_table">
+                <table cellpadding="3" border="1px">
+                    <tr>
+                        <td>
+                            <div>
+                                Select Dataset
+                                <div id='jqxdropdowndatasets'></div>
+                            </div>
+                            </br>
+                            <div>
+                                <input class="toggle_button" type="button" onclick="toggleHeatmap()" id ="heatmap" value="Show Heatmap"/>
+                            </div>
+
+                            <div>
+                                <input class="toggle_button" type="button" value="Show Boundary" id="boundary"
+                                       onClick="showBoundary('false')"/>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
             </div>
 
-            <div>
-                <input class="toggle_button" type="button" value="Show Boundary" id="boundary"
-                       onClick="showBoundary('false')"/>
+            <div class="enclosed_table">
+                <table cellpadding="3" style="font-size: 12px;margin-left: 10px">
+                    <tr>
+                        <td>
+                            <b>Dataset Statistics</b>
+                        </td>
+                        <td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Number of Workers:
+                        </td>
+                        <td>
+                            <label id="worker_count"></label></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Maximum Travel Distance (km):                                    </td>
+                        <td>
+                            <label id="mtd"></label></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Area (km2):                                    </td>
+                        <td>
+                            <label id="area"></label></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Pearson Skewness:                                    </td>
+                        <td>
+                            <label id="skewness"></label></td>
+                    </tr>
+                </table>
             </div>
+
         </div>
 
     </div>
@@ -100,7 +145,7 @@
         </div>
 
     </div>
-    
+
     <div id="tabs_query">
         <ul>
             <p>
@@ -123,10 +168,11 @@
                 Task (lat,lng) <input type="text" name="coordinate"><br>
                 <button type="submit" value="Submit">Submit</button>
             </form>          
-        </div>
-        <button type="button" value="Clear map" id="clear_map" style="left: 35px;position:relative;"
-                onClick="clearMap()">Clear Map</button>        
-    </div>    
+        </div>       
+    </div>
+
+    <button type="button" value="Clear map" id="clear_map" style="left: 35px;top:480px;position:relative;"
+            onClick="clearMap()">Clear Map</button> 
 
     <div id="usage">
         <iframe src="geocast/instruction" frameborder="2" width="220" height="100%"></iframe>

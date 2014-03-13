@@ -63,6 +63,8 @@ function load() {
             data: pointArray
         });
     }
+    
+    showStatistics()
 }
 
 function set_delay() {
@@ -364,6 +366,7 @@ function init() {
     autoRow.appendChild(completeTable);
 
     retrieveHistoryTasks();
+    retrieveHistoryTasks();
 }
 
 /**
@@ -524,12 +527,24 @@ $(function() {
         bounds = new google.maps.LatLngBounds(new google.maps.LatLng(parseFloat(boundary[0]),
                 parseFloat(boundary[1])), new google.maps.LatLng(parseFloat(boundary[2]), parseFloat(boundary[3])));
 
+        showStatistics();
         showBoundary(true);
         retrieveHistoryTasks();
         selectDatasetNotify();
     }
     );
 });
+
+function showStatistics() {
+    var worker_count = $datasets.worker_counts[datasetIdx];
+    var mtd = $datasets.mtds[datasetIdx];
+    var area = $datasets.areas[datasetIdx];
+    var skewness = $datasets.pearson_skewness[datasetIdx];
+    $("#worker_count").text(worker_count);
+    $("#mtd").text(mtd);
+    $("#area").text(area);
+    $("#skewness").text(skewness);
+}
 
 function selectDatasetNotify() {
     $("#jqxdropdowndatasets").notify("2. Data is ready to queried. --> Choose algorithm parameters.", "success", {position: "left"});
@@ -566,7 +581,7 @@ $(document).ready(function() {
         source: $datasets.names2,
         selectedIndex: 0,
         autoDropDownHeight: true
-    }).width("140px");
+    }).width("130px");
 
     $("#jqxdropdownalgos").jqxDropDownList({
         source: Algos,

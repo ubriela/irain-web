@@ -27,36 +27,14 @@ label {
 }
 /*=============== Map styling ======================*/
 
-div#tabs_query {
-    position: absolute;
-    top: 30%;
-    left: 5px;
-    height: 36%;
-    width: 220px;
-    margin: 0;
-    padding: 0;
-    text-align:left;
-    margin-top: 5px;
-    font-size: 13px; 
-    color: rgb(0, 0, 0);
-}
 
-div#usage {
-    top: 65%;
-    height: 35%;
-    width: 220px;
-    position: absolute;
-    left: 5px;
-    padding: 0;
-    margin-top:20px;
-}
 
 div#tabs_dataset{
     position: absolute;
     top: 0px;
     left: 5px;
-    height: 29%;
-    width: 39%;
+    height: 230px;
+    width: 500px;
     margin: 0;
     padding: 0;
     text-align:left;
@@ -65,12 +43,16 @@ div#tabs_dataset{
     color: rgb(0, 0, 0);
 }
 
+.enclosed_table {
+    float: left;
+}
+
 div#tabs_setting{
     position: absolute;
     top: 0px;
-    left: 40%;
-    height: 29%;
-    width: 60%;
+    left: 510px;
+    height: 230px;
+    width: 55%;
     margin: 0;
     padding: 0;
     text-align:left;
@@ -86,6 +68,30 @@ div.parameter_setting
     theme: 'energyblue';
 }
 
+div#tabs_query {
+    position: absolute;
+    top: 240px;
+    left: 5px;
+    height: 235px;
+    width: 220px;
+    margin: 0;
+    padding: 0;
+    text-align:left;
+    margin-top: 5px;
+    font-size: 13px; 
+    color: rgb(0, 0, 0);
+}
+
+div#usage {
+    top: 510px;
+    height: 35%;
+    width: 220px;
+    position: absolute;
+    left: 5px;
+    padding: 0;
+    margin-top:20px;
+}
+
 div#body_container{
     height: 70%;
     width: 100%;
@@ -93,7 +99,7 @@ div#body_container{
     color: black;
     
     position: absolute;
-    top: 30%;
+    top: 240px;
     left: 230px;
     height: 70%;
     padding: 5px;
