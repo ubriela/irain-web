@@ -71,25 +71,25 @@
                             Number of Workers:
                         </td>
                         <td>
-                            <label id="worker_count"></label></td>
+                            <label id="worker_count" ></label></td>
                     </tr>
                     <tr>
                         <td>
                             Maximum Travel Distance (km):                                    </td>
                         <td>
-                            <label id="mtd"></label></td>
+                            <label id="mtd" ></label></td>
                     </tr>
                     <tr>
                         <td>
                             Area (km2):                                    </td>
                         <td>
-                            <label id="area"></label></td>
+                            <label id="area" ></label></td>
                     </tr>
                     <tr>
                         <td>
                             Pearson Skewness:                                    </td>
                         <td>
-                            <label id="skewness"></label></td>
+                            <label id="skewness" ></label></td>
                     </tr>
                 </table>
             </div>
