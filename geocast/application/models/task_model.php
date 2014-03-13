@@ -17,7 +17,7 @@ class Task_model extends CI_Model {
         $this->db->select('x(Location) AS Lat, y(Location) AS Lng');
         $this->db->from('TASKS');
         $this->db->order_by('StartDate', 'desc');
-        $this->db->limit(7);
+        $this->db->limit(6);
 
         $query = $this->db->get();
 

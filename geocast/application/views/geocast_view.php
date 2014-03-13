@@ -130,7 +130,7 @@
                         </div></td>
                 </tr>
             </table>
-            <button type="submit" id="update_params" style="left: 160px;"
+            <button type="submit" id="update_params" style="left: 190px;"
                     onClick="updateParameters()"/>Update</button>
         </div>
         <div id="tabs_setting-2">
