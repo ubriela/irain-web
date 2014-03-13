@@ -46,11 +46,11 @@
                             </div>
                             </br>
                             <div>
-                                <input class="toggle_button" type="button" onclick="toggleHeatmap()" id ="heatmap" value="Show Heatmap"/>
+                                <input class="toggle_button" type="submit" onclick="toggleHeatmap()" id ="heatmap" value="Show Heatmap"/>
                             </div>
 
                             <div>
-                                <input class="toggle_button" type="button" value="Show Boundary" id="boundary"
+                                <input class="toggle_button" type="submit" value="Show Boundary" id="boundary"
                                        onClick="showBoundary('false')"/>
                             </div>
                         </td>
