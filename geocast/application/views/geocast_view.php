@@ -44,7 +44,6 @@
                                 <b>Select Dataset</b>
                                 <div id='jqxdropdowndatasets'></div>
                             </div>
-                            </br>
                             <div>
                                 <input class="toggle_button" onclick="toggleHeatmap()" id ="heatmap" value="Show Heatmap"/>
                             </div>
