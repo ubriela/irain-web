@@ -37,11 +37,11 @@
 
         <div id="tabs_dataset-2">
             <div class="enclosed_table">
-                <table cellpadding="3" border="1px">
+                <table cellpadding="3" border="0px">
                     <tr>
                         <td>
                             <div>
-                                Select Dataset
+                                <b>Select Dataset</b>
                                 <div id='jqxdropdowndatasets'></div>
                             </div>
                             </br>
@@ -62,7 +62,8 @@
                 <table cellpadding="3" style="font-size: 12px;margin-left: 10px">
                     <tr>
                         <td>
-                            <b>Dataset Statistics</b>
+                            <b style="font-size: 12px;">Dataset Statistics</b>
+                            <br>
                         </td>
                         <td>
                     </tr>
@@ -101,7 +102,7 @@
     <div id="tabs_setting">
         <ul>
             <p>
-                <b>GR Construction Parameters</b>
+                <b>Geocast Region Construction Parameters</b>
             </p>
             <li><a href="#tabs_setting-1">(3) Algorithm Parameters</a></li>
             <li><a href="#tabs_setting-2">GUI Parameters</a></li>

@@ -36,8 +36,8 @@ function load() {
     map = new google.maps.Map(document.getElementById("map_canvas"), {
 //        center: new google.maps.LatLng(37.76822, -122.44297),
         zoom: 12,
-        mapTypeId: 'roadmap'
-
+        mapTypeId: 'roadmap',
+        disableDoubleClickZoom: true
     });
 
     google.maps.event.addListener(map, 'dblclick', function(event) {
@@ -50,9 +50,10 @@ function load() {
             icon: 'http://labs.google.com/ridefinder/images/mm_20_blue.png'
         });
         infoWindow = new google.maps.InfoWindow;
-        drawATask(marker, map, infoWindow, event.latLng.lat() + '-'
+        drawATask(marker, map, infoWindow, event.latLng.lat() + ','
                 + event.latLng.lng());
         marker.setMap(map);
+        retrieveGeocastInfo(event.latLng.lat() + "," + event.latLng.lng());
         allMarkers.push(marker);
     });
 
@@ -73,7 +74,7 @@ function load() {
 
     map.fitBounds(bounds);
 
-    showStatistics()
+    showStatistics();
 }
 
 function set_delay() {
@@ -201,9 +202,7 @@ function drawATask(marker, map, infoWindow, html) {
     google.maps.event.addListener(marker, 'mouseover', function() {
         infoWindow.setContent(html);
         infoWindow.open(map, marker);
-    });
-    google.maps.event.addListener(marker, 'mouseout', function() {
-        infoWindow.close(map, marker);
+        setTimeout(function(){infoWindow.close();}, '3000');
     });
     google.maps.event.addListener(marker, 'click', function(event) {
         latlng = event.latLng.lat()
@@ -556,7 +555,7 @@ function showStatistics() {
 }
 
 function selectDatasetNotify() {
-    $("#jqxdropdowndatasets").notify("2. Data is ready to queried. --> Choose algorithm parameters.", "success", {position: "left"});
+    $("#jqxdropdowndatasets").notify("2. Data is ready to be queried. --> Choose algorithm parameters.", "success", {position: "left"});
 }
 
 $(document).ready(function() {
