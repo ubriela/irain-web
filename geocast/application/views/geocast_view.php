@@ -61,10 +61,10 @@
                 <table cellpadding="3" style="font-size: 12px;margin-left: 10px">
                     <tr>
                         <td>
-                            <b style="font-size: 12px;">Dataset Statistics</b>
+                            <b style="font-size: 13px;">Dataset Statistics</b>
                             <br>
                         </td>
-                        <td>
+                        <td></td>
                     </tr>
                     <tr>
                         <td>
@@ -111,23 +111,23 @@
         <div id="tabs_setting-1"  class="parameter_setting">
             <table cellpadding=3">
                 <tr>
-                    <td>
-                        Algorithm <div id='jqxdropdownalgos'>
-                        </div>
-                    </td>
                     <td>Heuristic <div id='jqxdropdownheuristic'>
                         </div></td> 
                     <td>Sub-cell Optimization <div id='jqxdropdownsubcell'>
                         </div></td>
+                    <td> Expected Utility <div id='jqxdropdownus'>
+                        </div></td>                        
                 </tr>
                 <tr>
-                    <td> Expected Utility <div id='jqxdropdownus'>
-                        </div></td>
 
                     <td>            Acceptance Rate (AR) <div id='jqxdropdownars'>
                         </div></td> 
                     <td>Maximum AR <div id='jqxdropdownmars'>
                         </div></td>
+                    <td>
+                        Wireless Range (m) <div id='jqxdropdownranges'>
+                        </div>
+                    </td>                        
                 </tr>
             </table>
             <button type="submit" id="update_params" style="left: 190px;"
@@ -142,6 +142,9 @@
                 <input type="text" name="delay" value="100"><br>
                 <button type="input" value="Submit">Update</button>
             </form>
+            </br>            
+            <input type="checkbox" class="largerCheckbox" value="1" id="chk_circle" checked/>
+            <label id="chk_circle_label">Show GR's bounding circle</label>            
         </div>
 
     </div>

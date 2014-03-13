@@ -1,14 +1,14 @@
 $CSP_URL = 'http://geocrowd2.cloudapp.net';
 
-var Algos = ["greedy"];
+var Ranges = ["100", "75", "50", "25"];
 var Ars = ["linear", "zipf"];
 var Mars = ["0.1", "0.4", "0.7", "1.0"];
 var US = ["0.9", "0.8", "0.7", "0.6"];
 var Heuristic = ["distance", "utility", "compactness", "hybrid"];
-var Subcells = ["True", "False"];
+var Subcells = ["true", "false"];
 var Budgets = ["1.0", "0.7", "0.4", "0.1"];
 var Percents = ["0.5", "0.4", "0.3", "0.2"];
-var Localnesses = ["True", "False"];
+var Localnesses = ["true", "false"];
 
 var map = null;
 var infoWindow;
@@ -16,7 +16,7 @@ var isIE;
 
 google.maps.event.addDomListener(window, 'load', init);
 var allMarkers = [];
-
+var allCircles = [];
 var cellPolygons = new Array();
 var cells = new Array();
 //var polygon = new Array();
@@ -111,6 +111,15 @@ function retrieveGeocastInfo(latlng) {
             });
 }
 
+function whateverorigin(url) {
+    $.getJSON('http://whateverorigin.org/get?url=' + encodeURIComponent(url)
+            + '&callback=?', function(data) {
+                json = data.contents;
+                if (json === "blank")
+                    alert("Crowdsourcing service is now unavailable");
+            });
+}
+
 /*
  *Overlay_GeoCast_Region is to visualize how geocast cells are chosen by
  *iteratively overlay polygons on map.
@@ -125,6 +134,38 @@ function drawGeocastRegion() {
         if (i >= obj.geocast_query.x_min_cords.length)
             clearInterval(interval);
     }, delayTime);
+
+    if ($('#chk_circle').is(":checked"))
+        drawCircle(obj.bounding_circle[0], obj.bounding_circle[1], obj.bounding_circle[2]);
+}
+
+function drawCircle(cx, cy, r) {
+    var center = new google.maps.LatLng(cx, cy);
+    var r = r / 0.0000097;
+    var populationOptions = {
+        strokeColor: '#FF0000',
+        strokeOpacity: 0.8,
+        strokeWeight: 1,
+        fillColor: '#FF0000',
+        fillOpacity: 0.1,
+        map: map,
+        center: center,
+        radius: r
+    };
+    var circle = new google.maps.Circle(populationOptions);
+    infoWindow = new google.maps.InfoWindow();
+    google.maps.event.addListener(circle, 'click', function(
+            event) {
+        var info = '<table>';
+        info += '<tr><td><b>Hop count:</b></td></tr>';
+        info += '<tr><td>' + obj.hop_count + '</td></tr>';
+        info += '</table>';
+        infoWindow.setContent(info);
+        infoWindow.setPosition(event.latLng);
+        infoWindow.open(map);
+    });
+
+    allCircles.push(circle);
 }
 
 /*
@@ -170,19 +211,26 @@ function drawGeocastCell(i) {
     infoWindow = new google.maps.InfoWindow();
     google.maps.event.addListener(cellPolygons[cellIdx], 'click',
             function(event) {
-                var info = 'Order added: ' + (i + 1);
-                info += '</br><b>Cell Utility:</b>'
-                        + obj.geocast_query.utilities[i][0];
-                info += '</br><b>Current GeoCast Utility:</b>'
-                        + obj.geocast_query.utilities[i][1];
-                info += '</br><b>Compactness:</b>'
-                        + obj.geocast_query.compactnesses[i];
-                info += '</br><b>Distance:</b>'
-                        + obj.geocast_query.distances[i];
-                info += '</br><b>Area:</b>' + obj.geocast_query.areas[i];
-                info += '</br><b>Worker Counts:</b>'
-                        + obj.geocast_query.worker_counts[i];
+                var info = 'Adding Order: ' + (i + 1);
+                info += '<table>';
+                info += '<tr><td><b>Cell Utility:</b></td>';
+                info += '<td>' + obj.geocast_query.utilities[i][0] + '</td></tr>';
 
+                info += '<tr><td><b>Current Utility:</b></td>';
+                info += '<td>' + obj.geocast_query.utilities[i][1] + '</td></tr>';
+
+                info += '<tr><td><b>Current Compactness:</b></td>';
+                info += '<td>' + obj.geocast_query.compactnesses[i] + '</td></tr>';
+
+                info += '<tr><td><b>Distance to task:</b></td>';
+                info += '<td>' + obj.geocast_query.distances[i] + '</td></tr>';
+
+                info += '<tr><td><b>Area:</b></td>';
+                info += '<td>' + obj.geocast_query.areas[i] + '</td></tr>';
+
+                info += '<tr><td><b>Noisy Worker Count:</b></td>';
+                info += '<td>' + obj.geocast_query.worker_counts[i] + '</td></tr>';
+                info += '</table>';
                 infoWindow.setContent(info);
                 infoWindow.setPosition(event.latLng);
 
@@ -202,7 +250,9 @@ function drawATask(marker, map, infoWindow, html) {
     google.maps.event.addListener(marker, 'mouseover', function() {
         infoWindow.setContent(html);
         infoWindow.open(map, marker);
-        setTimeout(function(){infoWindow.close();}, '3000');
+        setTimeout(function() {
+            infoWindow.close();
+        }, '3000');
     });
     google.maps.event.addListener(marker, 'click', function(event) {
         latlng = event.latLng.lat()
@@ -263,7 +313,6 @@ function showBoundary(showBound) {
         button.value = "Show Boundary";
         boundary.setMap(null);
     }
-
 }
 
 /*
@@ -342,6 +391,10 @@ function clearMap() {
     for (var n = 0; n < cellPolygons.length; n++)
         cellPolygons[n].setMap(null);
     cellPolygons = [];
+
+    for (var n = 0; n < allCircles.length; n++)
+        allCircles[n].setMap(null);
+    allCircles = [];
 
     cellIdx = -1;
 }
@@ -555,7 +608,7 @@ function showStatistics() {
 }
 
 function selectDatasetNotify() {
-    $("#jqxdropdowndatasets").notify("2. Data is ready to be queried. --> Choose algorithm parameters.", "success", {position: "left"});
+    $("#boundary").notify("2. Data is ready to be queried. --> Choose algorithm parameters.", "success", {position: "left"});
 }
 
 $(document).ready(function() {
@@ -591,8 +644,8 @@ $(document).ready(function() {
         autoDropDownHeight: true
     }).width("130px");
 
-    $("#jqxdropdownalgos").jqxDropDownList({
-        source: Algos,
+    $("#jqxdropdownranges").jqxDropDownList({
+        source: Ranges,
         selectedIndex: 0,
         autoDropDownHeight: true
     }).width("160px");
@@ -630,8 +683,8 @@ $(document).ready(function() {
 
 
 function updateParameters() {
-    var idx = $("#jqxdropdownalgos").jqxDropDownList('getSelectedIndex');
-    var algo = $('#jqxdropdownalgos').jqxDropDownList('getItem', idx).label;
+    var idx = $("#jqxdropdownranges").jqxDropDownList('getSelectedIndex');
+    var range = $('#jqxdropdownranges').jqxDropDownList('getItem', idx).label;
 
     idx = $("#jqxdropdownars").jqxDropDownList('getSelectedIndex');
     var ar = $('#jqxdropdownars').jqxDropDownList('getItem', idx).label;
@@ -650,9 +703,9 @@ function updateParameters() {
 
     $.ajax({
         url: $CSP_URL + "/param/",
-        data: 'algo=' + algo + "&arf=" + ar + "&mar=" + mar + "&utl=" + utl + "&heuristic=" + heuristic + "&subcell=" + subcell,
+        data: 'range=' + range + "&arf=" + ar + "&mar=" + mar + "&utl=" + utl + "&heuristic=" + heuristic + "&subcell=" + subcell,
         type: "GET",
-        dataType: "xml",
+        dataType: "json",
         success: updateParametersNotify()
     });
 }
@@ -680,7 +733,7 @@ function publishDataset() {
         url: $CSP_URL + "/param/",
         data: 'dataset=' + dataset + "&eps=" + budget + "&percent=" + percent + "&localness=" + localness + "&rebuild=1",
         type: "GET",
-        dataType: "xml",
+        dataType: "json",
         success: publishDataNotify()
     });
 }

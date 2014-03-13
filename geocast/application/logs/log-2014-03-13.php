@@ -1389,3 +1389,42 @@ ERROR - 2014-03-13 08:06:24 --> Severity: Warning  --> file_get_contents(http://
 ERROR - 2014-03-13 08:06:28 --> Severity: Warning  --> file_get_contents(http://geocrowd2.cloudapp.net/dataset): failed to open stream: HTTP request failed!  C:\xampp\htdocs\geocast\application\controllers\geocast.php 26
 ERROR - 2014-03-13 08:06:33 --> Severity: Warning  --> file_get_contents(http://geocrowd2.cloudapp.net/dataset): failed to open stream: HTTP request failed!  C:\xampp\htdocs\geocast\application\controllers\geocast.php 26
 ERROR - 2014-03-13 08:06:50 --> Severity: Warning  --> file_get_contents(http://geocrowd2.cloudapp.net/dataset): failed to open stream: HTTP request failed!  C:\xampp\htdocs\geocast\application\controllers\geocast.php 26
+ERROR - 2014-03-13 10:28:20 --> Severity: Warning  --> file_get_contents(http://geocrowd2.cloudapp.net/dataset): failed to open stream: HTTP request failed!  C:\xampp\htdocs\geocast\application\controllers\geocast.php 26
+ERROR - 2014-03-13 10:58:43 --> Severity: Warning  --> file_get_contents(http://geocrowd2.cloudapp.net/dataset): failed to open stream: HTTP request failed!  C:\xampp\htdocs\geocast\application\controllers\geocast.php 26
+ERROR - 2014-03-13 11:00:52 --> Severity: Warning  --> file_get_contents(http://geocrowd2.cloudapp.net/dataset): failed to open stream: HTTP request failed!  C:\xampp\htdocs\geocast\application\controllers\geocast.php 26
+ERROR - 2014-03-13 11:04:45 --> Severity: Warning  --> file_get_contents(http://geocrowd2.cloudapp.net/dataset): failed to open stream: HTTP request failed!  C:\xampp\htdocs\geocast\application\controllers\geocast.php 26
+ERROR - 2014-03-13 11:35:01 --> Severity: Warning  --> file_get_contents(http://geocrowd2.cloudapp.net/dataset): failed to open stream: HTTP request failed!  C:\xampp\htdocs\geocast\application\controllers\geocast.php 26
+ERROR - 2014-03-13 11:57:02 --> Severity: Warning  --> file_get_contents(http://geocrowd2.cloudapp.net/dataset): failed to open stream: HTTP request failed!  C:\xampp\htdocs\geocast\application\controllers\geocast.php 26
+ERROR - 2014-03-13 12:30:59 --> Severity: Warning  --> file_get_contents(http://geocrowd2.cloudapp.net/dataset): failed to open stream: HTTP request failed!  C:\xampp\htdocs\geocast\application\controllers\geocast.php 26
+ERROR - 2014-03-13 12:31:04 --> Severity: Warning  --> file_get_contents(http://geocrowd2.cloudapp.net/dataset): failed to open stream: No connection could be made because the target machine actively refused it.
+ C:\xampp\htdocs\geocast\application\controllers\geocast.php 26
+ERROR - 2014-03-13 12:31:57 --> Severity: Warning  --> file_get_contents(http://geocrowd2.cloudapp.net/dataset): failed to open stream: HTTP request failed!  C:\xampp\htdocs\geocast\application\controllers\geocast.php 26
+ERROR - 2014-03-13 12:32:50 --> Severity: Warning  --> file_get_contents(http://geocrowd2.cloudapp.net/dataset): failed to open stream: HTTP request failed!  C:\xampp\htdocs\geocast\application\controllers\geocast.php 26
+ERROR - 2014-03-13 12:33:59 --> Severity: Warning  --> file_get_contents(http://geocrowd2.cloudapp.net/dataset): failed to open stream: HTTP request failed!  C:\xampp\htdocs\geocast\application\controllers\geocast.php 26
+ERROR - 2014-03-13 12:34:49 --> Severity: Warning  --> file_get_contents(http://geocrowd2.cloudapp.net/dataset): failed to open stream: HTTP request failed!  C:\xampp\htdocs\geocast\application\controllers\geocast.php 26
+ERROR - 2014-03-13 12:38:35 --> Severity: Warning  --> file_get_contents(http://geocrowd2.cloudapp.net/dataset): failed to open stream: HTTP request failed!  C:\xampp\htdocs\geocast\application\controllers\geocast.php 26
+ERROR - 2014-03-13 12:41:31 --> Severity: Warning  --> file_get_contents(http://geocrowd2.cloudapp.net/dataset): failed to open stream: HTTP request failed!  C:\xampp\htdocs\geocast\application\controllers\geocast.php 26
+ERROR - 2014-03-13 12:42:34 --> Severity: Warning  --> file_get_contents(http://geocrowd2.cloudapp.net/dataset): failed to open stream: HTTP request failed!  C:\xampp\htdocs\geocast\application\controllers\geocast.php 26
+ERROR - 2014-03-13 13:12:34 --> Severity: Warning  --> file_get_contents(http://geocrowd2.cloudapp.net/dataset): failed to open stream: HTTP request failed!  C:\xampp\htdocs\geocast\application\controllers\geocast.php 26
+ERROR - 2014-03-13 13:13:15 --> Severity: Warning  --> file_get_contents(http://geocrowd2.cloudapp.net/dataset): failed to open stream: HTTP request failed!  C:\xampp\htdocs\geocast\application\controllers\geocast.php 26
+ERROR - 2014-03-13 13:13:21 --> Severity: Warning  --> file_get_contents(http://geocrowd2.cloudapp.net/dataset): failed to open stream: HTTP request failed!  C:\xampp\htdocs\geocast\application\controllers\geocast.php 26
+ERROR - 2014-03-13 13:14:13 --> Severity: Warning  --> file_get_contents(http://geocrowd2.cloudapp.net/dataset): failed to open stream: HTTP request failed!  C:\xampp\htdocs\geocast\application\controllers\geocast.php 26
+ERROR - 2014-03-13 13:14:19 --> Severity: Warning  --> file_get_contents(http://geocrowd2.cloudapp.net/dataset): failed to open stream: HTTP request failed!  C:\xampp\htdocs\geocast\application\controllers\geocast.php 26
+ERROR - 2014-03-13 13:15:01 --> Severity: Warning  --> file_get_contents(http://geocrowd2.cloudapp.net/dataset): failed to open stream: HTTP request failed!  C:\xampp\htdocs\geocast\application\controllers\geocast.php 26
+ERROR - 2014-03-13 13:15:30 --> Severity: Warning  --> file_get_contents(http://geocrowd2.cloudapp.net/dataset): failed to open stream: HTTP request failed!  C:\xampp\htdocs\geocast\application\controllers\geocast.php 26
+ERROR - 2014-03-13 13:17:09 --> Severity: Warning  --> file_get_contents(http://geocrowd2.cloudapp.net/dataset): failed to open stream: HTTP request failed!  C:\xampp\htdocs\geocast\application\controllers\geocast.php 26
+ERROR - 2014-03-13 13:18:36 --> Severity: Warning  --> file_get_contents(http://geocrowd2.cloudapp.net/dataset): failed to open stream: HTTP request failed!  C:\xampp\htdocs\geocast\application\controllers\geocast.php 26
+ERROR - 2014-03-13 13:18:40 --> Severity: Warning  --> file_get_contents(http://geocrowd2.cloudapp.net/dataset): failed to open stream: HTTP request failed!  C:\xampp\htdocs\geocast\application\controllers\geocast.php 26
+ERROR - 2014-03-13 13:20:31 --> Severity: Warning  --> file_get_contents(http://geocrowd2.cloudapp.net/dataset): failed to open stream: HTTP request failed!  C:\xampp\htdocs\geocast\application\controllers\geocast.php 26
+ERROR - 2014-03-13 13:20:37 --> Severity: Warning  --> file_get_contents(http://geocrowd2.cloudapp.net/dataset): failed to open stream: HTTP request failed!  C:\xampp\htdocs\geocast\application\controllers\geocast.php 26
+ERROR - 2014-03-13 13:20:41 --> Severity: Warning  --> file_get_contents(http://geocrowd2.cloudapp.net/dataset): failed to open stream: HTTP request failed!  C:\xampp\htdocs\geocast\application\controllers\geocast.php 26
+ERROR - 2014-03-13 13:20:46 --> Severity: Warning  --> file_get_contents(http://geocrowd2.cloudapp.net/dataset): failed to open stream: HTTP request failed!  C:\xampp\htdocs\geocast\application\controllers\geocast.php 26
+ERROR - 2014-03-13 13:39:09 --> Severity: Warning  --> file_get_contents(http://geocrowd2.cloudapp.net/dataset): failed to open stream: HTTP request failed!  C:\xampp\htdocs\geocast\application\controllers\geocast.php 26
+ERROR - 2014-03-13 13:52:55 --> Severity: Warning  --> file_get_contents(http://geocrowd2.cloudapp.net/dataset): failed to open stream: HTTP request failed!  C:\xampp\htdocs\geocast\application\controllers\geocast.php 26
+ERROR - 2014-03-13 13:53:04 --> '34.023996,-118.279731'
+ERROR - 2014-03-13 13:53:04 --> '34.024476,-118.293679'
+ERROR - 2014-03-13 13:53:04 --> '34.02124,-118.28958'
+ERROR - 2014-03-13 13:53:04 --> '34.0214,-118.284881'
+ERROR - 2014-03-13 13:53:04 --> '34.023907,-118.285396'
+ERROR - 2014-03-13 13:53:04 --> '34.022787,-118.287499'
+ERROR - 2014-03-13 13:54:15 --> Severity: Warning  --> file_get_contents(http://geocrowd2.cloudapp.net/dataset): failed to open stream: HTTP request failed!  C:\xampp\htdocs\geocast\application\controllers\geocast.php 26

@@ -1,16 +1,6 @@
 /*=============== Common styling ======================*/  
-button {
-    position: relative;
-    margin-top:5px;
-    font-weight: bold;
-    color: blue;
-    width : 130px;
-    height: 30px;    
-    font-size: 13px;
-    font-family: Verdana,Arial,sans-serif;
-}
 
-.toggle_button {
+.toggle_button, button {
     position: relative;
     margin-top:5px;
     font-weight: bold;
@@ -25,6 +15,13 @@ label {
     font-size: 12px;
     font-weight: bold;
     font-family: Verdana,Arial,sans-serif;
+}
+
+#chk_circle_label {
+    color: #222222;
+    font-size: 13px;
+    font-weight: normal;
+    font-family: Verdana,Arial,sans-serif;    
 }
 /*=============== Map styling ======================*/
 
@@ -153,4 +150,11 @@ a:hover {
     color: #333;
     text-decoration: none;
     font-size: 1em;
+}
+
+/************************* Custom Checkbox *********************************/
+input.largerCheckbox
+{
+width: 20px;
+height: 20px;
 }
