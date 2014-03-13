@@ -85,5 +85,9 @@ class Geocast extends CI_Controller {
         $data = file_get_contents($file);
         echo $data;
     }
+    
+    public function instruction() {
+        $this->load->view('instruction.html');
+    }
 
 }

@@ -1,76 +1,113 @@
-/*=============== Datasets styling ======================*/
-#dataset .ui-selecting { background: #FECA40; }
-#dataset .ui-selected { background: gray; color: white; font-weight: bold}
-#dataset { list-style-type: none; margin: 0; padding: 0; width: 220px; }
-#dataset li { margin: 2px; padding: 0.4em; font-size: 1.2em; height: 13px; }
-
 /*=============== Common styling ======================*/  
 button {
-    color: blue;
+    position: relative;
+    margin-top:5px;
     font-weight: bold;
+    color: blue;
+    width : 130px;
+    height: 30px;    
+    font-family: Verdana,Arial,sans-serif;
+}
+
+.toggle_button {
+        position: relative;
+    margin-top:5px;
+    font-weight: bold;
+    color: blue;
+    width : 130px;
+    height: 30px;    
+    font-family: Verdana,Arial,sans-serif;
 }
 
 label {
     color: #222222;
-    font-size: 16px;;
+    font-size: 13px;
     font-weight: bold;
     font-family: Verdana,Arial,sans-serif;
 }
 /*=============== Map styling ======================*/
 
-#map_canvas {
-    height: 100%;
-    width: 80%;
-
+div#tabs_query {
     position: absolute;
-    top: 5px;
-    left: 230px;
-    height: 100%;
-    padding: 0px;
-}
-
-.toggle_button{
-    font-weight: bold;
-    font-family: Verdana,Arial,sans-serif;
-}
-
-/*============================== Left panel - Geocast Query demo ==================*/
-
-div#tabs {
-    position: absolute;
-    top: 200px;
+    top: 30%;
     left: 5px;
-    height: 290px;
+    height: 36%;
     width: 220px;
     margin: 0;
     padding: 0;
     text-align:left;
     margin-top: 5px;
-    font-size: 15px; 
+    font-size: 13px; 
     color: rgb(0, 0, 0);
 }
-/*============================== Left panel - Settings ==================*/
-div#tabs_setting{
-    position: absolute;
-    top: 500px;
-    left: 5px;
-    height: 450px;
+
+div#usage {
+    top: 65%;
+    height: 35%;
     width: 220px;
+    position: absolute;
+    left: 5px;
+    padding: 0;
+    margin-top:20px;
+}
+
+div#tabs_dataset{
+    position: absolute;
+    top: 0px;
+    left: 5px;
+    height: 29%;
+    width: 39%;
     margin: 0;
     padding: 0;
     text-align:left;
     margin-top: 5px;
-    font-size: 15px; 
+    font-size: 13px; 
+    color: rgb(0, 0, 0);
+}
+
+div#tabs_setting{
+    position: absolute;
+    top: 0px;
+    left: 40%;
+    height: 29%;
+    width: 60%;
+    margin: 0;
+    padding: 0;
+    text-align:left;
+    margin-top: 5px;
+    font-size: 13px; 
     color: rgb(0, 0, 0);
 }
 
 div.parameter_setting
 {
-    width: 160px,
-    height: 25px,
-    theme: 'energyblue'
+    width: 160px;
+    height: 25px;
+    theme: 'energyblue';
 }
 
+div#body_container{
+    height: 70%;
+    width: 100%;
+    margin: 0px auto;
+    color: black;
+    
+    position: absolute;
+    top: 30%;
+    left: 230px;
+    height: 70%;
+    padding: 5px;
+}
+
+#map_canvas {
+    height:100% !important;
+    overflow:hidden;
+    position:relative;
+}
+
+.wrapper-rect.white {
+    background: url(../images/wash-white-30.png);
+}
 
 div#auto-row {
     height:50%;

@@ -6,6 +6,9 @@ var Mars = ["0.1", "0.4", "0.7", "1.0"];
 var US = ["0.9", "0.8", "0.7", "0.6"];
 var Heuristic = ["distance", "utility", "compactness", "hybrid"];
 var Subcells = ["True", "False"];
+var Budgets = ["1.0", "0.7", "0.4", "0.1"];
+var Percents = ["0.5", "0.4", "0.3", "0.2"];
+var Localnesses = ["True", "False"];
 
 var map = null;
 var infoWindow;
@@ -338,12 +341,16 @@ function clearMap() {
  * @returns {undefined}
  */
 $(function() {
-    $("#tabs").tabs();
+    $("#tabs_query").tabs();
 });
 $(function() {
     $("#tabs_setting").tabs();
 
 });
+$(function() {
+    $("#tabs_dataset").tabs();
+});
+
 
 /***
  * create table to store history task list
@@ -509,64 +516,93 @@ function toggleHeatmap() {
 
 
 $(function() {
-    $("#dataset").selectable({
-        selected: function(event, ui) {
-            datasetIdx = ui.selected.value;
-            if ($datasets.names[datasetIdx] === "test") {
-                   $("#dataset").notify("This dataset is comming soon", "info");
-                   return;
-            }
-            var boundary = $datasets.boundaries[datasetIdx];
-            boundary = boundary.split(",");
+    $("#jqxdropdowndatasets").change(function(event, ui) {
+        datasetIdx = $("#jqxdropdowndatasets").jqxDropDownList('getSelectedIndex');
+        var boundary = $datasets.boundaries[datasetIdx];
+        boundary = boundary.split(",");
 
-            bounds = new google.maps.LatLngBounds(new google.maps.LatLng(parseFloat(boundary[0]),
-                    parseFloat(boundary[1])), new google.maps.LatLng(parseFloat(boundary[2]), parseFloat(boundary[3])));
+        bounds = new google.maps.LatLngBounds(new google.maps.LatLng(parseFloat(boundary[0]),
+                parseFloat(boundary[1])), new google.maps.LatLng(parseFloat(boundary[2]), parseFloat(boundary[3])));
 
-            showBoundary(true);
-            retrieveHistoryTasks();
-        }
+        showBoundary(true);
+        retrieveHistoryTasks();
+        selectDatasetNotify();
     }
     );
 });
 
+function selectDatasetNotify() {
+    $("#jqxdropdowndatasets").notify("2. Data is ready to queried. --> Choose algorithm parameters.", "success", {position: "left"});
+}
+
 $(document).ready(function() {
     $('#dataset li:first').addClass('ui-selected');
+
+    $("#jqxdropdowndataset").jqxDropDownList({
+        source: $datasets.names2,
+        selectedIndex: 0,
+        autoDropDownHeight: true
+    }).width("120px");
+
+    $("#jqxdropdownbudget").jqxDropDownList({
+        source: Budgets,
+        selectedIndex: 0,
+        autoDropDownHeight: true
+    }).width("120px");
+
+    $("#jqxdropdownpercent").jqxDropDownList({
+        source: Percents,
+        selectedIndex: 0,
+        autoDropDownHeight: true
+    }).width("120px");
+
+    $("#jqxdropdownlocalness").jqxDropDownList({
+        source: Localnesses,
+        selectedIndex: 0,
+        autoDropDownHeight: true
+    }).width("120px");
+
+    $("#jqxdropdowndatasets").jqxDropDownList({
+        source: $datasets.names2,
+        selectedIndex: 0,
+        autoDropDownHeight: true
+    }).width("140px");
 
     $("#jqxdropdownalgos").jqxDropDownList({
         source: Algos,
         selectedIndex: 0,
         autoDropDownHeight: true
-    });
+    }).width("140px");
 
     $("#jqxdropdownars").jqxDropDownList({
         source: Ars,
         selectedIndex: 0,
         autoDropDownHeight: true
-    });
+    }).width("140px");
 
     $("#jqxdropdownmars").jqxDropDownList({
         source: Mars,
         selectedIndex: 0,
         autoDropDownHeight: true,
-    });
+    }).width("140px");
 
     $("#jqxdropdownus").jqxDropDownList({
         source: US,
         selectedIndex: 0,
         autoDropDownHeight: true
-    });
+    }).width("140px");
 
     $("#jqxdropdownheuristic").jqxDropDownList({
         source: Heuristic,
         selectedIndex: 0,
         autoDropDownHeight: true
-    });
+    }).width("140px");
 
     $("#jqxdropdownsubcell").jqxDropDownList({
         source: Subcells,
         selectedIndex: 0,
         autoDropDownHeight: true
-    });
+    }).width("140px");
 });
 
 
@@ -600,5 +636,32 @@ function updateParameters() {
 
 // http://notifyjs.com/
 function updateParametersNotify() {
-    $("#update_params").notify("Updated parameters successfully", "success", {position: "left"});
+    $("#update_params").notify("3. Updated parameters successfully. --> Perform geocast queries.", "success", {position: "left"});
+}
+
+
+function publishDataset() {
+    var idx = $("#jqxdropdowndataset").jqxDropDownList('getSelectedIndex');
+    var dataset = $('#jqxdropdowndataset').jqxDropDownList('getItem', idx).label;
+
+    idx = $("#jqxdropdownbudget").jqxDropDownList('getSelectedIndex');
+    var budget = $('#jqxdropdownbudget').jqxDropDownList('getItem', idx).label;
+
+    idx = $("#jqxdropdownpercent").jqxDropDownList('getSelectedIndex');
+    var percent = $('#jqxdropdownpercent').jqxDropDownList('getItem', idx).label;
+
+    idx = $("#jqxdropdownlocalness").jqxDropDownList('getSelectedIndex');
+    var localness = $('#jqxdropdownlocalness').jqxDropDownList('getItem', idx).label;
+
+    $.ajax({
+        url: $CSP_URL + "/param/",
+        data: 'dataset=' + dataset + "&eps=" + budget + "&percent=" + percent + "&localness=" + localness + "&rebuild=1",
+        type: "GET",
+        dataType: "xml",
+        success: publishDataNotify()
+    });
+}
+
+function publishDataNotify() {
+    $("#publish_dataset").notify("1. Published data successfully. --> Please select a dataset.", "success", {position: "left"});
 }
