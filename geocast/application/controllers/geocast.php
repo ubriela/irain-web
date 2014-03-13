@@ -39,7 +39,7 @@ class Geocast extends CI_Controller {
         if ($dataset == 'gowallala') {
             $data = $this->task_model->history_tasks();
             foreach ($data as $item) {
-                $task = round($item['Lng'], 6, PHP_ROUND_HALF_DOWN) . ',' . round($item['Lat'], 6, PHP_ROUND_HALF_DOWN);
+                $task = round($item['Lng'], 5, PHP_ROUND_HALF_DOWN) . ',' . round($item['Lat'], 6, PHP_ROUND_HALF_DOWN);
                 log_message('error', var_export($task, True));
                 $tasks[] = $task;
             }
@@ -64,8 +64,8 @@ class Geocast extends CI_Controller {
             foreach ($tasks as $task) {
                 $item = explode(',', $task);
                 echo "<task>";
-                echo "<lat>" . round($item[0], 5, PHP_ROUND_HALF_DOWN) . "</lat>";
-                echo "<lng>" . round($item[1], 5, PHP_ROUND_HALF_DOWN) . "</lng>";
+                echo "<lat>" . round($item[0], 6, PHP_ROUND_HALF_DOWN) . "</lat>";
+                echo "<lng>" . round($item[1], 6, PHP_ROUND_HALF_DOWN) . "</lng>";
                 echo "</task>";
             }
             echo "</tasks>";
