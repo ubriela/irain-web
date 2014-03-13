@@ -416,8 +416,8 @@ function parseTasksFromXML(responseXML) {
         if (tasks.childNodes.length > 0) {
             completeTable.setAttribute("bordercolor", "black");
             completeTable.setAttribute("border", "1");
-            var max = 7;
-            if (tasks.childNodes.length <= 7)
+            var max = 6;
+            if (tasks.childNodes.length <= max)
                 max = tasks.childNodes.length;
             for (loop = 0; loop < max; loop++) {
                 var task = tasks.childNodes[loop];
