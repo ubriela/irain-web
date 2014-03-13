@@ -34,11 +34,12 @@ var dataLocs = new Array();
 
 function load() {
     map = new google.maps.Map(document.getElementById("map_canvas"), {
-        center: new google.maps.LatLng(37.76822, -122.44297),
+//        center: new google.maps.LatLng(37.76822, -122.44297),
         zoom: 12,
         mapTypeId: 'roadmap'
 
     });
+
     google.maps.event.addListener(map, 'dblclick', function(event) {
 
         var touch_point = new google.maps.LatLng(event.latLng.lat(),
@@ -63,7 +64,15 @@ function load() {
             data: pointArray
         });
     }
-    
+
+    var boundary = $datasets.boundaries[datasetIdx];
+    boundary = boundary.split(",");
+
+    bounds = new google.maps.LatLngBounds(new google.maps.LatLng(parseFloat(boundary[0]),
+            parseFloat(boundary[1])), new google.maps.LatLng(parseFloat(boundary[2]), parseFloat(boundary[3])));
+
+    map.fitBounds(bounds);
+
     showStatistics()
 }
 
@@ -245,7 +254,7 @@ function showBoundary(showBound) {
         google.maps.event.addListener(boundary, 'click', function(
                 event) {
             var boundaryinfo = '<b>Dataset:</b>' + $datasets.names[datasetIdx]
-                    + '<\br><b>#Workers:</b>' + $datasets.worker_counts[datasetIdx];
+                    + '<br><b>#Workers:</b>' + $datasets.worker_counts[datasetIdx];
             infoWindow.setContent(boundaryinfo);
             infoWindow.setPosition(event.latLng);
             infoWindow.open(map);
