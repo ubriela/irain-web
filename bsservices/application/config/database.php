@@ -50,8 +50,8 @@ $active_record = TRUE;
 
 //$db['default']['hostname'] = 'localhost';
 $db['default']['hostname'] = '137.135.59.188';
-$db['default']['username'] = 'root';
-$db['default']['password'] = 'mediaq';
+$db['default']['username'] = 'MediaQ';
+$db['default']['password'] = 'pc4passlr';
 $db['default']['database'] = 'billshare';
 $db['default']['dbdriver'] = 'mysqli';
 $db['default']['[port'] = '3306';

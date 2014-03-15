@@ -18,7 +18,7 @@ class Bill extends CI_Controller {
     }
 
     function index() {
-//        echo 'not yet';
+        echo 'not yet';
     }
 
     function save_bill() {
