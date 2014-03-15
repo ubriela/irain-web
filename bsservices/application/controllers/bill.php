@@ -12,7 +12,7 @@ class Bill extends CI_Controller {
 
     function __construct() {
         parent::__construct();
-
+        $this->load->helper('form');
         $this->load->model('bill_model', '', True);
         $this->load->helper('url');
     }
@@ -22,8 +22,10 @@ class Bill extends CI_Controller {
     }
 
     function save_bill() {
+        log_message("error", "here1");
+        log_message("error", var_dump($_POST));
         $data = json_decode($this->input->post('mydata'));
-        log_message("error", var_dump($data, True, True));
+        log_message("error", var_dump($data));
         $success = $this->bill_model->save_bill($data);
         if ($success)
             $this->response ("success", "Saving bill successfully.");
