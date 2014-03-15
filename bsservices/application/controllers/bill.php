@@ -23,7 +23,7 @@ class Bill extends CI_Controller {
 
     function save_bill() {
         $data = json_decode($this->input->post('mydata'));
-        log_message("debug", var_dump($data, True));
+        log_message("error", var_dump($data, True, True));
         $success = $this->bill_model->save_bill($data);
         if ($success)
             $this->response ("success", "Saving bill successfully.");
