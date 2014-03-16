@@ -153,16 +153,16 @@ function drawCircle(cx, cy, r) {
         radius: r
     };
     var circle = new google.maps.Circle(populationOptions);
-    infoWindow = new google.maps.InfoWindow();
+    var infoWindowCircle = new google.maps.InfoWindow();
     google.maps.event.addListener(circle, 'click', function(
             event) {
         var info = '<table>';
         info += '<tr><td><b>Hop count:</b></td></tr>';
         info += '<tr><td>' + obj.hop_count + '</td></tr>';
         info += '</table>';
-        infoWindow.setContent(info);
-        infoWindow.setPosition(event.latLng);
-        infoWindow.open(map);
+        infoWindowCircle.setContent(info);
+        infoWindowCircle.setPosition(event.latLng);
+        infoWindowCircle.open(map);
     });
 
     allCircles.push(circle);
