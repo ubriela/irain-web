@@ -45,12 +45,12 @@
                                 <div id='jqxdropdowndatasets'></div>
                             </div>
                             <div>
-                                <input class="toggle_button" onclick="toggleHeatmap()" id ="heatmap" value="Show Heatmap"/>
+                                <button type="button" onclick="toggleHeatmap()" id ="heatmap" value="Show Heatmap">Heatmap</button>
                             </div>
 
                             <div>
-                                <input class="toggle_button" value="Show Boundary" id="boundary"
-                                       onClick="showBoundary('false')"/>
+                                <button type="button" value="Show Boundary" id="boundary"
+                                        onClick="showBoundary('false')">Boundary</button>
                             </div>
                         </td>
                     </tr>
