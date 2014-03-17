@@ -718,7 +718,7 @@ function updateParametersNotify() {
 
 function publishDataset() {
     var idx = $("#jqxdropdowndataset").jqxDropDownList('getSelectedIndex');
-    var dataset = $('#jqxdropdowndataset').jqxDropDownList('getItem', idx).label;
+    var dataset = $datasets.names[idx];
 
     idx = $("#jqxdropdownbudget").jqxDropDownList('getSelectedIndex');
     var budget = $('#jqxdropdownbudget').jqxDropDownList('getItem', idx).label;
