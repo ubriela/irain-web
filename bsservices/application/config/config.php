@@ -18,10 +18,10 @@
 
 
 // Hien config
-$config['base_url']	= 'http://localhost/geocastprotocol/';
+// $config['base_url']	= 'http://localhost/';
 
 // Cloud config       
-// $config['base_url']	=  'http://geocast.azurewebsites.net/';
+$config['base_url']	=  'http://billshare.azurewebsites.net/';
 
 /*
 |--------------------------------------------------------------------------
