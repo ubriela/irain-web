@@ -8,6 +8,7 @@ if (!defined('BASEPATH'))
  *
  * @author ubriela
  */
+
 class Bill extends CI_Controller {
 
     function __construct() {
@@ -32,7 +33,7 @@ class Bill extends CI_Controller {
         else
             $this->response ("error", "Saving bill fail.");
     }
-
+  
     function response($status, $msg) {
         $this->output->set_content_type('application/json');
         $this->output->set_output(json_encode(array('status' => $status, 'msg' => $msg)));
