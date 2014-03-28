@@ -49,7 +49,6 @@ $active_group = 'default';
 $active_record = TRUE;
 
 //$db['default']['hostname'] = 'localhost';
-//$db['default']['hostname'] = 'localhost';
 $db['default']['hostname'] = '137.135.59.188';
 $db['default']['username'] = 'weather';
 $db['default']['password'] = 'weather';
