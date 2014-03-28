@@ -2,12 +2,12 @@
 
 class Bill_model extends CI_Model {
 
-    public function save_bill($data) {
+    public function save_bill($data, $session) {
         $success = True;
-        
-        $this->db->set('description', $data->description);
-//        $this->db->set('date', $data->date);
-        $this->db->set('date', date("Y-m-d H:i:s"));
+        $userid = $session['userid'];
+        $this->db->set('creatorid', $userid);
+        $this->db->set('description', $data->description);      
+        //$this->db->set('date', date('d/m/Y',strtotime($data->date)) );
         $this->db->set('total', $data->total);
         $this->db->set('tip', $data->tip);
         

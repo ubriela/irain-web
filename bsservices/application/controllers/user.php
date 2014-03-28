@@ -31,14 +31,11 @@ class User extends CI_Controller {
 
         // Load user model
         $this->load->model('user_model');
+        $this->load->helper('cookie');
 
         // Load user agent library
         $this->load->library('user_agent');
         $this->load->helper('json_response');
-        // If user is logged in redirect to home page
-        if ($this->session->userdata('logged_in')) {
-            $this->_json_response($this->session->userdata('logged_in')['userid']);
-        }
     }
 
     /**
@@ -76,7 +73,7 @@ class User extends CI_Controller {
             // Log 'Login'
             log_message('info', date("Y-m-d H:i:s") . "\tUser logged in (session created): " . $username);
 
-            $this->_json_response($this->session->userdata('logged_in')['userid']);
+            $this->_json_response($this->session->userdata('userid'));
         }
     }
 
@@ -109,16 +106,18 @@ class User extends CI_Controller {
             if ($this->user_model->is_active($user_id)) {
                 // Passwords must match
                 if ($db_password == $password) {
-                    log_message('error', 'xxxx');
                     // Create a session
                     $sess_array = array(
                         'userid' => $user_id,
                         'username' => $username,
                         'avatar' => $avatar,
-                        'fullname' => $fullname
+                        'fullname' => $fullname,
+                        'signed_in' => True
                     );
+                    
+                    //log_message('debug', var_export($sess_array, True));
 
-                    $this->session->set_userdata('logged_in', $sess_array);
+                    $this->session->set_userdata($sess_array);
                     return TRUE;
                 }
                 // Validation failed
@@ -289,7 +288,7 @@ class User extends CI_Controller {
     public function forgot_password_submit() {
         $this->load->helper('form');
         $this->load->library('form_validation');
-        if (!$this->session->userdata('logged_in')) {
+        if (!$this->session->userdata('signed_in')) {
             if ($this->form_validation->run('forgot_password') === FALSE) {
                 json_response($this, "error", validation_errors());
             } else {
@@ -406,7 +405,7 @@ class User extends CI_Controller {
         $this->load->helper('form');
         $this->load->library('form_validation');
 
-        if (!$temp_pass or $this->session->userdata('logged_in')) {
+        if (!$temp_pass or $this->session->userdata('signed_in')) {
             redirect('home', 'refresh');
         } else {
             $user = $this->user_model->check_reset_password($temp_pass);
