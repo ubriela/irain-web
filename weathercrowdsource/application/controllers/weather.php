@@ -9,18 +9,24 @@ class Weather extends CI_Controller{
         $this->load->library('session');
         $this->load->helper('json_response');
     }
-    public function index($lat,$lng,$code){
-        $this->weather_model->insert_location($lat,$lng,$code);
+    public function index(){
+        $userid = $this->session->userdata('userid');
+        $success = false;
+        if($userid!=''){
+            $lat = $_GET['lat'];
+            $lng = $_GET['lng'];
+            $code = $_GET['code'];
+            $this->weather_model->insert_location($userid,$lat,$lng,$code);
+        }
+        $this->_json_response($success);
     }
     public function test(){
         $this->weather_model->test_insert();
     }
     private function _json_response($data) {
-
         $this->output->set_content_type('application/json');
-
-        if (!empty($data)) {
-            $this->output->set_output(json_encode(array('status' => 'success', "msg" => $data)));
+        if ($data) {
+            $this->output->set_output(json_encode(array('status' => 'success', "msg" => 'success')));
         } else {
             $this->output->set_output(json_encode(array('status' => 'error', "msg" => '0')));
         }
