@@ -5,6 +5,7 @@ class Weather_model extends CI_Model{
     }
     public function insert_location($lat,$lng,$code){
         $userid = $this->session->userdata('userid');
+        $success;
         if($userid!=''){
             $location = "'POINT($lat $lng)'";
             $date_now = date("Y-m-d H:i:s");
@@ -24,10 +25,19 @@ class Weather_model extends CI_Model{
                 'upload_date' => $date_now
                 );
                 $this->db->insert('responses',$data_response);
-                echo "true";
-            }else{
-                echo "false";
+                $success = 1;
             }
+        }
+        $this->_json_response($success);
+    }
+    private function _json_response($data) {
+
+        $this->output->set_content_type('application/json');
+
+        if (!empty($data)) {
+            $this->output->set_output(json_encode(array('status' => 'success', "msg" => $data)));
+        } else {
+            $this->output->set_output(json_encode(array('status' => 'error', "msg" => '0')));
         }
     }
 
