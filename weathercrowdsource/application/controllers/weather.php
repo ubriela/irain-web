@@ -10,7 +10,7 @@ class Weather extends CI_Controller{
         $this->load->helper('json_response');
     }
     public function index(){
-        $userid = $this->session->userdata('userid');
+        $userid = $_GET['id'];//$this->session->userdata('userid');
         $success = false;
         if($userid!=''){
             $lat = $_GET['lat'];
