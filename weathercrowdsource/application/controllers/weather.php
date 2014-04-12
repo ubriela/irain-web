@@ -16,7 +16,7 @@ class Weather extends CI_Controller{
             $lat = $_GET['lat'];
             $lng = $_GET['lng'];
             $code = $_GET['code'];
-            $this->weather_model->insert_location($userid,$lat,$lng,$code);
+            $success = $this->weather_model->insert_location($userid,$lat,$lng,$code);
         }
         $this->_json_response($success);
     }
