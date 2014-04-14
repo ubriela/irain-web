@@ -12,7 +12,7 @@ class Weather extends CI_Controller{
         $this->load->helper('form');
         $this->load->library('form_validation');
         $userid = $this->session->userdata('userid');
-        if($userid=''){
+        if($userid==''){
              $this->_json_response(FALSE);
              return;
         }
