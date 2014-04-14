@@ -73,7 +73,30 @@ $config = array(
             'label' => 'Repeat Password',
             'rules' => 'trim|required|max_length[128]|xss_clean'
         )
+    ),
+    'report_location' => array(
+        array(
+            'field' => 'lat',
+            'label' => 'Lat',
+            'rules' => 'trim|required|callback_is_number'
+        ),
+        array(
+            'field' => 'lng',
+            'label' => 'Lng',
+            'rules' => 'trim|required|callback_is_number'
+        ),
+        array(
+            'field' => 'code',
+            'label' => 'Code',
+            'rules' => 'trim|required|callback_is_number|callback_range_value'
+        ),
+        array(
+            'field' => 'time',
+            'label' => 'Time',
+            'rules' => 'trim|required|'
+        )
     )
+    
 );
 /* End of file form_validation.php */
 /* Location: ./application/config/form_validation.php */
