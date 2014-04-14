@@ -11,10 +11,14 @@ class Weather extends CI_Controller{
     public function index(){
         $this->load->helper('form');
         $this->load->library('form_validation');
+        $userid = $this->session->userdata('userid');
+        if($userid=''){
+             $this->_json_response(FALSE);
+             return;
+        }
         if ($this->form_validation->run('report_location') == FALSE){
             $this->_json_response(FALSE);
-        }else{
-            $userid = $this->session->userdata('userid'); 
+        }else{           
             $lat = $this->input->post('lat');
             $lng = $this->input->post('lng');
             $code = $this->input->post('code');
