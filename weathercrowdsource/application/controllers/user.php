@@ -160,7 +160,7 @@ class User extends CI_Controller {
             log_message("error", "ok");
         
             // Send welcome email
-            $this->_send_welcome_email_confirmation();
+            //$this->_send_welcome_email_confirmation();
 
             $username = $this->input->post('username');
 
