@@ -101,35 +101,29 @@ class User extends CI_Controller {
             $db_password = $row->password;
             $salt = $row->salt;
             $password = hash('sha512', $password . $salt);
-
-            if ($this->user_model->is_active($user_id)) {
-                // Passwords must match
-                if ($db_password == $password) {
-                    // Create a session
-                    $sess_array = array(
-                        'userid' => $user_id,
-                        'username' => $username,
-                        'avatar' => $avatar,
-                        'fullname' => $fullname,
-                        'signed_in' => True
-                    );
+            // Passwords must match
+            if ($db_password == $password) {
+            // Create a session
+                $sess_array = array(
+                    'userid' => $user_id,
+                    'username' => $username,
+                    'avatar' => $avatar,
+                    'fullname' => $fullname,
+                    'signed_in' => True
+                );
                     
-                    log_message('debug', var_export($sess_array, True));
+                log_message('debug', var_export($sess_array, True));
 
-                    $this->session->set_userdata($sess_array);
-                    return TRUE;
-                }
-                // Validation failed
-                else {
-                    // Set failed validation message
-                    $this->form_validation->set_message('_authenticate_user', 'Invalid username or password');
-                    return FALSE;
-                }
-            } else {
-                // Set failed validation message
-                $this->form_validation->set_message('_authenticate_user', 'Account was deleted');
+                $this->session->set_userdata($sess_array);
+                return TRUE;
+            }
+            // Validation failed
+            else {
+            // Set failed validation message
+                $this->form_validation->set_message('_authenticate_user', 'Invalid username or password');
                 return FALSE;
             }
+            
         } else {
             // Set failed validation message
             $this->form_validation->set_message('_authenticate_user', 'Invalid username or password');

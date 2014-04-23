@@ -1,24 +1,40 @@
 <?php
 class Weather extends CI_Controller{
+    /**
+     * Constructor
+     *
+     * Loads user model and libraries. They are available for all methods
+     *
+     * @access	public
+     * @return	void
+     */
     public function __construct(){
         parent::__construct();
         $this->load->database();
         $this->load->model('user_model');
         $this->load->model('weather_model');
         $this->load->library('session');
+        $this->load->helper('cookie');
         $this->load->helper('json_response');
     }
+    /**
+     * Default function executed when [base_url]/index.php/weather
+     *
+     * @access	public
+     * @return	void
+     */
     public function index(){
         $this->load->helper('form');
         $this->load->library('form_validation');
-        $userid = $this->session->userdata('userid');
-        if($userid==''){
+        $signed = $this->session->userdata('signed_in'); 
+        if(!$signed){
              $this->_json_response(FALSE);
              return;
         }
-        if ($this->form_validation->run('report_location') == FALSE){
+        if ($this->form_validation->run('report_location_weather') == FALSE){
             $this->_json_response(FALSE);
-        }else{           
+        }else{
+            $userid = $this->session->userdata('userid');
             $lat = $this->input->post('lat');
             $lng = $this->input->post('lng');
             $code = $this->input->post('code');
@@ -38,6 +54,10 @@ class Weather extends CI_Controller{
             $this->output->set_output(json_encode(array('status' => 'error', "msg" => '0')));
         }
     }
+    /**
+     * Callback validation to Check input is number
+     * @return	true if $str is number else false
+     */
     public function is_number($str){
        if(is_numeric($str)){
             return TRUE;
@@ -46,6 +66,10 @@ class Weather extends CI_Controller{
             return FALSE;
        }
     }
+    /**
+     * Callback validation to Check input is number
+     * @return	true if $str is number else false
+     */
     public function range_value($value){
         if($value>-1 && $value <3){
             return TRUE;
