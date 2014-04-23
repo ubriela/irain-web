@@ -47,9 +47,9 @@ class Requester extends CI_Controller{
             $title = $this->input->post('title');
             $lat = $this->input->post('lat');
             $lng = $this->input->post('lng');
-            $requestdate = $this->input->post('requesttime');
-            $startdate = $this->input->post('starttime');
-            $enddate = $this->input->post('endtime');
+            $requestdate = $this->input->post('request_date');
+            $startdate = $this->input->post('start_date');
+            $enddate = $this->input->post('end_date');
             $type = $this->input->post('type');
             $radius = $this->input->post('radius');
             $flag = $this->requester_model->task_request($title,$lat,$lng,$requestdate,$startdate,$enddate,$type,$radius);
