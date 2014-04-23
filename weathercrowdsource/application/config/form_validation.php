@@ -74,7 +74,7 @@ $config = array(
             'rules' => 'trim|required|max_length[128]|xss_clean'
         )
     ),
-    'report_location' => array(
+    'report_location_weather' => array(
         array(
             'field' => 'lat',
             'label' => 'Lat',
@@ -95,7 +95,84 @@ $config = array(
             'label' => 'Time',
             'rules' => 'trim|required|'
         )
+    ),
+    'report_location' => array(
+        array(
+            'field' => 'lat',
+            'label' => 'Lat',
+            'rules' => 'trim|required|callback_is_number'
+        ),
+        array(
+            'field' => 'lng',
+            'label' => 'Lng',
+            'rules' => 'trim|required|callback_is_number'
+        ),
+        array(
+            'field' => 'datetime',
+            'label' => 'Time',
+            'rules' => 'trim|required|'
+        )
+    ),
+    'task_request' => array(
+        array(
+            'field' => 'title',
+            'label' => 'Title',
+            'rules' => 'trim|required|max_length[100]'
+        ),
+        array(
+            'field' => 'lat',
+            'label' => 'Lat',
+            'rules' => 'trim|required|callback_is_number'
+        ),
+        array(
+            'field' => 'lng',
+            'label' => 'Lng',
+            'rules' => 'trim|required|callback_is_number'
+        ),
+        array(
+            'field' => 'requesttime',
+            'label' => 'Time',
+            'rules' => 'trim|required'
+        ),
+        array(
+            'field' => 'starttime',
+            'label' => 'Startdate',
+            'rules' => 'trim|required'
+        ),
+        array(
+            'field' => 'endtime',
+            'label' => 'Enddate',
+            'rules' => 'trim|required'
+        ),
+        array(
+            'field' => 'type',
+            'label' => 'Type',
+            'rules' => 'trim|required|callback_is_number'
+        ),
+        array(
+            'field' => 'radius',
+            'label' => 'Radius',
+            'rules' => 'trim|required|callback_is_number'
+        ),
+    ),
+    'task_response' => array(
+        array(
+            'field' => 'taskid',
+            'label' => 'Taksid',
+            'rules' => 'trim|required'
+        ),
+        array(
+            'field' => 'code',
+            'label' => 'Responsecode',
+            'rules' => 'trim|required|callback_is_number|callback_range_value'
+        ),
+        array(
+            'field' => 'responsedate',
+            'label' => 'Responsedate',
+            'rules' => 'trim|required'
+        )
     )
+   
     
 );
 /* End of file form_validation.php */
