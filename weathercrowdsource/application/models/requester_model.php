@@ -21,6 +21,7 @@ class Requester_model extends CI_Model{
         $this->db->set('startdate',$startdate);
         $this->db->set('enddate',$enddate);
         $this->db->set('type',$type);
+        $this->db->set('radius',$radius);
         $query = $this->db->insert('tasks');
         if($query){
             $this->db->select('taskid');
