@@ -31,7 +31,7 @@ class Weather_model extends CI_Model{
         $this->db->set('location', "GeomFromText($loc)",false);
         $this->db->set('date', $date );
         $this->db->set('isactive', $active);
-        if($this->is_exits_location($id)){
+        if($this->is_exits_location($userid)){
             $this->db->where('userid',$userid);
             $this->db->update('location_report');
         }else{
