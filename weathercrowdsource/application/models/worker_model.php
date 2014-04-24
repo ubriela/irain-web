@@ -63,31 +63,24 @@ class Worker_model extends CI_Model{
      * @access	public
      * @return	true if is successfully set
      */
-    public function set_isactive(){
-        if(!$this->session->userdata('signed_in')){
-            return FALSE;
-        }else{
+    public function set_isactive($active){
             $id = $this->session->userdata('userid');
-            $active = $this->user_model->is_active($id);
-            if($active==0){
+            if($active=='false'){
+                $this->db->set('isactive',0);
+                $this->db->where('userid',$id);
+                $this->db->update('location_report');
+                $this->db->set('isactive',0);
+                $this->db->where('userid',$id);
+                $this->db->update('users');
+            }else{
                 $this->db->set('isactive',1);
                 $this->db->where('userid',$id);
                 $this->db->update('location_report');
-                 $this->db->set('isactive',1);
+                $this->db->set('isactive',1);
                 $this->db->where('userid',$id);
                 $this->db->update('users');
-                return TRUE;
-            }else{
-                $this->db->set('isactive',0);
-                $this->db->where('userid',$id);
-                $this->db->update('location_report');
-                $this->db->set('isactive',0);
-                $this->db->where('userid',$id);
-                $this->db->update('users');
-                return TRUE;
             }
             
-        }
     }
     /**
      * response a task from user

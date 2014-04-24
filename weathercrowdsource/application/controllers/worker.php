@@ -109,9 +109,22 @@ class Worker extends CI_Controller{
      * @return	void
      */
     public function set_isactive(){
-       
-        $flag = $this->worker_model->set_isactive();
-        $this->_json_response($flag);
+        if(!$this->session->userdata('signed_in')){
+            $this->_json_response(FALSE);
+            return;
+        }
+        if ($this->form_validation->run('isactive') == FALSE){
+                $this->_json_response(FALSE);
+        }else{
+            $isactive = $this->input->post('isactive');
+            $this->worker_model->set_isactive($isactive);
+            $this->_json_response(true);
+        }
+    }
+    public function is_bool($str){
+        if($str == 'true' || $str == 'false')
+            return true;
+        return false;
     }
      public function is_number($str){
        if(is_numeric($str)){

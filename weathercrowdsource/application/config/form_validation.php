@@ -171,6 +171,13 @@ $config = array(
             'label' => 'Responsedate',
             'rules' => 'trim|required'
         )
+    ),
+    'isactive' => array(
+        array(
+            'field' => 'isactive',
+            'label' => 'Active',
+            'rules' => 'trim|required|callback_is_bool'
+        )
     )
    
     
