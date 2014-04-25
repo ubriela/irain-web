@@ -94,7 +94,7 @@ class Worker_model extends CI_Model{
     public function task_response($taskid,$code,$date){
         $userid = $this->session->userdata('userid');
         $this->db->where('taskid',$taskid);
-        $this->db->where('userid',$userid);
+        //$this->db->where('userid',$userid);
         $check = $this->db->get('responses');
         if($check->num_rows()>0){
             return false;
@@ -112,6 +112,5 @@ class Worker_model extends CI_Model{
             return true;
         }
     }
-    
 }
 ?>
