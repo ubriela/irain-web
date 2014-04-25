@@ -94,23 +94,37 @@ class Worker_model extends CI_Model{
     public function task_response($taskid,$code,$date){
         $userid = $this->session->userdata('userid');
         $this->db->where('taskid',$taskid);
-        $this->db->where('userid',$userid);
+        $this->db->where('workerid',$userid);
         $check = $this->db->get('responses');
         if($check->num_rows()>0){
             return false;
         }else{
             $time = strtotime($date);
             $date = date('Y-m-d H:i:s',$time);
-            $this->db->set('taskid',$taskid);
-            $this->db->set('userid',$userid);
-            $this->db->set('response_code',$code);
-            $this->db->set('response_date',$date);
-            $query = $this->db->insert('responses');
-            $this->db->set('isassigned','0');
-            $this->db->where('userid',$userid);
-            $this->db->update('location_report');
-            return true;
+            $date_now = date("Y-m-d H:i:s");
+            
+            $success = TRUE;
+            $response_data = array(
+                'taskid' => $taskid,
+                'workerid' => $userid,
+                'response_code' => $code,
+                'response_date' => $date,
+                'response_date_server' => $date_now
+            );
+            // Transaction
+            $this->db->trans_start();
+            if (!$this->db->insert('responses', $response_data))
+                $success = FALSE;
+            $this->db->trans_complete();
+            if($success){
+                $this->db->set('isassigned','0');
+                $this->db->where('userid',$userid);
+                $this->db->update('location_report');
+            }
+           
+            return $success;
         }
     }
+    
 }
 ?>

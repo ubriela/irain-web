@@ -52,7 +52,7 @@ class Weather_model extends CI_Model{
         $loc = "GeomFromText('POINT($lat $lng)')";
         $this->db->where('userid',$userid);
         $this->db->where('location',$loc,false);
-        $query = $this->db->get('weather_location');
+        $query = $this->db->get('weather_report');
         if($query->num_rows()>0){
             return true;
         }
@@ -75,11 +75,11 @@ class Weather_model extends CI_Model{
         if($this->is_exits_weather($userid,$lat,$lng)){
             $this->db->where('userid',$userid);
             $this->db->where('location',"GeomFromText($loc)",false);
-            $this->db->update('weather_location');
+            $this->db->update('weather_report');
         }else{
             $this->db->set('userid',$userid);
             $this->db->set('location',"GeomFromText($loc)",false);
-            $this->db->insert('weather_location');
+            $this->db->insert('weather_report');
         }
         return true;
     }

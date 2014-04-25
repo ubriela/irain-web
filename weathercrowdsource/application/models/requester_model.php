@@ -11,9 +11,13 @@ class Requester_model extends CI_Model{
     public function task_request($title,$lat,$lng,$request_date,$start_date,$end_date,$type=1,$radius){
         $userid = $this->session->userdata('userid');
         $loc = "'POINT($lat $lng)'";
+        $location = "GeomFromText($loc)";
         $requestdate = $this->string_to_time($request_date);
         $startdate = $this->string_to_time($start_date);
         $enddate = $this->string_to_time($end_date);
+        if($startdate >= $enddate)
+            return false;
+        $success = TRUE;
         $this->db->set('requesterid',$userid);
         $this->db->set('title',$title);
         $this->db->set('location', "GeomFromText($loc)",false);
@@ -22,17 +26,20 @@ class Requester_model extends CI_Model{
         $this->db->set('enddate',$enddate);
         $this->db->set('type',$type);
         $this->db->set('radius',$radius);
-        $query = $this->db->insert('tasks');
-        if($query){
+        //$query = $this->db->insert('tasks');
+        $this->db->trans_start();
+        if (!$this->db->insert('tasks'))
+            $success = FALSE;
+        $this->db->trans_complete();
+        if($success){
             $this->db->select('taskid');
             $this->db->from('tasks');
             $this->db->where('requesterid',$userid);
             $this->db->order_by('taskid','desc');
             $this->db->limit('1');
             $query_taskid = $this->db->get();
-            foreach($query_taskid->result() as $row){
-                return $row->taskid;
-            }
+            $row = $query_taskid->row();
+            return $row->taskid;
         }else{
             return false;
         }

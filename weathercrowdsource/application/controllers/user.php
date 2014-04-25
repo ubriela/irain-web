@@ -4,6 +4,7 @@ if (!defined('BASEPATH'))
     exit('No direct script access allowed');
 
 /**
+ * MediaQ User Class
  *
  * This class provides methods to interact with the user
  *
