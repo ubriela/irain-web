@@ -56,11 +56,11 @@ class Geocrowd extends CI_Controller {
      * 
      * @param type $lat
      * @param type $lng
-     * @param type $radius, in km
+     * @param type $radius, in metres
      */
-    function circle_query($lat, $lng, $radius = 10) {
+    function circle_query($lat, $lng, $radius = 100) {
 
-        $this->db->select("id, x(location) AS lat, y(location) AS lng, response_code, response_date, (6373 * acos (cos ( radians( '$lat' ) )* cos( radians( x(location) ) )* cos( radians( y(location) ) - radians( '$lng' ) )+ sin ( radians( '$lat' ) )* sin( radians( x(location) ) ))) AS distance");
+        $this->db->select("id, x(location) AS lat, y(location) AS lng, response_code, response_date, (6373000 * acos (cos ( radians( '$lat' ) )* cos( radians( x(location) ) )* cos( radians( y(location) ) - radians( '$lng' ) )+ sin ( radians( '$lat' ) )* sin( radians( x(location) ) ))) AS distance");
         $this->db->from('weather_location')->order_by('response_date');
         $query = $this->db->having("distance < ' $radius '")->get();
 
