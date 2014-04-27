@@ -19,7 +19,7 @@ class Requester_model extends CI_Model{
             "type" => $type,
             "radius" => $radius
         );
-        log_message('debug', var_dump($arr, True));
+        log_message('debug', var_export($arr, True));
         $userid = $this->session->userdata('userid');
         $loc = "'POINT($lat $lng)'";
         $location = "GeomFromText($loc)";
