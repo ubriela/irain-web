@@ -93,7 +93,7 @@ $config = array(
         array(
             'field' => 'time',
             'label' => 'Time',
-            'rules' => 'trim|required|'
+            'rules' => 'trim|required'
         )
     ),
     'report_location' => array(
@@ -110,7 +110,7 @@ $config = array(
         array(
             'field' => 'datetime',
             'label' => 'Time',
-            'rules' => 'trim|required|'
+            'rules' => 'trim|required'
         )
     ),
     'task_request' => array(
