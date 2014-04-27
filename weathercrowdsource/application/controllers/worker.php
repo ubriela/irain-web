@@ -91,9 +91,9 @@ class Worker extends CI_Controller{
         if ($this->form_validation->run('task_response') == FALSE){
                 $this->_json_response(FALSE);
         }else{ 
-            $taskid = $this->input->post('task_id');
-            $code = $this->input->post('response_code');
-            $time = $this->input->post('response_date');
+            $taskid = $this->input->post('taskid');
+            $code = $this->input->post('responsecode');
+            $time = $this->input->post('responsedate');
             $flag = $this->worker_model->task_response($taskid,$code,$time);
             $this->_json_response($flag);
         }           
