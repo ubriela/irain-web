@@ -130,17 +130,17 @@ $config = array(
             'rules' => 'trim|required|callback_is_number'
         ),
         array(
-            'field' => 'request_date',
+            'field' => 'requestdate',
             'label' => 'Time',
             'rules' => 'trim|required'
         ),
         array(
-            'field' => 'start_date',
+            'field' => 'startdate',
             'label' => 'Startdate',
             'rules' => 'trim|required'
         ),
         array(
-            'field' => 'end_date',
+            'field' => 'enddate',
             'label' => 'Enddate',
             'rules' => 'trim|required'
         ),
@@ -157,17 +157,17 @@ $config = array(
     ),
     'task_response' => array(
         array(
-            'field' => 'task_id',
+            'field' => 'taskid',
             'label' => 'Taksid',
             'rules' => 'trim|required'
         ),
         array(
-            'field' => 'response_code',
+            'field' => 'responsecode',
             'label' => 'Responsecode',
             'rules' => 'trim|required|callback_is_number|callback_range_value'
         ),
         array(
-            'field' => 'response_date',
+            'field' => 'responsedate',
             'label' => 'Responsedate',
             'rules' => 'trim|required'
         )
