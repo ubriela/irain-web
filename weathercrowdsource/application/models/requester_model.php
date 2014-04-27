@@ -9,7 +9,7 @@ class Requester_model extends CI_Model{
      * @return	TRUE if is successfully set
      */
     public function task_request($title,$lat,$lng,$request_date,$start_date,$end_date,$type=1,$radius){
-        $array = array(
+        $arr = array(
             "title" => $title,
             "lat" => $lat,
             "lng" => $lng,
@@ -19,7 +19,7 @@ class Requester_model extends CI_Model{
             "type" => $type,
             "radius" => $radius
         );
-        log_message('debug', var_export($array, True));
+        log_message('debug', var_dump($arr, True));
         $userid = $this->session->userdata('userid');
         $loc = "'POINT($lat $lng)'";
         $location = "GeomFromText($loc)";
