@@ -21,6 +21,7 @@ class Requester_model extends CI_Model{
         );
         log_message('debug', var_export($arr, True));
         $userid = $this->session->userdata('userid');
+        log_message('debug', $userid);
         $loc = "'POINT($lat $lng)'";
         $location = "GeomFromText($loc)";
         $requestdate = $this->string_to_time($request_date);
