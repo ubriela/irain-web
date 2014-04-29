@@ -37,10 +37,10 @@ class Requester extends CI_Controller{
      * @return	void
      */
     public function task_request(){
-//        if(!$this->session->userdata('signed_in')){
-//            $this->_json_response(FALSE);
-//            return;
-//        }
+        if(!$this->session->userdata('signed_in')){
+            $this->_json_response(FALSE);
+            return;
+        }
         if ($this->form_validation->run('task_request') == FALSE){
             $data = "form validation error";
             $this->_json_response($data);
