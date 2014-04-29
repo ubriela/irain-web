@@ -42,7 +42,8 @@ class Requester extends CI_Controller{
             return;
         }
         if ($this->form_validation->run('task_request') == FALSE){
-                $this->_json_response(FALSE);
+            $data = "form validation error";
+            $this->_json_response($data);
         }else{ 
             $title = $this->input->post('title');
             $lat = $this->input->post('lat');
