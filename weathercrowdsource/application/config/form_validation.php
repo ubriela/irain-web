@@ -245,7 +245,7 @@ $config = array(
         array(
             'field' => 'code',
             'label' => 'Code',
-            'rules' => 'trim|required|callback_is_number'
+            'rules' => 'trim|required|callback_is_number|callback_range_value'
         )
     )
    
