@@ -86,7 +86,7 @@ class Weather_model extends CI_Model{
     public function spatiotemporal_query($SW_lat, $SW_lng, $NE_lat, $NE_lng, $from = '1979-01-01 00:00:00', $to = '2015-01-01 00:00:00') {
         $region_str = "POLYGON((" . $SW_lat . ' ' . $SW_lng . "," . $NE_lat . ' ' . $SW_lng . "," . $NE_lat . ' ' . $NE_lng . "," . $SW_lat . ' ' . $NE_lng . "," . $SW_lat . ' ' . $SW_lng . "))";
         $start = $this->string_to_time($from);
-        $end = $this -> string_to_time($end);
+        $end = $this -> string_to_time($to);
         if($start>$end){
             $this->_json_response(false);
         }else{
@@ -98,7 +98,7 @@ class Weather_model extends CI_Model{
     public function spatiotemporal_code_query($code,$SW_lat, $SW_lng, $NE_lat, $NE_lng, $from = '1979-01-01 00:00:00', $to = '2015-01-01 00:00:00') {
         $region_str = "POLYGON((" . $SW_lat . ' ' . $SW_lng . "," . $NE_lat . ' ' . $SW_lng . "," . $NE_lat . ' ' . $NE_lng . "," . $SW_lat . ' ' . $NE_lng . "," . $SW_lat . ' ' . $SW_lng . "))";
         $start = $this->string_to_time($from);
-        $end = $this -> string_to_time($end);
+        $end = $this -> string_to_time($to);
         if($start>$end){
             $this->_json_response(false);
         }else{
