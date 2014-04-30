@@ -93,7 +93,7 @@ $config = array(
         array(
             'field' => 'time',
             'label' => 'Time',
-            'rules' => 'trim|required'
+            'rules' => 'trim|required|'
         )
     ),
     'report_location' => array(
@@ -110,7 +110,7 @@ $config = array(
         array(
             'field' => 'datetime',
             'label' => 'Time',
-            'rules' => 'trim|required'
+            'rules' => 'trim|required|'
         )
     ),
     'task_request' => array(
@@ -177,6 +177,75 @@ $config = array(
             'field' => 'isactive',
             'label' => 'Active',
             'rules' => 'trim|required|callback_is_bool'
+        )
+    ),
+    'rectangle_report' => array(
+        array(
+            'field' => 'swlat',
+            'label' => 'SW_lat',
+            'rules' => 'trim|required|callback_is_number'
+        ),
+        array(
+            'field' => 'swlng',
+            'label' => 'SW_lng',
+            'rules' => 'trim|required|callback_is_number'
+        ),
+        array(
+            'field' => 'nelat',
+            'label' => 'NE_lat',
+            'rules' => 'trim|required|callback_is_number'
+        ),
+        array(
+            'field' => 'nelng',
+            'label' => 'NE_lng',
+            'rules' => 'trim|required|callback_is_number'
+        ),
+        array(
+            'field' => 'startdate',
+            'label' => 'Start_date',
+            'rules' => 'trim|required'
+        ),
+        array(
+            'field' => 'enddate',
+            'label' => 'End_date',
+            'rules' => 'trim|required'
+        )
+    ),
+    'rectangle_report_code' => array(
+        array(
+            'field' => 'swlat',
+            'label' => 'SW_lat',
+            'rules' => 'trim|required|callback_is_number'
+        ),
+        array(
+            'field' => 'swlng',
+            'label' => 'SW_lng',
+            'rules' => 'trim|required|callback_is_number'
+        ),
+        array(
+            'field' => 'nelat',
+            'label' => 'NE_lat',
+            'rules' => 'trim|required|callback_is_number'
+        ),
+        array(
+            'field' => 'nelng',
+            'label' => 'NE_lng',
+            'rules' => 'trim|required|callback_is_number'
+        ),
+        array(
+            'field' => 'startdate',
+            'label' => 'Start_date',
+            'rules' => 'trim|required'
+        ),
+        array(
+            'field' => 'enddate',
+            'label' => 'End_date',
+            'rules' => 'trim|required'
+        ),
+        array(
+            'field' => 'code',
+            'label' => 'Code',
+            'rules' => 'trim|required|callback_is_number'
         )
     )
    

@@ -6,6 +6,10 @@
 
 class Geocrowd extends CI_Controller {
 
+    public function __construct(){
+        parent::__construct();
+        $this->load->model('geocrowd_model');
+    }
     /**
      * Used to test other functions
      */
@@ -20,7 +24,7 @@ class Geocrowd extends CI_Controller {
         echo "</br></br>Test circle_query </br>";
         $lat = "34.0197";
         $lng = "-118.2927";
-        $this->circle_query($lat, $lng, 100);
+        $this->circle_query($lat, $lng, 1);
     }
 
     /**
@@ -38,8 +42,13 @@ class Geocrowd extends CI_Controller {
         $region_str = "POLYGON((" . $SW_lat . ' ' . $SW_lng . "," . $NE_lat . ' ' . $SW_lng . "," . $NE_lat . ' ' . $NE_lng . "," . $SW_lat . ' ' . $NE_lng . "," . $SW_lat . ' ' . $SW_lng . "))";
 
         $condition = "response_date between '$from' and '$to' and CONTAINS(GeomFromText(\"$region_str\"), GeomFromText(CONCAT('POINT(', x(location), ' ', y(location),')')))";
-        $query = $this->db->select('id, x(location) AS lat, y(location) AS lng, response_code, response_date')->from('weather_report')->where($condition)->order_by('response_date')->get();
-        echo json_encode(array("results" => $query->result()));
+        $query = $this->db->select('x(location) AS lat, y(location) AS lng, response_date')->from('weather_report')->where($condition)->order_by('response_date')->get();
+        echo json_encode($query->result_array());
+        //foreach($query->result_array() as $row){
+            //echo json_encode($row);
+        //}
+        
+        
     }
 
     // this version would be slower version 1
@@ -64,7 +73,14 @@ class Geocrowd extends CI_Controller {
         $this->db->from('weather_report')->order_by('response_date');
         $query = $this->db->having("distance < ' $radius '")->get();
 
-        echo json_encode(array("results" => $query->result()));
+        //echo json_encode(array("results" => $query->result()));
     }
-
+    private function _json_response($data) {
+        $this->output->set_content_type('application/json');
+        if ($data) {
+            $this->output->set_output(json_encode(array('status' => 'success', "msg" => $data)));
+        } else {
+            $this->output->set_output(json_encode(array('status' => 'error', "msg" => '0')));
+        }
+    }
 }

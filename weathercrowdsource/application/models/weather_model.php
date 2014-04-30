@@ -83,7 +83,33 @@ class Weather_model extends CI_Model{
         }
         return true;
     }
-    
+    public function spatiotemporal_query($SW_lat, $SW_lng, $NE_lat, $NE_lng, $from = '1979-01-01 00:00:00', $to = '2015-01-01 00:00:00') {
+        $region_str = "POLYGON((" . $SW_lat . ' ' . $SW_lng . "," . $NE_lat . ' ' . $SW_lng . "," . $NE_lat . ' ' . $NE_lng . "," . $SW_lat . ' ' . $NE_lng . "," . $SW_lat . ' ' . $SW_lng . "))";
+
+        $condition = "response_date between '$from' and '$to' and CONTAINS(GeomFromText(\"$region_str\"), GeomFromText(CONCAT('POINT(', x(location), ' ', y(location),')')))";
+        $query = $this->db->select('x(location) AS lat, y(location) AS lng, response_date')->from('weather_report')->where($condition)->order_by('response_date')->get();
+        $this->_json_response($query);    
+    }
+    public function spatiotemporal_code_query($code,$SW_lat, $SW_lng, $NE_lat, $NE_lng, $from = '1979-01-01 00:00:00', $to = '2015-01-01 00:00:00') {
+        $region_str = "POLYGON((" . $SW_lat . ' ' . $SW_lng . "," . $NE_lat . ' ' . $SW_lng . "," . $NE_lat . ' ' . $NE_lng . "," . $SW_lat . ' ' . $NE_lng . "," . $SW_lat . ' ' . $SW_lng . "))";
+
+        $condition = "response_date between '$from' and '$to' and response_code = '$code' and CONTAINS(GeomFromText(\"$region_str\"), GeomFromText(CONCAT('POINT(', x(location), ' ', y(location),')')))";
+        $query = $this->db->select('x(location) AS lat, y(location) AS lng, response_date')->from('weather_report')->where($condition)->order_by('response_date')->get();
+        $this->_json_response($query);    
+    }
+    public function _json_response($data) {
+        $this->output->set_content_type('application/json');
+        if ($data) {
+            $this->output->set_output(json_encode($data->result_array()));
+        } else {
+            $this->output->set_output(json_encode(array('status' => 'error', "msg" => '0')));
+        }
+    }
+    public function string_to_time($in){
+        $time = strtotime($in);
+        $date = date('Y-m-d H:i:s',$time);
+        return $date;
+    }
    
 
     

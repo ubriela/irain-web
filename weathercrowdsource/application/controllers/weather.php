@@ -16,6 +16,8 @@ class Weather extends CI_Controller{
         $this->load->library('session');
         $this->load->helper('cookie');
         $this->load->helper('json_response');
+         $this->load->helper('form');
+        $this->load->library('form_validation');
     }
     /**
      * Default function executed when [base_url]/index.php/weather
@@ -45,7 +47,39 @@ class Weather extends CI_Controller{
         }
             
     }
-       
+     public function rectangle_report(){
+        if(!$this->session->userdata('signed_in')){
+            $this->_json_response(false);
+        }
+        if ($this->form_validation->run('rectangle_report') == FALSE){
+                $this->_json_response(FALSE);
+        }else{
+            $SW_lat = $this->input->post('swlat');//"34.0197";
+            $SW_lng = $this->input->post('swlng');//"-118.2927";
+            $NE_lat = $this->input->post('nelat');//"34.219722";
+            $NE_lng = $this->input->post('nelng');//"-118.092785";
+            $from = $this->input->post('startdate');
+            $to = $this->input->post('enddate');
+            $this->weather_model->spatiotemporal_query($SW_lat,$SW_lng,$NE_lat,$NE_lng,$from,$to);
+        } 
+    }  
+    public function rectangle_report_code(){
+        if(!$this->session->userdata('signed_in')){
+            $this->_json_response(false);
+        }
+        if ($this->form_validation->run('rectangle_report_code') == FALSE){
+                $this->_json_response(FALSE);
+        }else{
+            $Code = $this->input->post('code');
+            $SW_lat = $this->input->post('swlat');//"34.0197";
+            $SW_lng = $this->input->post('swlng');//"-118.2927";
+            $NE_lat = $this->input->post('nelat');//"34.219722";
+            $NE_lng = $this->input->post('nelng');//"-118.092785";
+            $from = $this->input->post('startdate');
+            $to = $this->input->post('enddate');
+            $this->weather_model->spatiotemporal_code_query($Code,$SW_lat,$SW_lng,$NE_lat,$NE_lng,$from,$to);
+        } 
+    }
     private function _json_response($data) {
         $this->output->set_content_type('application/json');
         if ($data) {
@@ -54,6 +88,7 @@ class Weather extends CI_Controller{
             $this->output->set_output(json_encode(array('status' => 'error', "msg" => '0')));
         }
     }
+    
     /**
      * Callback validation to Check input is number
      * @return	true if $str is number else false
@@ -78,5 +113,6 @@ class Weather extends CI_Controller{
             return FALSE;
         }
     }
+     
 }
 ?>
