@@ -1,3 +1,4 @@
+
 <?php
 
 /*
@@ -17,7 +18,7 @@ class User_model extends CI_Model {
      */
     public function get_user($username_or_email) {
 
-        $this->db->select('userid, username, avatar, firstname, lastname, password, salt');
+        $this->db->select('userid, username, avatar, firstname, lastname, password, salt, channelid');
         $this->db->from('users');
         $this->db->where('username', $username_or_email);
         $this->db->or_where('email', $username_or_email);
@@ -58,9 +59,10 @@ class User_model extends CI_Model {
      * @param	string $username the user's username
      * @param	string $password the user's password
      * @param	string $email the user's email
+     * @param 	string $channelid channelid for push notification service
      * @return	TRUE if user creation was successfull, otherwise FALSE
      */
-    public function create_user($username, $password, $email) {
+    public function create_user($username, $password, $email, $channelid = FALSE) {
 
         // Generate unique id from application/helpers/uuid_helper.php
         $uuid = gen_uuid();
@@ -73,6 +75,11 @@ class User_model extends CI_Model {
 
         // Get the date
         $date_now = date("Y-m-d H:i:s");
+        
+        //set NULL to channelid
+        if ($channelid === FALSE) {
+        	$channelid = NULL;
+        }
 
         $user_data = array(
             'userid' => $uuid,
@@ -83,7 +90,8 @@ class User_model extends CI_Model {
             'last_login_date' => $date_now,
             'last_activity_date' => $date_now,
             'last_password_change_date' => $date_now,
-            'salt' => $random_salt
+            'salt' => $random_salt,
+        	'channelid' => $channelid
         );
 
 

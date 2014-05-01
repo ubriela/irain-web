@@ -209,9 +209,10 @@ class User extends CI_Controller {
 
         $username = $this->input->post('username');
         $email = $this->input->post('email');
+        $channelid = $this->input->post('channelid');
 
         // query the database
-        $success = $this->user_model->create_user($username, $password, $email);
+        $success = $this->user_model->create_user($username, $password, $email, $channelid);
 
         if ($success) {
             return TRUE;

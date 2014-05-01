@@ -50,6 +50,18 @@ class push extends CI_Controller {
 	}
 	
 	/**
+	 * function executed when [base_url]/index.php/push/get_channel_id is requested
+	 * get channel id
+	 * @access	public
+	 * @return	void
+	 * @param
+	 */
+	public function get_channel_id()
+	{
+		$this->push_to_group();
+	}
+	
+	/**
 	 * function executed when [base_url]/index.php/push/push_to_group is requested
 	 * send push notification to a list of user
 	 * @access	public
