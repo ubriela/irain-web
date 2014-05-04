@@ -1,5 +1,6 @@
 <?php
-class Requester extends CI_Controller{
+require_once('geocrowd.php');
+class Requester extends Geocrowd{
     /**
      * Constructor
      *
@@ -11,11 +12,6 @@ class Requester extends CI_Controller{
      
     public function __construct(){
         parent::__construct();
-        $this->load->database();
-        $this->load->library('session');
-        $this->load->helper('json_response');
-        $this->load->helper('form');
-        $this->load->library('form_validation');
         $this->load->model('requester_model');
     }
      /**
@@ -43,7 +39,8 @@ class Requester extends CI_Controller{
         }
         if ($this->form_validation->run('task_request') == FALSE){
                 $this->_json_response(FALSE);
-        }else{ 
+        }else{
+            $userid = $this->session->userdata('userid');
             $title = $this->input->post('title');
             $lat = $this->input->post('lat');
             $lng = $this->input->post('lng');
@@ -52,8 +49,15 @@ class Requester extends CI_Controller{
             $enddate = $this->input->post('enddate');
             $type = $this->input->post('type');
             $radius = $this->input->post('radius');
-            $flag = $this->requester_model->task_request($title,$lat,$lng,$requestdate,$startdate,$enddate,$type,$radius);
-            $this->_json_response($flag);
+            if($this->requester_model->task_request($userid,$title,$lat,$lng,$requestdate,$startdate,$enddate,$type,$radius)){
+                $taskid = $this->requester_model->get_taskid($userid);
+                if(!$this->task_matched($taskid,$lat,$lng,$startdate,$enddate,$radius)){
+                    $this->task_query($taskid,$lat,$lng,$radius);
+                }
+            }else{
+                $this->_json_response(false);
+            };
+            
         }
     }
     /**

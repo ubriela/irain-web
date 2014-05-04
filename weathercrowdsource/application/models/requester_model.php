@@ -8,8 +8,8 @@ class Requester_model extends CI_Model{
      * @param   number $lat,$lng,$type,$radius
      * @return	TRUE if is successfully set
      */
-    public function task_request($title,$lat,$lng,$request_date,$start_date,$end_date,$type=1,$radius){
-        $userid = $this->session->userdata('userid');
+    public function task_request($userid,$title,$lat,$lng,$request_date,$start_date,$end_date,$type=1,$radius){
+        //$userid = $this->session->userdata('userid');
         $loc = "'POINT($lat $lng)'";
         $location = "GeomFromText($loc)";
         $requestdate = $this->string_to_time($request_date);
@@ -31,18 +31,17 @@ class Requester_model extends CI_Model{
         if (!$this->db->insert('tasks'))
             $success = FALSE;
         $this->db->trans_complete();
-        if($success){
-            $this->db->select('taskid');
-            $this->db->from('tasks');
-            $this->db->where('requesterid',$userid);
-            $this->db->order_by('taskid','desc');
-            $this->db->limit('1');
-            $query_taskid = $this->db->get();
-            $row = $query_taskid->row();
-            return $row->taskid;
-        }else{
-            return false;
-        }
+        return $success;
+    }
+    public function get_taskid($userid){
+         $this->db->select('taskid');
+         $this->db->from('tasks');
+         $this->db->where('requesterid',$userid);
+         $this->db->order_by('taskid','desc');
+         $this->db->limit('1');
+         $query_taskid = $this->db->get();
+         $row = $query_taskid->row();
+         return $row->taskid;
     }
     public function string_to_time($in){
         $time = strtotime($in);
