@@ -3,6 +3,7 @@
 /*
  * Geocrowd
  */
+require_once('push.php');
 
 class Geocrowd extends CI_Controller {
 
@@ -57,7 +58,7 @@ class Geocrowd extends CI_Controller {
      * @param $radius
      * @return array workerid
      */
-    public function task_query($taskid,$lat,$lng,$radius){
+    public function task_query($taskid,$lat,$lng,$radius,$message){
         $condition = "isactive = 1 and isassigned = 0 and (6373000 * acos (cos ( radians( '$lat' ) )* cos( radians( x(location) ) )* cos( radians( y(location) ) - radians( '$lng' ) )+ sin ( radians( '$lat' ) )* sin( radians( x(location) ) ))) < '$radius'";
         $this->db->select('userid');
         $this->db->from('location_report');
@@ -72,11 +73,15 @@ class Geocrowd extends CI_Controller {
                     'userid' => $row['userid'],
                     'assigned_date' => $now
                 );
-                $this->db->insert('task_worker_matches',$data);
+                //$this->db->insert('task_worker_matches',$data);
                 $this->worker_model->assigned($row['userid']);
+                //notifice user
+                $pushObject = new push();
+                $pushObject->push_to_userid($row['userid'], $message);
            }
            $this->db->trans_complete();
         $this->_json_response1($query->result_array());
+        return true;
         }else{
             return false;
         }

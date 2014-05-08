@@ -68,24 +68,45 @@ class push extends CI_Controller {
 	 * @return	void
 	 */
 	
-	public function push_to_group(){
-		// Global informatin
-		$url = "https://api.parse.com/1/push";
-		$appId = 'UovV9FjabAWcEoNDSWRjGZl9L4ZQGdklPtqwuP3m';
-		$restKey = 'gzoEcDslLHdNqu2cTLG4bIIoSm7FkYVXxBtTZJYh';
+	public function push_by_channelid(){
 		
 		if (isset($_POST['message'])) {
 			$message = $_POST['message'];
 			$channelId = $_POST['channelid'];
 		} else
 			return False;
+		$this->push_service($message, $channelid);
+		
+	}
+	
+	public function push_to_userid($userId, $message){
+		$condition = "userid = '$userId'";
+		$this->db->select('channelid');
+		$this->db->from('users');
+		$this->db->where($condition);
+		$query = $this->db->get();
+		if($query->num_rows()>0){
+			$this->db->trans_start();
+			foreach($query->result_array() as $row){
+				$channelid = $row['channelid'];
+				$this->push_service($message, $channelid);//"iRain_UOTpv7BD7q");
+			}
+			$this->db->trans_complete();
+		}
+	}
+	
+	public function push_service($message, $channelId){
+		// Global informatin
+		$url = "https://api.parse.com/1/push";
+		$appId = 'i1O0ATgVN1ObAwUYzdoPtp1lStP5EfYWY2wP4E4d';
+		$restKey = 'D5Yons8UEGyPowoeSv5oasGhgXper4Rk1KULZKBV';
 		
 		$push_payload = json_encode(array(
-				"channels" =>	
-// 				array("$in"=>$channelId)
-						[
-						$channelId         
-						]
+				"channels" =>
+				// 				array("$in"=>$channelId)
+				[
+				$channelId
+				]
 				,
 				"data" => array(
 						"alert" => $message
@@ -107,13 +128,13 @@ class push extends CI_Controller {
 		$response = curl_exec($rest);
 		$responseCode = curl_getinfo($rest, CURLINFO_HTTP_CODE);
 		print curl_error($rest);
-// 		$this->_json_response($message);
+		// 		$this->_json_response($message);
 		echo $push_payload;
 		echo $response;
 		echo $responseCode;
-// 		$this->_json_response($response);
+		// 		$this->_json_response($response);
 		curl_close($rest);
-	}
+	} 
 	
 	
 	/**
