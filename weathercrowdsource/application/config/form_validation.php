@@ -153,7 +153,7 @@ $config = array(
             'field' => 'radius',
             'label' => 'Radius',
             'rules' => 'trim|required|callback_is_number'
-        ),
+        )
     ),
     'task_response' => array(
         array(
@@ -245,7 +245,14 @@ $config = array(
         array(
             'field' => 'code',
             'label' => 'Code',
-            'rules' => 'trim|required|callback_is_number|callback_range_value'
+            'rules' => 'trim|required|callback_is_number'
+        )
+    ),
+    'top_contributions' => array(
+        array(
+            'field' => 'type',
+            'label' => 'Type',
+            'rules' => 'trim|required|callback_is_number'
         )
     )
    
