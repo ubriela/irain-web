@@ -49,7 +49,7 @@ class Stats extends CI_Controller{
         $this->stats_model->summary_workers();
     }
     public function summary_geocrowd(){
-        
+        $this->stats_model->summary_geocrowd();
     }
     /**
      * top_contributions

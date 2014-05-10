@@ -71,7 +71,8 @@ class Stats_model extends CI_Model{
     }
     private function get_num_available(){
         $this->db->where('isactive','1');
-        $query = $this->db->get('users');
+        $this->db->where('isassigned','0');
+        $query = $this->db->get('location_report');
         return $query->num_rows();
     }
     /**
@@ -84,21 +85,40 @@ class Stats_model extends CI_Model{
      * @return	void
      */
     public function top_contributions($type){
-        $select = "select task_worker_matches.userid,users.username,users.email,count(*) as contributions
+        if($type!=0){
+            $select = "select task_worker_matches.userid,users.username,users.email,count(*) as contributions
                 from tasks
                 left join task_worker_matches on tasks.taskid = task_worker_matches.taskid
                 left join users on task_worker_matches.userid = users.userid
-                where tasks.iscompleted = 1 and tasks.type=$type
+                where tasks.iscompleted = 1 and tasks.type=1
                 group by task_worker_matches.userid
                 order by contributions desc
+                limit 0,10
                 ";
+        }else{
+            $select = "select weather_report.userid,users.username,users.email,count(*) as contributions
+                from weather_report
+                left join users on  weather_report.userid = users.userid
+                group by weather_report.userid
+				order by contributions desc
+				limit 0,10
+                ";
+                
+        }
+        
         $query = $this->db->query($select);
         $this->output->set_content_type('application/json');
         $this->output->set_output(json_encode($query->result_array()));
         
     }
     public function summary_geocrowd(){
-        
+        $select = "select taskid,task_worker_matches.userid,users.username,users.email,iscompleted,assigned_date,completed_date
+            from task_worker_matches
+            left join users on task_worker_matches.userid = users.userid
+            order by userid";
+        $query = $this->db->query($select);
+        $this->output->set_content_type('application/json');
+        $this->output->set_output(json_encode($query->result_array()));
     }
     private function _json_response($data) {
         $this->output->set_content_type('application/json');
