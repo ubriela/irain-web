@@ -54,6 +54,8 @@ class Requester extends Geocrowd{
                 //if(!$this->task_matched($taskid,$lat,$lng,$startdate,$enddate,$radius)){
                 $this->task_query($taskid,$lat,$lng,$radius,$title);
                 //}
+                
+                $this->_json_response($taskid);
             }else{
                 $this->_json_response(false);
             };
