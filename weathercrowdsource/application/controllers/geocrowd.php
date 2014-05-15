@@ -73,7 +73,7 @@ class Geocrowd extends CI_Controller {
                     'userid' => $row['userid'],
                     'assigned_date' => $now
                 );
-                //$this->db->insert('task_worker_matches',$data);
+                $this->db->insert('task_worker_matches',$data);
                 $this->worker_model->assigned($row['userid']);
                 //notifice user
                 $pushObject = new push();
