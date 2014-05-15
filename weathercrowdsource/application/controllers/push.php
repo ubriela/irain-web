@@ -129,9 +129,9 @@ class push extends CI_Controller {
 		$responseCode = curl_getinfo($rest, CURLINFO_HTTP_CODE);
 		print curl_error($rest);
 		// 		$this->_json_response($message);
-		echo $push_payload;
-		echo $response;
-		echo $responseCode;
+// 		echo $push_payload;
+// 		echo $response;
+// 		echo $responseCode;
 		// 		$this->_json_response($response);
 		curl_close($rest);
 	} 
