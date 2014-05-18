@@ -142,6 +142,18 @@ class Worker_model extends CI_Model{
     	$this->db->order_by('assigned_date','desc');
     	$this->db->limit('1');
     	$query_taskid = $this->db->get();
+    	if ($query_taskid->num_rows()>0){
+    		return $this->get_tasktitle($query_taskid->row()->taskid);
+    	}
+    	return $row;
+    }
+    
+    public function get_tasktitle($taskid){
+    	$this->db->select('taskid');
+    	$this->db->select('title');
+    	$this->db->from('tasks');
+    	$this->db->where('taskid',$taskid);
+    	$query_taskid = $this->db->get();
     	$row = $query_taskid->row();
     	return $row;
     }
