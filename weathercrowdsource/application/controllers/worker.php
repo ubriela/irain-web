@@ -43,7 +43,7 @@ class Worker extends CI_Controller{
      private function _json_response($data) {
         $this->output->set_content_type('application/json');
         if ($data) {
-            $this->output->set_output(json_encode(array('status' => 'success', "msg" => 'success')));
+            $this->output->set_output(json_encode(array('status' => 'success', "msg" => $data)));
         } else {
             $this->output->set_output(json_encode(array('status' => 'error', "msg" => '0')));
         }
@@ -103,7 +103,7 @@ class Worker extends CI_Controller{
      * set user's active 
      *
      *
-     * [base_url]/index.php/worker/is_active
+     * [base_url]/index.php/worker/set_isactive
      *
      * @access	public
      * @return	void
@@ -121,6 +121,27 @@ class Worker extends CI_Controller{
             $this->_json_response(true);
         }
     }
+    
+    /**
+     * get_taskid
+     * get current task id for an user
+     *
+     *
+     * [base_url]/index.php/worker/get_taskid
+     *
+     * @access	public
+     * @return	void
+     */
+    public function get_taskid(){
+    	if(!$this->session->userdata('signed_in')){
+    		$this->_json_response(FALSE);
+    		return;
+    	}else{
+    		$flag = $this->worker_model->get_taskid();
+    		$this->_json_response($flag);
+    	}
+    }
+    
     public function is_bool($str){
         if($str == 'true' || $str == 'false')
             return true;
@@ -142,5 +163,7 @@ class Worker extends CI_Controller{
             return FALSE;
         }
     }
+    
+    
 }
 ?>

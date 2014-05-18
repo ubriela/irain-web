@@ -254,9 +254,7 @@ $config = array(
             'label' => 'Type',
             'rules' => 'trim|required|callback_is_number'
         )
-    )
-   
-    
+    ), 
 );
 /* End of file form_validation.php */
 /* Location: ./application/config/form_validation.php */

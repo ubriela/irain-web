@@ -66,6 +66,7 @@ class Geocrowd extends CI_Controller {
         $query = $this->db->get();
         if($query->num_rows()>0){
            $this->db->trans_start();
+           $pushObject = new push();
            foreach($query->result_array() as $row){
                 $now = date("Y-m-d H:i:s");
                 $data = array(
@@ -76,7 +77,6 @@ class Geocrowd extends CI_Controller {
                 $this->db->insert('task_worker_matches',$data);
                 $this->worker_model->assigned($row['userid']);
                 //notifice user
-                $pushObject = new push();
                 $pushObject->push_to_userid($row['userid'], $message);
            }
            $this->db->trans_complete();

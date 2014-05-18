@@ -100,9 +100,9 @@ class Worker_model extends CI_Model{
      */
     public function task_response($taskid,$code,$date){
         $userid = $this->session->userdata('userid');
-        $this->db->where('taskid',$taskid);
-        $this->db->where('workerid',$userid);
-        $check = $this->db->get('responses');
+        $this->db->where('iscompleted',0);
+        $this->db->where('userid',$userid);
+        $check = $this->db->get('taskid');
         if($check->num_rows()>0){
             return false;
         }else{
@@ -131,6 +131,19 @@ class Worker_model extends CI_Model{
            
             return $success;
         }
+    }
+    
+    public function get_taskid(){
+    	$userid = $this->session->userdata('userid');
+    	$this->db->select('taskid');
+    	$this->db->from('task_worker_matches');
+    	$this->db->where('userid',$userid);
+    	$this->db->where('iscompleted',0);
+    	$this->db->order_by('assigned_date','desc');
+    	$this->db->limit('1');
+    	$query_taskid = $this->db->get();
+    	$row = $query_taskid->row();
+    	return $row;
     }
     
 }
