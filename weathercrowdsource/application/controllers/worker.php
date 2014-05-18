@@ -135,6 +135,7 @@ class Worker extends CI_Controller{
     public function get_taskid(){
     	if(!$this->session->userdata('signed_in')){
     		$this->_json_response(FALSE);
+    		log_message('error','user did not log in');
     		return;
     	}else{
     		$flag = $this->worker_model->get_taskid();
