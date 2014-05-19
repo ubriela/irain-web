@@ -154,7 +154,10 @@ class Worker_model extends CI_Model{
     	if ($query_taskid->num_rows()>0){
     		return $this->get_tasktitle($query_taskid->row()->taskid);
     	}
-    	return '-1';
+    	$response_data = array(
+    			'taskid' => '-1'
+    	);
+    	return $response_data;
     }
     
     public function get_tasktitle($taskid){
