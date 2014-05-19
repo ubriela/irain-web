@@ -100,9 +100,10 @@ class Worker_model extends CI_Model{
      */
     public function task_response($taskid,$code,$date){
         $userid = $this->session->userdata('userid');
-        $this->db->where('iscompleted',0);
-        $this->db->where('userid',$userid);
-        $check = $this->db->get('taskid');
+        $this->db->from('responses');
+        $this->db->where('taskid',$taskid);
+        $this->db->where('workerid',$userid);
+        $check = $this->db->get();
         if($check->num_rows()>0){
             return false;
         }else{
@@ -123,10 +124,18 @@ class Worker_model extends CI_Model{
             if (!$this->db->insert('responses', $response_data))
                 $success = FALSE;
             $this->db->trans_complete();
+            
+            // Update related table
             if($success){
                 $this->db->set('isassigned','0');
                 $this->db->where('userid',$userid);
                 $this->db->update('location_report');
+                
+                $this->db->set('iscompleted','1');
+                $this->db->set('completed_date',$date);
+                $this->db->where('userid',$userid);
+                $this->db->where('taskid',$taskid);
+                $this->db->update('task_worker_matches');
             }
            
             return $success;
