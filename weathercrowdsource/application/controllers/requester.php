@@ -51,10 +51,10 @@ class Requester extends Geocrowd{
             $radius = $this->input->post('radius');
             if($this->requester_model->task_request($userid,$title,$lat,$lng,$requestdate,$startdate,$enddate,$type,$radius)){
                 $taskid = $this->requester_model->get_taskid($userid);
-//                if(!$this->task_matched($taskid,$lat,$lng,$startdate,$enddate,$radius)){
+                if(!$this->task_matched($taskid,$lat,$lng,$startdate,$enddate,$radius)){
                     $this->task_query($taskid,$lat,$lng,$radius,$title);
                     return $this->_json_response($taskid);
-//                }
+               }
             }else{
                 $this->_json_response(false);
                 return;

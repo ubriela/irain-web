@@ -254,7 +254,14 @@ $config = array(
             'label' => 'Type',
             'rules' => 'trim|required|callback_is_number'
         )
-    ), 
+    ),
+	'update_channelid' => array(
+			array(
+					'field' => 'channelid',
+					'label' => 'Channelid',
+					'rules' => 'trim|required|callback_is_number'
+			)
+	),
 );
 /* End of file form_validation.php */
 /* Location: ./application/config/form_validation.php */

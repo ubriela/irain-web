@@ -75,6 +75,35 @@ class User extends CI_Controller {
             $this->_json_response($this->session->userdata('userid'));
         }
     }
+    
+    /**
+     * Update channel id
+     *
+     * One of the two urls requested
+     *
+     * 1. [base_url]/index.php/user
+     * 2. [base_url]/index.php/user/update_channelid
+     *
+     * @access	public
+     * @param	string $username the user's username (can be used after create account)
+     * @return	void
+     */
+    public function update_channelid() {
+    	$this->load->helper('form');
+    	$this->load->library('form_validation');
+    
+    	if(!$this->session->userdata('signed_in')){
+    		$this->_json_response(FALSE);
+    		return;
+    	}
+    	if ($this->form_validation->run('update_channelid') == FALSE){
+    		$this->_json_response(FALSE);
+    	}else{
+    		$channelid = $this->input->post('channelid');
+    		$this->user_model->update_channelid($channelid);
+    		$this->_json_response($this->session->userdata('userid'));
+    	}
+    }
 
     /**
      * Callback validation to Check password with DB

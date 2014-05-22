@@ -277,5 +277,18 @@ class User_model extends CI_Model {
             return FALSE;
         }
     }
+    /**
+     * set user's channelid:
+     *
+     * @access	public
+     * @return	true if is successfully set
+     */
+    public function update_channelid($channelid){
+    	$id = $this->session->userdata('userid');
 
+    		$this->db->set('channelid',$channelid);
+    		$this->db->where('userid',$id);
+    		$this->db->update('users');
+    
+    }
 }
