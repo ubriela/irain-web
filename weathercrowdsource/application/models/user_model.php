@@ -8,7 +8,53 @@
  */
 
 class User_model extends CI_Model {
+	
+	/**
+	 * Finds and returns the user details based on userid
+	 *
+	 * @access	public
+	 * @param	string $username_or_email the user's username or email
+	 * @return	the user details, otherwise FALSE
+	 */
+	public function get_userinfo() {
+	
+		$userid = $this->session->userdata('userid');
+		
+		$this->db->select('username, avatar, firstname, lastname, phone_number, email');
+		$this->db->from('users');
+		$this->db->where('userid', $userid);
+		$this->db->limit(1);
+	
+		$query = $this->db->get();
+	
+		if ($query->num_rows() == 1) {
+			// Return the row
+			return $query->row();
+		} else {
+			return FALSE;
+		}
+	}
 
+	/**
+	 * Update user info
+	 *
+     * @access	public
+     * @return	true if is successfully set
+     */
+    public function update_userinfo($firstname, $lastname, $phone_number){
+    	$id = $this->session->userdata('userid');
+   		$this->db->set('firstname',$firstname);
+   		$this->db->set('lastname',$lastname);
+   		$this->db->set('phone_number',$phone_number);
+   		$this->db->where('userid',$id);
+   		if ($this->db->update('users')){
+   			return TRUE;
+   		}else {
+   			return FALSE;
+   		}
+    
+    }
+	
     /**
      * Finds and returns the user details based on the username or email
      *

@@ -77,6 +77,48 @@ class User extends CI_Controller {
     }
     
     /**
+     * Get user info
+     *
+     *
+     * [base_url]/index.php/user/get_userinfo
+     *
+     * @access	public
+     * @param	void
+     * @return	user info : username, last name, first name, phone, email
+     */
+    public function get_userinfo() {
+    	if(!$this->session->userdata('signed_in')){
+    		$this->_json_response(FALSE);
+    		return;
+    	}
+    	// get user info
+    	$this->_json_response($this->user_model->get_userinfo());
+    }
+    
+    /**
+     * update user info
+     *
+     *
+     * [base_url]/index.php/user/update_userinfo
+     *
+     * @access	public
+     * @param	lastname, firstname, phone_number,
+     * @return	void
+     */
+    public function update_userinfo() {
+    	if(!$this->session->userdata('signed_in')){
+    		$this->_json_response(FALSE);
+    		return;
+    	}
+    	// get user info
+    	$firstname = $this->input->post('firstname');
+    	$lastname = $this->input->post('lastname');
+    	$phone_number = $this->input->post('phone_number');
+    	 
+    	$this->_json_response($this->user_model->update_userinfo($firstname,$lastname,$phone_number));
+    }
+    
+    /**
      * Update channel id
      *
      * One of the two urls requested
@@ -477,5 +519,7 @@ class User extends CI_Controller {
 
         return $change_successful;
     }
+    
+    
 
 }
