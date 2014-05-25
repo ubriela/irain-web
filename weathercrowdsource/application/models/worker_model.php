@@ -18,7 +18,6 @@ class Worker_model extends CI_Model{
         };
     }
     public function assigned($userid){
-        $userid = $this->session->userdata('userid');
             $this->db->set('isassigned','1');
             $this->db->where('userid',$userid);
             $this->db->update('location_report');
