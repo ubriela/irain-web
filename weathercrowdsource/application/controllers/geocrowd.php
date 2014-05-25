@@ -24,6 +24,28 @@ class Geocrowd extends CI_Controller {
     public function index() {
         
     }
+    
+    public function assign_tasks(){
+        $now = date("Y-m-d H:i:s");
+        $condition = 'iscompleted=0';
+        $this->db->select('taskid,x(location) AS lat, y(location) AS lng, radius');
+        $this->db->from('tasks');
+        $this->db->where("iscompleted = 0 and enddate >= '$now'");
+        $query = $this->db->get();
+        if($query->num_rows()>0){
+            foreach($query->result_array() as $row){
+                $taskid = $row['taskid'];
+                $lat = $row['lat'];
+                $lng = $row['lng'];
+                $radius = $row['radius'];
+                $message = "you have a task";
+                $this->task_query($taskid,$lat,$lng,$radius,$message);
+            }
+        }
+        
+    }
+    
+    
     /**
      * checks data weather existing or not
      * @param $taskid

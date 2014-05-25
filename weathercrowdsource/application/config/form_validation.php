@@ -255,13 +255,15 @@ $config = array(
             'rules' => 'trim|required|callback_is_number'
         )
     ),
-	'update_channelid' => array(
-			array(
-					'field' => 'channelid',
-					'label' => 'Channelid',
-					'rules' => 'trim|required|callback_is_number'
-			)
-	),
+    'submitted_tasks' => array(
+        array(
+            'field' => 'number',
+            'label' => 'Number',
+            'rules' => 'trim|required|callback_is_number'
+        )
+    )
+   
+    
 );
 /* End of file form_validation.php */
 /* Location: ./application/config/form_validation.php */

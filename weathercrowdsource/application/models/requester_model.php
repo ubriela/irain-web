@@ -48,5 +48,19 @@ class Requester_model extends CI_Model{
         $date = date('Y-m-d H:i:s',$time);
         return $date;
     }
+    
+    public function submitted_task($number){
+        $id = $this->session->userdata('userid');
+        $this->db->select('title, x(location) AS lat, y(location) AS lng,request_date,startdate,enddate, iscompleted');
+        $this->db->from('tasks');
+        $this->db->where("requesterid = '$id'");
+        $this->db->limit($number);
+        $query = $this->db->get();
+        if($query->num_rows()>0){
+            $this->output->set_content_type('application/json');
+            $this->output->set_output(json_encode($query->result_array()));
+        }
+       
+    }
 }
 ?>

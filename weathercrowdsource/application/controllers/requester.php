@@ -23,6 +23,19 @@ class Requester extends Geocrowd{
     public function index(){
         
     }
+    
+    public function submitted_tasks(){
+        if(!$this->session->userdata('signed_in')){
+            $this->_json_response(FALSE);
+            return;
+        }
+        if ($this->form_validation->run('submitted_tasks') == FALSE){
+                $this->_json_response(FALSE);
+        }else{
+            $number = $this->input->post('number');
+            $this->requester_model->submitted_task($number);
+        }
+    }
     /**
      * task request
      *
