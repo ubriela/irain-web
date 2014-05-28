@@ -1,14 +1,12 @@
 <?php
+require_once('convert.php');
 class Stats extends CI_Controller{
     public function __construct(){
         parent::__construct();
-        $this->load->database();
-        $this->load->library('session');
+        
         $this->load->model('stats_model');
-        $this->load->helper('json_response');
-        //$this->load->model('user_model');
-        $this->load->helper('form');
-        $this->load->library('form_validation');
+       
+        
     }
     /**
      * Default function executed when [base_url]/index.php/stats
@@ -71,14 +69,7 @@ class Stats extends CI_Controller{
             $this->stats_model->top_contributions($type);
         }
     }
-     public function is_number($str){
-       if(is_numeric($str)){
-            return TRUE;
-       }else{
-            $this->form_validation->set_message('is_number', 'Please enter number');
-            return FALSE;
-       }
-    }
+    
     private function _json_response($data) {
         $this->output->set_content_type('application/json');
         if ($data) {

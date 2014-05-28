@@ -77,18 +77,7 @@ class Requester extends Geocrowd{
             
         }
     }
-    /**
-     * Callback validation to Check input is number
-     * @return	true if $str is number else false
-     */
-    public function is_number($str){
-       if(is_numeric($str)){
-            return TRUE;
-       }else{
-            $this->form_validation->set_message('is_number', 'Please enter number');
-            return FALSE;
-       }
-    }
+    
     
      private function _json_response($data) {
         $this->output->set_content_type('application/json');
