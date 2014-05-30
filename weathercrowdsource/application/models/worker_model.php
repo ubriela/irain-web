@@ -140,7 +140,7 @@ class Worker_model extends CI_Model{
                 
 				// Set completion in Tasks table                
                 $this->db->set('iscompleted','1');
-                $this->db->where('userid',$userid);
+                $this->db->where('taskid',$taskid);
                 $this->db->update('tasks');
             }
            
