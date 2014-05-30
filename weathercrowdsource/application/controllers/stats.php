@@ -1,6 +1,6 @@
 <?php
 require_once('convert.php');
-class Stats extends CI_Controller{
+class Stats extends Convert{
     public function __construct(){
         parent::__construct();
         
