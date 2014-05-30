@@ -141,6 +141,13 @@ class Worker_model extends CI_Model{
         }
     }
     
+    /**
+     * get task info for a worker based on his id
+     *
+     * @access	public
+     * @return	taskid, title, startdate, enddate
+     */
+    
     public function get_taskid(){
     	$userid = $this->session->userdata('userid');
     	$this->db->select('taskid');
@@ -151,7 +158,7 @@ class Worker_model extends CI_Model{
     	$this->db->limit('1');
     	$query_taskid = $this->db->get();
     	if ($query_taskid->num_rows()>0){
-    		return $this->get_tasktitle($query_taskid->row()->taskid);
+    		return $this->get_taskinfo($query_taskid->row()->taskid);
     	}
     	$response_data = array(
     			'taskid' => '-1'
@@ -159,9 +166,11 @@ class Worker_model extends CI_Model{
     	return $response_data;
     }
     
-    public function get_tasktitle($taskid){
+    public function get_taskinfo($taskid){
     	$this->db->select('taskid');
     	$this->db->select('title');
+    	$this->db->select('startdate');
+    	$this->db->select('enddate');
     	$this->db->from('tasks');
     	$this->db->where('taskid',$taskid);
     	$query_taskid = $this->db->get();
