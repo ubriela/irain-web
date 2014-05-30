@@ -126,15 +126,22 @@ class Worker_model extends CI_Model{
             
             // Update related table
             if($success){
+            	// Set user free to received new task
                 $this->db->set('isassigned','0');
                 $this->db->where('userid',$userid);
                 $this->db->update('location_report');
                 
+                // Set completion in Task_worker_matches table
                 $this->db->set('iscompleted','1');
                 $this->db->set('completed_date',$date);
                 $this->db->where('userid',$userid);
                 $this->db->where('taskid',$taskid);
                 $this->db->update('task_worker_matches');
+                
+				// Set completion in Tasks table                
+                $this->db->set('iscompleted','1');
+                $this->db->where('userid',$userid);
+                $this->db->update('tasks');
             }
            
             return $success;
