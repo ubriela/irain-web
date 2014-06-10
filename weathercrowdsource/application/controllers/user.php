@@ -138,13 +138,13 @@ class User extends CI_Controller {
     		$this->_json_response(FALSE);
     		return;
     	}
-    	if ($this->form_validation->run('update_channelid') == FALSE){
-    		$this->_json_response(FALSE);
-    	}else{
+//     	if ($this->form_validation->run('update_channelid') == FALSE){
+//     		$this->_json_response(FALSE);
+//     	}else{
     		$channelid = $this->input->post('channelid');
     		$this->user_model->update_channelid($channelid);
     		$this->_json_response($this->session->userdata('userid'));
-    	}
+//     	}
     }
 
     /**

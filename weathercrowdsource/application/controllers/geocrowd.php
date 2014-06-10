@@ -38,7 +38,7 @@ class Geocrowd extends CI_Controller {
                 $lat = $row['lat'];
                 $lng = $row['lng'];
                 $radius = $row['radius'];
-                $message = "you have a task";
+                $message = "Please report weather at your location. Thank you!";
                 $this->task_query($taskid,$lat,$lng,$radius,$message);
             }
         }
