@@ -1,6 +1,8 @@
 <?php
 require_once('convert.php');
-class Worker extends Convert{
+require_once('push.php');
+
+class Worker extends Convert {
     /**
      * Constructor
      *
@@ -16,7 +18,8 @@ class Worker extends Convert{
         $this->load->model('worker_model');
         
         $this->load->model('user_model');
-       
+
+        $this->load->model('requester_model');
     }
     /**
      * Default function executed when [base_url]/index.php/worker
@@ -95,6 +98,15 @@ class Worker extends Convert{
             $code = $this->input->post('responsecode');
             $time = $this->input->post('responsedate');
             $flag = $this->worker_model->task_response($taskid,$code,$time);
+            
+            $row = $this->requester_model->requesterid_from_taskid($taskid);
+            $message = "Your task with id " . $taskid . " has been done.";
+            if ($row) {
+                $requesterid = $row->requesterid;
+                $pushObject = new push();
+                $pushObject->push_to_userid($requesterid, $message);
+            }
+                    
             $this->_json_response($flag);
         }           
     }

@@ -62,5 +62,25 @@ class Requester_model extends CI_Model{
         }
        
     }
+    
+     /**
+     * get requesterid from taskid
+     * @param type $taskid
+     */
+    public function requesterid_from_taskid($taskid) {
+        $this->db->select('requesterid');
+        $this->db->from('tasks');
+        $this->db->where('taskid', $taskid);
+        $this->db->limit(1);
+        
+        $query = $this->db->get();
+
+        if ($query->num_rows() == 1) {
+            // Return the row
+            return $query->row();
+        } else {
+            return FALSE;
+        }
+    }
 }
 ?>
