@@ -17,6 +17,8 @@ class Worker extends Convert {
         
         $this->load->model('worker_model');
         
+        $this->load->model('task_model');
+        
         $this->load->model('user_model');
 
         $this->load->model('requester_model');
