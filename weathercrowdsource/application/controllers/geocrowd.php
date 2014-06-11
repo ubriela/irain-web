@@ -15,6 +15,7 @@ class Geocrowd extends CI_Controller {
         $this->load->helper('json_response');
         $this->load->helper('form');
         $this->load->model('worker_model');
+        $this->load->model('task_model');
         $this->load->library('form_validation');
     }
      
@@ -73,7 +74,8 @@ class Geocrowd extends CI_Controller {
        
     }
     /**
-     * checks and assign a task to a worker 
+     * checks and assign a task to all workers in nearby area
+     * 
      * @param $taskid
      * @param $lat
      * @param $lng
@@ -98,8 +100,12 @@ class Geocrowd extends CI_Controller {
                 );
                 $this->db->insert('task_worker_matches',$data);
                 $this->worker_model->assigned($row['userid']);
+                
                 //notifice user
                 $pushObject->push_to_userid($row['userid'], $message);
+                
+                // update status in tasks table
+                $this->task_model->update_status($taskid, 1);	// assigned
            }
            $this->db->trans_complete();
         $this->_json_response1($query->result_array());

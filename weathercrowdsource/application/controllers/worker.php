@@ -99,12 +99,18 @@ class Worker extends Convert {
             $time = $this->input->post('responsedate');
             $flag = $this->worker_model->task_response($taskid,$code,$time);
             
-            $row = $this->requester_model->requesterid_from_taskid($taskid);
-            $message = "Your task with id " . $taskid . " has been done.";
-            if ($row) {
-                $requesterid = $row->requesterid;
-                $pushObject = new push();
-                $pushObject->push_to_userid($requesterid, $message);
+            if ($flag) {
+            	// update status in tasks table
+            	$this->task_model->update_status($taskid, 2);	// assigned
+            	
+            	// notify requester
+            	$row = $this->requester_model->requesterid_from_taskid($taskid);
+            	$message = "Your task with id " . $taskid . " has been done.";
+            	if ($row) {
+            		$requesterid = $row->requesterid;
+            		$pushObject = new push();
+            		$pushObject->push_to_userid($requesterid, $message);
+            	}            	
             }
                     
             $this->_json_response($flag);

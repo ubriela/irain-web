@@ -332,9 +332,9 @@ class User_model extends CI_Model {
     public function update_channelid($channelid){
     	$id = $this->session->userdata('userid');
 
-    		$this->db->set('channelid',$channelid);
-    		$this->db->where('userid',$id);
-    		$this->db->update('users');
+    	$this->db->set('channelid',$channelid);
+    	$this->db->where('userid',$id);
+    	$this->db->update('users');
     
     }
 }

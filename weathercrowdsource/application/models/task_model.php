@@ -13,12 +13,19 @@
  */
 class Task_model extends CI_Model {
 
-    public function task_request($taskid, $lat, $lng, $status = 0) {
-        $loc = "'POINT($lat $lng)'";
-        $this->db->set('TaskId', $taskid);
-        $this->db->set('Loc', "GeomFromText($loc)", false);
-        $this->db->set('Status', $status, false);
-        $this->db->insert('pri_tasks');
+	/**
+	 * Update status of a task
+	 * 
+	 * Initialized status = 0
+	 * Pending status = 1 (i.e., assigned to some workers)
+	 * Completed status = 2
+	 * 
+	 * @param unknown $taskid
+	 * @param number $status
+	 */
+    public function update_tatus($taskid, $status = 0) {
+    	$this->db->set('status', $status);
+    	$this->db->where('taskid', $taskid);
+    	$this->db->update('tasks');
     }
-
 }
