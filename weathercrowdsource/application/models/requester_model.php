@@ -58,7 +58,9 @@ class Requester_model extends CI_Model{
         $query = $this->db->get();
         if($query->num_rows()>0){
             $this->output->set_content_type('application/json');
-            $this->output->set_output(json_encode($query->result_array()));
+            $this->output->set_output(json_encode(array('status' => 'success', "msg" => $query->result_array())));
+        } else {
+            $this->output->set_output(json_encode(array('status' => 'error', "msg" => 'No task')));
         }
        
     }

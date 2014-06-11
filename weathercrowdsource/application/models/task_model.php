@@ -23,7 +23,7 @@ class Task_model extends CI_Model {
 	 * @param unknown $taskid
 	 * @param number $status
 	 */
-    public function update_tatus($taskid, $status = 0) {
+    public function update_status($taskid, $status = 0) {
     	$this->db->set('status', $status);
     	$this->db->where('taskid', $taskid);
     	$this->db->update('tasks');
