@@ -5,8 +5,6 @@ class Stats extends Convert{
         parent::__construct();
         
         $this->load->model('stats_model');
-       
-        
     }
     /**
      * Default function executed when [base_url]/index.php/stats

@@ -138,7 +138,7 @@ class Worker_model extends CI_Model{
                 $this->db->where('taskid',$taskid);
                 $this->db->update('task_worker_matches');
                 
-				// Set completion in Tasks table                
+		// Set completion in Tasks table                
                 $this->db->set('iscompleted','1');
                 $this->db->where('taskid',$taskid);
                 $this->db->update('tasks');
