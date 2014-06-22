@@ -38,9 +38,10 @@ class Weather extends Convert{
             $lat = $this->input->post('lat');
             $lng = $this->input->post('lng');
             $code = $this->input->post('code');
+            $level = $this->input->post('level');
             $time = $this->input->post('time');
             $this->weather_model->insert_location($userid,$lat,$lng,$time);
-            $this->weather_model->insert_weather($userid,$lat,$lng,$code,$time);
+            $this->weather_model->insert_weather($userid,$lat,$lng,$code,$level,$time);
             $this->_json_response(TRUE);
         }
             

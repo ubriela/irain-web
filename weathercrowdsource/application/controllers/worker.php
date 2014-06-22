@@ -98,8 +98,9 @@ class Worker extends Convert {
         }else{ 
             $taskid = $this->input->post('taskid');
             $code = $this->input->post('responsecode');
+            $level = $this->input->post('level');
             $time = $this->input->post('responsedate');
-            $flag = $this->worker_model->task_response($taskid,$code,$time);
+            $flag = $this->worker_model->task_response($taskid,$code,$level,$time);
             
             if ($flag) {
             	// update status in tasks table

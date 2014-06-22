@@ -97,7 +97,7 @@ class Worker_model extends CI_Model{
      * @param   string $date
      * @return	true if is successfully set
      */
-    public function task_response($taskid,$code,$date){
+    public function task_response($taskid,$code,$level,$date){
         $userid = $this->session->userdata('userid');
         $this->db->from('responses');
         $this->db->where('taskid',$taskid);
@@ -115,6 +115,7 @@ class Worker_model extends CI_Model{
                 'taskid' => $taskid,
                 'workerid' => $userid,
                 'response_code' => $code,
+                'level' => $level,
                 'response_date' => $date,
                 'response_date_server' => $date_now
             );

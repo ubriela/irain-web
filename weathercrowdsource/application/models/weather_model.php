@@ -66,11 +66,12 @@ class Weather_model extends CI_Model{
      * @param   number $lat,@lng,$code
      * @return	true if is successfully set
      */
-    public function insert_weather($userid,$lat,$lng,$code,$responsetime){
+    public function insert_weather($userid,$lat,$lng,$code,$level,$responsetime){
         $time = strtotime($responsetime);
         $date = date('Y-m-d H:i:s',$time);
         $loc = "'POINT($lat $lng)'";
         $this->db->set('response_code',$code);
+        $this->db->set('level',$level);
         $this->db->set('response_date',$date);
         if($this->is_exits_weather($userid,$lat,$lng)){
             $this->db->where('userid',$userid);
