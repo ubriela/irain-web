@@ -33,6 +33,7 @@ class Requester_model extends CI_Model{
         $this->db->trans_complete();
         return $success;
     }
+    
     public function get_taskid($userid){
          $this->db->select('taskid');
          $this->db->from('tasks');
@@ -50,11 +51,17 @@ class Requester_model extends CI_Model{
     }
     
     public function submitted_task($number){
+        if(isset($_POST['offset'])){
+            $start = $_POST['offset'];
+        }else{
+            $start = 0;
+        }
         $id = $this->session->userdata('userid');
-        $this->db->select('title, x(location) AS lat, y(location) AS lng,request_date,startdate,enddate, iscompleted');
+        $this->db->select('taskid,title, x(location) AS lat, y(location) AS lng,request_date,startdate,enddate, iscompleted');
         $this->db->from('tasks');
         $this->db->where("requesterid = '$id'");
-        $this->db->limit($number);
+        $this->db->order_by('taskid','desc');
+        $this->db->limit($number,$start);
         $query = $this->db->get();
         if($query->num_rows()>0){
             $this->output->set_content_type('application/json');

@@ -1,0 +1,27 @@
+body{
+    background: url(../img/rain.jpg);
+    -moz-background-size: cover;
+-webkit-background-size: cover;
+background-size: cover;
+background-position: top center !important;
+background-repeat: no-repeat !important;
+background-attachment: fixed;
+}
+.container{
+    margin-top: 15%;
+    width: 500px;
+    
+}
+.form-horizontal label{
+    font-weight: bold;
+    color: black;
+    
+}
+.form-horizontal{
+    background-color: rgba(255, 255, 255, 0.5);
+    padding: 20px;
+    border-radius: 5px ;
+}
+.checkbox label{
+    margin-right: 10px;
+}

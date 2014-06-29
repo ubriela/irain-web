@@ -91,8 +91,9 @@ class Weather_model extends CI_Model{
         if($start>$end){
             $this->_json_response(false);
         }else{
+            $this->db->distinct();
             $condition = "response_date between '$from' and '$to' and CONTAINS(GeomFromText(\"$region_str\"), GeomFromText(CONCAT('POINT(', x(location), ' ', y(location),')')))";
-            $query = $this->db->select('x(location) AS lat, y(location) AS lng, response_date')->from('weather_report')->where($condition)->order_by('response_date')->get();
+            $query = $this->db->select('x(location) AS lat, y(location) AS lng,response_code, response_date')->from('weather_report')->where($condition)->order_by('response_date')->get();
             $this->_json_response($query);    
         }
     }
@@ -104,9 +105,15 @@ class Weather_model extends CI_Model{
             $this->_json_response(false);
         }else{
             $condition = "response_date between '$from' and '$to' and response_code = '$code' and CONTAINS(GeomFromText(\"$region_str\"), GeomFromText(CONCAT('POINT(', x(location), ' ', y(location),')')))";
+            $this->db->distinct();
             $query = $this->db->select('x(location) AS lat, y(location) AS lng, response_date')->from('weather_report')->where($condition)->order_by('response_date')->get();
             $this->_json_response($query);  
         }
+    }
+    public function getallreport(){
+        $this->db->distinct();
+        $query = $this->db->select('x(location) AS lat, y(location) AS lng,response_code, response_date')->from('weather_report')->order_by('response_date','desc')->get();
+        $this->_json_response($query);
     }
     public function _json_response($data) {
         $this->output->set_content_type('application/json');

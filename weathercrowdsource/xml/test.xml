@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<note>
+	<task>
+		<title>post from file 1</title>
+		<lat>34.54345</lat>
+		<lng>55.2345345</lng>
+		<requestdate>29-06-2014</requestdate>
+		<startdate>29-06-2014</startdate>
+		<enddate>30-06-2014</enddate>
+		<type>0</type>
+		<radius>1000</radius>
+	</task>
+	<task>
+		<title>post from file 2</title>
+		<lat>34.54345</lat>
+		<lng>55.2345345</lng>
+		<requestdate>29-06-2014</requestdate>
+		<startdate>29-06-2014</startdate>
+		<enddate>30-06-2014</enddate>
+		<type>0</type>
+		<radius>1000</radius>
+	</task>
+	<task>
+		<title>post from file 3</title>
+		<lat>34.54345</lat>
+		<lng>55.2345345</lng>
+		<requestdate>29-06-2014</requestdate>
+		<startdate>29-06-2014</startdate>
+		<enddate>30-06-2014</enddate>
+		<type>0</type>
+		<radius>1000</radius>
+	</task>
+	<task>
+		<title>post from file 4</title>
+		<lat>34.54345</lat>
+		<lng>55.2345345</lng>
+		<requestdate>29-06-2014</requestdate>
+		<startdate>29-06-2014</startdate>
+		<enddate>30-06-2014</enddate>
+		<type>0</type>
+		<radius>1000</radius>
+	</task>
+	<task>
+		<title>post from file 5</title>
+		<lat>34.54345</lat>
+		<lng>55.2345345</lng>
+		<requestdate>29-06-2014</requestdate>
+		<startdate>29-06-2014</startdate>
+		<enddate>30-06-2014</enddate>
+		<type>0</type>
+		<radius>1000</radius>
+	</task>
+	<task>
+		<title>post from file 6</title>
+		<lat>34.54345</lat>
+		<lng>55.2345345</lng>
+		<requestdate>29-06-2014</requestdate>
+		<startdate>29-06-2014</startdate>
+		<enddate>30-06-2014</enddate>
+		<type>0</type>
+		<radius>1000</radius>
+	</task>
+</note>

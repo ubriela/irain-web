@@ -77,8 +77,38 @@ class Requester extends Geocrowd{
             
         }
     }
-    
-    
+    public function post_from_file(){
+        $arrays = json_decode($_POST["arraytasks"], true);
+        $count = 0;
+        foreach($arrays as $array){
+            $userid = $array['userid'];
+            $title = $array['title'];
+            $lat = $array['lat'];
+            $lng = $array['lng'];
+            $requestdate = $array['requestdate'];
+            $startdate = $array['startdate'];
+            $enddate = $array['enddate'];
+            $type = $array['type'];
+            $radius = $array['radius'];
+            if($this->requester_model->task_request($userid,$title,$lat,$lng,$requestdate,$startdate,$enddate,$type,$radius)){
+                $count+=1;
+            }
+        }
+        $this->_json_response($count);
+    }
+    public function delete_tasks(){
+        if(!$this->session->userdata('signed_in')){
+            $this->_json_response(FALSE);
+            return;
+        }
+        $taskidarray = explode(',', $_POST['taskids']);
+        $this->db->from('tasks');
+        $this->db->where_in('taskid',$taskidarray);
+        $query = $this->db->delete();
+        
+            $this->_json_response('true');
+        
+    }
      private function _json_response($data) {
         $this->output->set_content_type('application/json');
         if ($data) {
