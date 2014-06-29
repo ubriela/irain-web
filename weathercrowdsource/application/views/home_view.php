@@ -225,7 +225,7 @@
                     data: 'title='+title+'&lat='+lat+'&lng='+lng+'&requestdate='+requestdate+'&startdate='+requestdate+'&enddate='+enddate+'&type=0'+'&radius='+radius,
                     success:function(data){
                         if(data.status=='success'){
-                            alert(data.msg);
+                            alert('Post success');
                             $('#post').hide();
                              $('#title').val('');
                         }else{
