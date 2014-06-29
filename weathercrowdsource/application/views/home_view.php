@@ -45,7 +45,7 @@
                 var snow = baseurl+"img/mark_snow_ic.png";
                 var markers = [];
                 var myLatlng = new google.maps.LatLng(40.71278369999998, -74.00594130000002);
-                var minzoom = 15;
+                var minzoom = 6;
                 var mapOptions = {
                   zoom: minzoom,
                   center: myLatlng,
