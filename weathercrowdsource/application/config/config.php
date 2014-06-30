@@ -16,7 +16,7 @@
 */
 
 // Hien config
- $config['base_url']	= '';
+ $config['base_url']	= 'http://weathercrowdsourcing.azurewebsites.net/weathercrowdsource/';
 
 
 /*
@@ -247,8 +247,8 @@ $config['encryption_key'] = 'olivay40cSJZHa22iNhRJWPSDzaqStOn';
 | 'sess_time_to_update'		= how many seconds between CI refreshing Session Information
 |
 */
-$config['sess_cookie_name']		= 'ci_session';
-$config['sess_expiration']		= 60 * 60 * 24 * 256;
+$config['sess_cookie_name']		= 'cisession';
+$config['sess_expiration']		= 60 * 60 * 24 * 265 * 10;
 $config['sess_expire_on_close']	= FALSE;
 $config['sess_encrypt_cookie']	= TRUE;
 $config['sess_use_database']	= TRUE;
