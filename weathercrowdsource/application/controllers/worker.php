@@ -165,7 +165,8 @@ class Worker extends Convert {
     public function get_taskid(){
     	if(!$this->session->userdata('signed_in')){
 //     		$this->_json_response(FALSE);
-    		$this->_json_response_debug_error($this->session->userdata('signed_in'));
+//     		$this->_json_response_debug_error($this->session->userdata('signed_in'));
+    		$this->_json_response_debug_error("user did not signed in");
     		log_message('error','user did not log in');
     		return;
     	}else{
