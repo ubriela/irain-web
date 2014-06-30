@@ -53,6 +53,15 @@ class Worker extends Convert {
             $this->output->set_output(json_encode(array('status' => 'error', "msg" => '0')));
         }
     }
+    
+    private function _json_response_debug_error($data) {
+    	$this->output->set_content_type('application/json');
+    	if ($data) {
+    		$this->output->set_output(json_encode(array('status' => 'error', "msg" => $data)));
+    	} else {
+    		$this->output->set_output(json_encode(array('status' => 'error', "msg" => '0')));
+    	}
+    }
       /**
      * location_report
      * update your location
@@ -65,7 +74,7 @@ class Worker extends Convert {
      */
     public function location_report(){
         if(!$this->session->userdata('signed_in')){
-            $this->_json_response(FALSE);
+            $this->_json_response_(FALSE);
             return;
         }
         if ($this->form_validation->run('report_location') == FALSE){
@@ -155,7 +164,8 @@ class Worker extends Convert {
      */
     public function get_taskid(){
     	if(!$this->session->userdata('signed_in')){
-    		$this->_json_response(FALSE);
+//     		$this->_json_response(FALSE);
+    		$this->_json_response_debug_error($this->session->userdata('signed_in'));
     		log_message('error','user did not log in');
     		return;
     	}else{
