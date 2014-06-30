@@ -166,7 +166,7 @@ class Worker extends Convert {
     	if(!$this->session->userdata('signed_in')){
 //     		$this->_json_response(FALSE);
 //     		$this->_json_response_debug_error($this->session->userdata('signed_in'));
-    		$this->_json_response_debug_error("user did not signed in");
+    		$this->_json_response_debug_error($this->session);
     		log_message('error','user did not log in');
     		return;
     	}else{
