@@ -97,7 +97,7 @@ class Worker_model extends CI_Model{
      * @param   string $date
      * @return	true if is successfully set
      */
-    public function task_response($taskid,$code,$level,$date){
+    public function task_response($taskid,$code,$level,$date,$lat,$lng){
         $userid = $this->session->userdata('userid');
         $this->db->from('responses');
         $this->db->where('taskid',$taskid);
@@ -109,6 +109,7 @@ class Worker_model extends CI_Model{
             $time = strtotime($date);
             $date = date('Y-m-d H:i:s',$time);
             $date_now = date("Y-m-d H:i:s");
+            $loc = "'POINT($lat $lng)'";
             
             $success = TRUE;
             $response_data = array(
@@ -117,7 +118,8 @@ class Worker_model extends CI_Model{
                 'response_code' => $code,
                 'level' => $level,
                 'response_date' => $date,
-                'response_date_server' => $date_now
+                'response_date_server' => $date_now,
+                'worker_location' => "GeomFromText($loc)"
             );
             // Transaction
             $this->db->trans_start();

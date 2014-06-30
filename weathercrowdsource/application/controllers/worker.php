@@ -104,12 +104,14 @@ class Worker extends Convert {
         }
         if ($this->form_validation->run('task_response') == FALSE){
                 $this->_json_response(FALSE);
-        }else{ 
+        }else{
             $taskid = $this->input->post('taskid');
             $code = $this->input->post('responsecode');
             $level = $this->input->post('level');
             $time = $this->input->post('responsedate');
-            $flag = $this->worker_model->task_response($taskid,$code,$level,$time);
+            $lat = $this->input->post('lat');
+            $lng = $this->input->post('lng');
+            $flag = $this->worker_model->task_response($taskid,$code,$level,$time,$lat,$lng);
             
             if ($flag) {
             	// update status in tasks table
