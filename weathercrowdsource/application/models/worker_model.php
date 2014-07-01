@@ -118,8 +118,8 @@ class Worker_model extends CI_Model{
                 'response_code' => $code,
                 'level' => $level,
                 'response_date' => $date,
-                'response_date_server' => $date_now
-                //'worker_location' => "GeomFromText($loc)"
+                'response_date_server' => $date_now,
+                'worker_location' => "GeomFromText($loc)"
             );
             // Transaction
             $this->db->trans_start();
