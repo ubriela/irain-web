@@ -113,7 +113,7 @@ class Worker extends Convert {
             $lng = $this->input->post('lng');
             $flag = $this->worker_model->task_response($taskid,$code,$level,$time);
             if ($flag) {
-                $flag2 = $this->worker_model->task_response($taskid,$lat,$lng);
+                $flag2 = $this->worker_model->update_worker_location($taskid,$lat,$lng);
                             
             	// update status in tasks table
             	$this->task_model->update_status($taskid, 2);	// assigned
