@@ -97,7 +97,7 @@ class Worker_model extends CI_Model{
      * @param   string $date
      * @return	true if is successfully set
      */
-    public function task_response($taskid,$code,$level,$date,$lat,$lng){
+    public function task_response($taskid,$code,$level,$date){
         $userid = $this->session->userdata('userid');
         $this->db->from('responses');
         $this->db->where('taskid',$taskid);
@@ -124,9 +124,6 @@ class Worker_model extends CI_Model{
             $this->db->trans_start();
             if (!$this->db->insert('responses', $response_data))
                 $success = FALSE;
-            $this->db->set('worker_location', "GeomFromText($loc)",false);
-            if (!$this->db->update('responses'))
-                $success = FALSE;
             $this->db->trans_complete();
             
             // Update related table
@@ -151,6 +148,27 @@ class Worker_model extends CI_Model{
            
             return $success;
         }
+    }
+    
+    /**
+     * Update worker location
+     * @param type $taskid
+     * @param type $lat
+     * @param type $lng
+     * @return boolean
+     */
+    public function update_worker_location($taskid,$lat,$lng){
+        $id = $this->session->userdata('userid');
+        $loc = "'POINT($lat $lng)'";
+        $this->db->set('location', "GeomFromText($loc)",false);
+        
+        $this->db->where('taskid',$taskid);
+        $this->db->where('workerid',$userid);
+        $this->db->set('worker_location', "GeomFromText($loc)",false);
+        if (!$this->db->update('responses'))
+            return FALSE;
+            
+        return TRUE;
     }
     
     /**
