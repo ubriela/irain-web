@@ -109,7 +109,6 @@ class Worker_model extends CI_Model{
             $time = strtotime($date);
             $date = date('Y-m-d H:i:s',$time);
             $date_now = date("Y-m-d H:i:s");
-            $loc = "'POINT($lat $lng)'";
             
             $success = TRUE;
             $response_data = array(
@@ -158,10 +157,8 @@ class Worker_model extends CI_Model{
      * @return boolean
      */
     public function update_worker_location($taskid,$lat,$lng){
-        $id = $this->session->userdata('userid');
+        $userid = $this->session->userdata('userid');
         $loc = "'POINT($lat $lng)'";
-        $this->db->set('location', "GeomFromText($loc)",false);
-        
         $this->db->where('taskid',$taskid);
         $this->db->where('workerid',$userid);
         $this->db->set('worker_location', "GeomFromText($loc)",false);
