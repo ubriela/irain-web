@@ -118,12 +118,14 @@ class Worker_model extends CI_Model{
                 'response_code' => $code,
                 'level' => $level,
                 'response_date' => $date,
-                'response_date_server' => $date_now,
-                'worker_location' => "GeomFromText($loc)"
+                'response_date_server' => $date_now
             );
             // Transaction
             $this->db->trans_start();
             if (!$this->db->insert('responses', $response_data))
+                $success = FALSE;
+            $this->db->set('worker_location', "GeomFromText($loc)",false);
+            if (!$this->db->update('responses'))
                 $success = FALSE;
             $this->db->trans_complete();
             
