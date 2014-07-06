@@ -524,7 +524,9 @@ $(document).ready(function()
                         if(data.status=='success'){
                             alert('Your account has been create');
                             $('#loginform').removeClass('hide');
+                            $('#loginform').addClass('current');
                             $('#registerform').addClass('hide');
+                            $('#registerform').removeClass('current');
                         }else{
                             alert('username or email already exists');
                         }
