@@ -460,6 +460,7 @@ $(document).ready(function()
                 $('form.current').addClass('hide');
                $('form.current').removeClass('current');
                $('#container_profile').addClass('hide');
+               $('#container_response').addClass('hide');
             });
             $('#logout').click(function(){
                 var r = confirm("Do you want logout?");
