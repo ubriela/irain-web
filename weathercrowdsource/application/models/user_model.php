@@ -20,7 +20,7 @@ class User_model extends CI_Model {
 	
 		$userid = $this->session->userdata('userid');
 		
-		$this->db->select('username, avatar, firstname, lastname, phone_number, email');
+		$this->db->select('username, avatar, firstname, lastname, phone_number, email, created_date, userid');
 		$this->db->from('users');
 		$this->db->where('userid', $userid);
 		$this->db->limit(1);
@@ -29,7 +29,10 @@ class User_model extends CI_Model {
 	
 		if ($query->num_rows() == 1) {
 			// Return the row
-			return $query->row();
+            $row = $query->result_array()[0];
+            $row['numrequest'] = $this->get_num_taskrequests();
+            $row['numresponse'] = $this->get_num_taskresponses();
+			return $row;
 		} else {
 			return FALSE;
 		}
@@ -323,12 +326,26 @@ class User_model extends CI_Model {
             return FALSE;
         }
     }
+    public function get_num_taskrequests(){
+            $userid = $this->session->userdata('userid');
+            $this->db->where('requesterid',$userid);
+            return $this->db->count_all_results('tasks');
+           
+    }
+    public function get_num_taskresponses(){
+        $userid = $this->session->userdata('userid');
+            $this->db->where('workerid',$userid);
+            return $this->db->count_all_results('responses');
+        
+    }
+   
     /**
      * set user's channelid:
      *
      * @access	public
      * @return	true if is successfully set
      */
+     
     public function update_channelid($channelid){
     	$id = $this->session->userdata('userid');
 
@@ -337,4 +354,5 @@ class User_model extends CI_Model {
     	$this->db->update('users');
     
     }
+    
 }

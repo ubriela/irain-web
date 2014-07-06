@@ -147,4 +147,17 @@ class Geocrowd extends CI_Controller {
         $date = date('Y-m-d H:i:s',$time);
         return $date;
     }
+    public function getplace(){
+        $lat = $_POST['lat'];
+        $lng = $_POST['lng'];
+        $geocode=file_get_contents("http://maps.googleapis.com/maps/api/geocode/json?latlng=$lat,$lng&sensor=false");
+
+        $output= json_decode($geocode);
+        if ($output->status=="OK") {
+            echo $output->results[0]->formatted_address;
+        }else{
+            echo '';
+        }
+        
+    }
 }

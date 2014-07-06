@@ -30,9 +30,9 @@
   
 	<script type="text/javascript" src="http://code.jquery.com/jquery-1.7.2.min.js"></script>
     <script src="http://malsup.github.com/jquery.form.js"></script>
+    <script type="text/javascript" src="<?php echo base_url()?>js/login.js"></script>
 	<script type="text/javascript" src="<?php echo base_url()?>js/bootstrap.min.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places"></script>
-    
     <script>
         $(document).ready(function(){
             var baseurl = '<?php echo base_url();?>';
@@ -95,10 +95,25 @@
                                     position: location
                                 });
                                 google.maps.event.addListener(marker, 'click', function(event) {       
-                                    var getlatlng = event.latLng;                           
-                                    $('#lat').val(getlatlng.lat());
-                                    $('#lng').val(getlatlng.lng());
-                                    $('#post').show();
+                                    var getlatlng = event.latLng;
+                                     var lat = getlatlng.lat();
+                                     var lng = getlatlng.lng();
+                                     $('#lat').val(lat);
+                                     $('#lng').val(lng);
+                                     var islogin = false;
+                                     <?php
+                                        if(isset($username)){
+                                            echo "$('#overlay').removeClass('hide');";
+                                            echo "$('#post').show();";
+                                            echo "islogin=true;";
+                                        }
+                                        
+                                     ?>
+                                     if(islogin){
+                                        $.post(baseurl+'index.php/geocrowd/getplace',{lat:lat,lng:lng},function(data){
+                                            $('#location').val(data); 
+                                        });
+                                     }
                                     
                                 });
                                 markers.push(marker);
@@ -140,9 +155,25 @@
                    });
                    google.maps.event.addListener(map, 'click', function(event){
                          var getlatlng = event.latLng;
-                         $('#lat').val(getlatlng.lat());
-                         $('#lng').val(getlatlng.lng());
-                         $('#post').show();
+                         var lat = getlatlng.lat();
+                         var lng = getlatlng.lng();
+                         $('#lat').val(lat);
+                         $('#lng').val(lng);
+                         var islogin = false;
+                         <?php
+                            if(isset($username)){
+                                echo "$('#overlay').removeClass('hide');";
+                                echo "$('#post').show();";
+                                echo "islogin=true;";
+                            }
+                            
+                         ?>
+                         if(islogin){
+                            $.post(baseurl+'index.php/geocrowd/getplace',{lat:lat,lng:lng},function(data){
+                                $('#location').val(data); 
+                            });
+                         }
+                         
                    });  
                 });
             }
@@ -189,112 +220,8 @@
                 });
             }
             loadTask(numbertask,offset);
-     $( document ).on( "click", "li:not(.current)", function() {
-                var id = $(this).attr('class');
-                $('#mainmenu li').removeClass('current');
-                $(this).addClass('current');
-                $('#right div:not(#'+id+')').hide();
-                $('#right div:not(#'+id+')').removeClass('show');
-                $('#post').hide();
-               $('#'+id).addClass('show');
-                $('#'+id).show();
-                if(id=='map'){
-                    $('#map').toggle();
-                    initialize();          
-                }        
-            });
-            $(document).on('click',"#btnback",function(event){
-                 event.preventDefault();
-                 $('#post').hide();
-            });
-            $(document).on('click',"#btnpost",function(event){
-                 event.preventDefault();
-                 var title = $('#title').val();
-                 var lat = $('#lat').val();
-                 var lng = $('#lng').val();
-                 var requestdate = '<?php echo date('d-m-Y')?>';
-                 var enddate = $('#end').val();//convertDate($('#end').val());
-                 var radius = $('#radius').val();
-                 if(title==''){
-                    alert('Please enter title');
-                    return;
-                 }
-                 $.ajax({
-                    type: 'POST',
-                    url: baseurl+'index.php/requester/task_request',
-                    data: 'title='+title+'&lat='+lat+'&lng='+lng+'&requestdate='+requestdate+'&startdate='+requestdate+'&enddate='+enddate+'&type=0'+'&radius='+radius,
-                    success:function(data){
-                        if(data.status=='success'){
-                            alert('Post success');
-                            $('#post').hide();
-                             $('#title').val('');
-                        }else{
-                            alert('error');
-                        }
-                    }
-                 });
-            });
-            $(document).on('change',"#end",function(event){
-                var end = $(this).val();
-                var start = $('#start').val();
-                var defaulvalue = '<?php echo date('Y-m-d',date(strtotime("+1 day", strtotime(date("Y-m-d")))));?>';
-                if(end<=start){
-                    $('#end').val(defaulvalue);
-                }
-            });
-            $(document).on('change',"#radius",function(event){
-               var value = $(this).val();
-               if(value<1){
-                    $(this).val(1);
-               }
-            });
-            $(document).on('click','.check',function(){
-                var member = $(this);
-                var taskid = member.attr('id');
-                if($(this).is(':checked')){
-                    deleteArray.push(taskid);
-                    
-                }else{
-                    var i = deleteArray.indexOf(taskid);
-                    deleteArray.splice(i,1);
-                }    
-            });
-            $(document).on('click','#btndel',{url:baseurl},function(event){
-                var elements = deleteArray.join(',');
-                if(deleteArray.length!=0){
-                    $.ajax({
-                        type: 'POST',
-                        url: event.data.url+'index.php/requester/delete_tasks',
-                        data: 'taskids='+elements,
-                        success:function(data){
-                            if(data.status=='success'){
-                                loadTask(numbertask);
-                                numbertask = 12;
-                                offset = 0;
-                            }
-                        }
-                    });
-                }
-            });
-            $(document).on('click','#next',function(){
-                var count = $('#container-tasks').find('tr').length;
-                if(count==numbertask){
-                    offset+=12;
-                    loadTask(numbertask,offset);
-                    deleteArray = new Array();
-                }
-            });
-            $(document).on('click','#prev',function(){
-                if(offset!=0){
-                    offset-=12;
-                    loadTask(numbertask,offset);
-                    deleteArray = new Array();
-                }
-            });
-            $(document).on('click','#refresh',function(){
-                offset=0;
-                loadTask(numbertask,offset);
-            });
+           
+            
             google.maps.event.addDomListener(window, 'load', initialize);
     });
     </script>
@@ -305,139 +232,34 @@
 	<div class="row clearfix">
 		<div class="col-md-12 column">
 			<div class="row clearfix">
-				<div class="col-md-2 column" id="sidebar">
-					<div class="row clearfix">
-						<div class="col-md-12 column" id="info">
-							<img alt="140x140" src="<?php echo base_url().$avatar?>"/>
-							<br/>
-							<span class="label label-primary"><?php echo $username?></span>
-						</div>
-					</div>
-                    
-					<div class="row clearfix" id="menu">
-						<div class="col-md-12 column">
-							<ul id="mainmenu">
-								<li class="current map">
-                                    Map
-								</li>
-								
-								<li class="taskmanager" >
-									Tasks manager
-								</li>
-								
-								<a href="<?php echo base_url()?>index.php/home/logout"><li>
-									Logout
-								</li></a>
-							</ul>
-						</div>
-					</div>
-				</div>
-				<div class="col-md-10 column" id="right">
+                
+				<div class="col-md-12 column" id="right">
                     <input id="pac-input" class="controls" type="text" placeholder="Search Box"/>
 					<div class="row clearfix right-container show" id="map">     
-					</div>
-
-                    <div class="row clearfix right-container" id="taskmanager">
-							<table class="table table-bordered table-hover table-condensed">
-				<thead>
-					<tr>
-						<th>
-							Taskid
-						</th>
-						<th>
-							Title
-						</th>
-						<th>
-							Latitude
-						</th>
-						<th>
-							Longitude
-						</th>
-                        <th>
-							Startdate
-						</th>
-                        <th>
-							Enddate
-						</th>
-                        <th>
-							Completed
-						</th>
-                        <th>
-							Expired
-						</th>
-                        <th>
-							Delete
-						</th>
-					</tr>
-				</thead>
-				<tbody id="container-tasks">
-				</tbody>
-                
-			</table>
-            
-           
-            	<button type="button" class="btn btn-default" id="prev">Prev</button>
-                    <button type="button" class="btn btn-default" id="next">Next</button>
-                    <button type="button" class="btn btn-default" id="refresh">Refresh</button>       
-                <button type="button" class="btn btn-default" id="btndel">Delete</button><br />
-                <form id="myForm" action="<?php echo base_url();?>upload.php" method="post" enctype="multipart/form-data">
-                     <input type="file" size="60" name="myfile" id="file" class="btn btn-default"/>
-                     <input type="submit" class="btn btn-default" value="Post" id="postfile"/>
-                </form>
-                <div id="progress">
-                        <div id="bar"></div>
-                        <div id="percent">0%</div >
-                </div>
-                <div id="message"></div>
-                    <output id="list"></output>      
-					</div>
-					
+				    </div>
 				</div>
-                <form class="form-horizontal" method="post" role="form" id="post">
-                        <div class="form-group">
-        					 <label for="inputEmail3" class="col-sm-2 control-label">Title:</label>
-        					<div class="col-sm-10">
-        						<input type="text" class="form-control" id="title" placeholder="Enter title"/>
-        					</div>
-        				</div>
-                        <div class="form-group">
-        					 <label for="inputEmail3" class="col-sm-2 control-label">Lat:</label>
-        					<div class="col-sm-10">
-        						<input type="text" class="form-control" id="lat" disabled="true"/>
-        					</div>
-        				</div>
-                        <div class="form-group">
-        					 <label for="inputEmail3" class="col-sm-2 control-label">Lng:</label>
-        					<div class="col-sm-10">
-        						<input type="text" class="form-control" id="lng" disabled="true"/>
-        					</div>
-        				</div>
-                        <div class="form-group">
-        					 <label for="inputEmail3" class="col-sm-2 control-label">From:</label>
-        					<div class="col-sm-10">
-        						<input type="date" class="form-control" disabled="true" value="<?php echo date("Y-m-d");?>" min="<?php echo date("Y-m-d");?>" id="start"/>
-        					</div>
-        				</div>
-                        <div class="form-group">
-        					 <label for="inputEmail3" class="col-sm-2 control-label">To:</label>
-        					<div class="col-sm-10">
-        						<input type="date" class="form-control" id="end" min="<?php echo date("Y-m-d");?>" value="<?php echo date('Y-m-d',date(strtotime("+1 day", strtotime(date("Y-m-d")))));?>"/>
-        					</div>
-        				</div> 
-                        <div class="form-group">
-        					 <label for="inputEmail3" class="col-sm-2 control-label">Radius:</label>
-        					<div class="col-sm-10">
-        						<input type="number" class="form-control" id="radius" min="1" value="1000"/>
-        					</div>
-        				</div>
-                        <div class="form-group">
-        					<div class="col-sm-offset-2 col-sm-10">
-        						 <button type="submit" class="btn btn-default" id="btnpost">Post</button>
-                                 <button type="button" class="btn btn-default" id="btnback">Back</button>
-        					</div>
-                           
-				        </div>                  
-                    </form>
+                <div id="overlay" class="hide">
+                    <?php
+                        if(!isset($username)){
+                            require_once('loginform.php');
+                        }else{
+                            require_once('posttask.php');
+                            require_once('profilepanel.php');
+                            require_once('responsepanel.php');
+                        }      
+                    ?>
+                </div>
+                <div class="list-group" id="container_menu">
+                    <?php
+                        if(isset($username)){
+                            include_once('after.php');
+                        }else{
+                            include_once('before.php');
+                        }
+                    ?>
+    				
+    			</div>
+                
 			</div>
 		</div>
 	</div>
@@ -448,7 +270,7 @@ $(document).ready(function()
     var baseurl = '<?php echo base_url();?>';
      function createtask(title,lat,lng,requestdate,startdate,enddate,type,radius){
                 return{
-                    userid:'<?php echo $userid;?>',
+                    userid:'asdasd',
                     title: title,
                     lat: lat,
                     lng: lng,
@@ -535,6 +357,212 @@ $(document).ready(function()
      
 }; 
      $("#myForm").ajaxForm(options);
+     $(document).on('click',"#btnback",function(event){
+                 event.preventDefault();
+                 $('#overlay').addClass('hide');
+                 $('#post').hide();
+            });
+            $(document).on('click',"#btnpost",function(event){
+                 event.preventDefault();
+                 var title = $('#title').val();
+                 var lat = $('#lat').val();
+                 var lng = $('#lng').val();
+                 var now = new Date();
+                 var tomorrow = new Date();
+                    tomorrow.setDate(tomorrow.getDate() + 1);
+                 var requestdate = now.getFullYear()+'-'+(now.getMonth()+1)+'-'+now.getDate()+' '+now.getHours()+':'+now.getMinutes()+':'+now.getSeconds();
+                 var enddate = tomorrow.getFullYear()+'-'+(tomorrow.getMonth()+1)+'-'+tomorrow.getDate()+' '+tomorrow.getHours()+':'+tomorrow.getMinutes()+':'+tomorrow.getSeconds();
+                
+                 var radius = $('#radius').val();
+                 $.ajax({
+                    type: 'POST',
+                    url: baseurl+'index.php/requester/task_request',
+                    data: 'title='+title+'&lat='+lat+'&lng='+lng+'&requestdate='+requestdate+'&startdate='+requestdate+'&enddate='+enddate+'&type=0'+'&radius='+radius,
+                    success:function(data){
+                        if(data.status=='success'){
+                            alert('Post success');
+                            $('#post').hide();
+                            $('#overlay').addClass('hide');
+                        }else{
+                            alert('error');
+                        }
+                    }
+                 });
+            });               
+            $(document).on('click','.check',function(){
+                var member = $(this);
+                var taskid = member.attr('id');
+                if($(this).is(':checked')){
+                    deleteArray.push(taskid);
+                    
+                }else{
+                    var i = deleteArray.indexOf(taskid);
+                    deleteArray.splice(i,1);
+                }    
+            });
+            $(document).on('click','#btndel',{url:baseurl},function(event){
+                var elements = deleteArray.join(',');
+                if(deleteArray.length!=0){
+                    $.ajax({
+                        type: 'POST',
+                        url: event.data.url+'index.php/requester/delete_tasks',
+                        data: 'taskids='+elements,
+                        success:function(data){
+                            if(data.status=='success'){
+                                loadTask(numbertask);
+                                numbertask = 12;
+                                offset = 0;
+                            }
+                        }
+                    });
+                }
+            });
+            $(document).on('click','#next',function(){
+                var count = $('#container-tasks').find('tr').length;
+                if(count==numbertask){
+                    offset+=12;
+                    loadTask(numbertask,offset);
+                    deleteArray = new Array();
+                }
+            });
+            $(document).on('click','#prev',function(){
+                if(offset!=0){
+                    offset-=12;
+                    loadTask(numbertask,offset);
+                    deleteArray = new Array();
+                }
+            });
+            $(document).on('click','#refresh',function(){
+                offset=0;
+                loadTask(numbertask,offset);
+            });
+            $('.hover').hover(function(){
+                $('.itemmenu').removeClass('hide');
+            },function(){
+                $('.itemmenu').addClass('hide');
+            });
+            $('#clickregister').on('click',function(){
+                $('#overlay').removeClass('hide');
+               $('form.current').addClass('hide');
+               $('form.current').removeClass('current');
+               $('#registerform').addClass('current');
+               $('#registerform').removeClass('hide');
+            });
+            $('#clicklogin').click(function(){
+                $('#overlay').removeClass('hide');
+               $('form.current').addClass('hide');
+               $('form.current').removeClass('current');
+               $('#loginform').addClass('current');
+               $('#loginform').removeClass('hide');
+            });
+            $('.back').on('click',function(){
+                $('#overlay').addClass('hide');
+                $('form.current').addClass('hide');
+               $('form.current').removeClass('current');
+               $('#container_profile').addClass('hide');
+            });
+            $('#logout').click(function(){
+                var r = confirm("Do you want logout?");
+                if (r == true) {
+                    window.location = baseurl+'index.php/home/logout';
+                } else {
+                    
+                }
+            });
+            $('#btnlogin').click(function(event){
+                event.preventDefault();
+
+                var username = $('#username').val();
+                var hashpass = SHA512($('#password').val());
+                $.ajax({
+                   type: 'POST',
+                   url: baseurl+'index.php/user/login',
+                   data: "username="+username+"&password="+hashpass,
+                   success:function(data){
+                        if(data.status=='success'){
+                            window.location="<?php echo base_url()?>index.php/home";
+                        }else{
+                            alert("Invalid username or password");
+                        }    
+                   }
+                });
+            });
+            $('#btnregister').click(function(event){
+                event.preventDefault();
+                var check = true;
+                var res_username = $('#resusername').val();
+                var res_email = $('#email').val();
+                var res_pass = $('#respassword').val();
+                var rppass = $('#rppassword').val();
+                var hasspass = SHA512(res_pass);
+                if(res_username==''){
+                    $('#error_username').removeClass('hide');
+                    check = false;
+                }else{
+                    $('#error_username').addClass('hide');
+                }
+                if(!validateEmail(res_email)){
+                    $('#error_email').removeClass('hide');
+                    check = false;   
+                }else{
+                    $('#error_email').addClass('hide');
+                }
+                if(res_pass==''){
+                    $('#error_pass').removeClass('hide');
+                    check = false;
+                }else{
+                    $('#error_pass').addClass('hide');
+                    if(res_pass!=rppass){
+                        $('#error_rppass').removeClass('hide');
+                        check = false;
+                    }else{
+                        $('#error_rppass').addClass('hide');
+                    }
+                }
+                if(check){
+                    $.post(baseurl+'index.php/user/register',{username:res_username,email:res_email,password:hasspass,repeatpw:hasspass},function(data){
+                        if(data.status=='success'){
+                            alert('Your account has been create');
+                            $('#loginform').removeClass('hide');
+                            $('#registerform').addClass('hide');
+                        }else{
+                            alert('username or email already exists');
+                        }
+                    });
+                }
+                
+            });
+            $('#profile_panel').click(function(){
+               $('#overlay').removeClass('hide');
+               $('#container_profile').removeClass('hide');
+               $('#container_response').addClass('hide');
+               
+            });
+           
+            $('#response_panel').click(function(){
+            $('#overlay').removeClass('hide');
+               $('#container_response').removeClass('hide');
+               $('#container_profile').addClass('hide');
+               $.post(baseurl+'index.php/worker/gettask',function(data){
+                    if(data.status=='success'){
+                        var array = data.msg;
+                        var lat = array.lat;
+                        var lng = array.lng;
+                        $.post(baseurl+'index.php/geocrowd/getplace',{lat:lat,lng:lng},function(data){
+                                $('#reslocation').html('Location: '+data); 
+                            });
+                            $('#restitle').html('Title: '+array.title);
+                            
+                            $('#resstart').html('Start date: '+array.startdate);
+                            $('#resend').html('End date: '+array.enddate);
+                        
+                    }
+               }); 
+            });
+            $(function(){
+                
+            });
+           
 });
 
 </script>

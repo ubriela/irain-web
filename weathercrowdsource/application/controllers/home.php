@@ -9,31 +9,27 @@ class Home extends CI_Controller {
          $this->load->helper('form');
         $this->load->library('form_validation');
         $this->load->helper('url');
+        $this->load->model('user_model');
     }
 	public function index()
 	{
         if($this->session->userdata('signed_in')){
-            $data = array(
-                'username' => $this->session->userdata('username'),
-                'avatar' => $this->session->userdata('avatar'),
-                'userid' => $this->session->userdata('userid')
-            );
+            $data = $this->user_model->get_userinfo();
+            
             $this->load->view('home_view',$data);
         }else{
-            redirect(base_url('index.php'));
+            $this->load->view('home_view');
         }
 	}
     public function logout(){
         $this->session->sess_destroy();
         redirect(base_url('index.php'));
     }
-    public function getmarker(){
-        $sw_lat = $_POST['sw_lat'];
-        $sw_lng = $_POST['sw_lng'];
-        $ne_lat = $_POST['ne_lat'];
-        $ne_lng = $_POST['ne_lng'];
+    public function gettask(){
         
     }
+    
+    
   
 }
 

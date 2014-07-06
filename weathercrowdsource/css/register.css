@@ -1,0 +1,20 @@
+body{
+    background: url(../img/rain.jpg);
+    -moz-background-size: cover;
+	-webkit-background-size: cover;
+	background-size: cover;
+	background-position: top center !important;
+	background-repeat: no-repeat !important;
+	background-attachment: fixed;
+}
+.form-horizontal{
+    width: 600px;
+    
+}
+.container{
+    width: 680px;
+    
+}
+.hide{
+   
+}

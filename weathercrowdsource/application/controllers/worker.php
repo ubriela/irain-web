@@ -177,7 +177,10 @@ class Worker extends Convert {
     		$this->_json_response($flag);
     	}
     }
-    
+    public function gettask(){
+        $tmp = $this->worker_model->gettask();
+        $this->_json_response($tmp);
+    }
    
     
     

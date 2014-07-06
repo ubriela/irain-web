@@ -198,12 +198,28 @@ class Worker_model extends CI_Model{
     	$this->db->select('title');
     	$this->db->select('startdate');
     	$this->db->select('enddate');
+        $this->db->select('x(location) AS lat');
+        $this->db->select('y(location) AS lng');
     	$this->db->from('tasks');
     	$this->db->where('taskid',$taskid);
     	$query_taskid = $this->db->get();
     	$row = $query_taskid->row();
     	return $row;
     }
-    
+    public function gettask(){
+        $userid = $this->session->userdata('userid');
+    	$this->db->select('taskid');
+    	$this->db->from('task_worker_matches');
+    	$this->db->where('userid',$userid);
+    	$this->db->where('iscompleted',0);
+    	$this->db->order_by('assigned_date','desc');
+    	$this->db->limit('1');
+    	$query_taskid = $this->db->get();
+    	if ($query_taskid->num_rows()>0){
+    		return  $this->get_taskinfo($query_taskid->row()->taskid);
+    	}else{
+    	   return false;
+    	}
+    }
 }
 ?>
