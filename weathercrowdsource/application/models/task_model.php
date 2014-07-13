@@ -36,12 +36,10 @@ class Task_model extends CI_Model {
      * @param	string taskid
      * @return	the user details
      */
-    public function get_userinfo() {
+    public function get_taskinfo($taskid) {
 
-        $taskid = $this->session->userdata('taskid');
-
-        $this->db->select('requesterid, title, x(location) AS lat, y(location) AS lng, request_date,startdate,enddate, iscompleted, status, ');
-        $this->db->from('users');
+        $this->db->select('requesterid, title, x(location) AS lat, y(location) AS lng, request_date,startdate,enddate, iscompleted, status');
+        $this->db->from('tasks');
         $this->db->where('taskid', $taskid);
         $this->db->limit(1);
 
@@ -50,22 +48,25 @@ class Task_model extends CI_Model {
         if ($query->num_rows() == 1) {
             // Return the row
             $task_info = $query->result_array()[0];
-            
-            // Find task response
-//            $this->db->select('workerid, x(worker_location) AS lat, y(worker_location) AS lng, response_code, level, response_date');
-//            $this->db->from('responses');
-//            $this->db->where('taskid', $taskid);
-//            $this->db->limit(1);
-//            $query = $this->db->get();
-//            if ($query->num_rows() >= 1) {
-//                $taskresponse = $query->result_array();
-//                $this->output->set_content_type('application/json');
-//                $this->output->set_output(json_encode(array('status' => 'success', "msg" => array('info' => $task_info,'responses' => $taskresponse))));
-//            }
-            
-            $this->output->set_output(json_encode(array('status' => 'success', "msg" => array('info' => $task_info,'responses' => NULL))));
+
+            return $task_info;
+
         } else {
-            $this->output->set_output(json_encode(array('status' => 'error', "msg" => 'No task')));
+            return FALSE;
+        }
+    }
+
+    public function get_taskresponse($taskid) {
+        // Find task response
+        $this->db->select('workerid, x(worker_location) AS lat, y(worker_location) AS lng, response_code, level, response_date');
+        $this->db->from('responses');
+        $this->db->where('taskid', $taskid);
+        $query = $this->db->get();
+        if ($query->num_rows() >= 1) {
+            $taskresponse = $query->result_array();
+            return $taskresponse;
+        } else {
+            return FALSE;
         }
     }
 
