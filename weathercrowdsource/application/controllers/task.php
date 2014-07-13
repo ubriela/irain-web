@@ -39,10 +39,10 @@ class Task extends CI_Controller {
     
     
     function get_taskinfo() {
-        if(!$this->session->userdata('signed_in')){
-            $this->_json_response(FALSE);
-            return;
-    	}
+//        if(!$this->session->userdata('signed_in')){
+//            $this->_json_response(FALSE);
+//            return;
+//        }
     	// get task info
         $taskid = $_POST['taskid'];
     	$task_info = $this->task_model->get_taskinfo($taskid);

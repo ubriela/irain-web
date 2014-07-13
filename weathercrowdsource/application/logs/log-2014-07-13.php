@@ -957,3 +957,76 @@ DEBUG - 2014-07-13 03:54:08 --> Model Class Initialized
 DEBUG - 2014-07-13 03:54:08 --> Helper loaded: json_response_helper
 DEBUG - 2014-07-13 03:54:08 --> Final output sent to browser
 DEBUG - 2014-07-13 03:54:08 --> Total execution time: 0.5171
+DEBUG - 2014-07-13 03:54:59 --> Config Class Initialized
+DEBUG - 2014-07-13 03:54:59 --> Hooks Class Initialized
+DEBUG - 2014-07-13 03:54:59 --> Utf8 Class Initialized
+DEBUG - 2014-07-13 03:54:59 --> UTF-8 Support Enabled
+DEBUG - 2014-07-13 03:54:59 --> URI Class Initialized
+DEBUG - 2014-07-13 03:54:59 --> Router Class Initialized
+DEBUG - 2014-07-13 03:54:59 --> Output Class Initialized
+DEBUG - 2014-07-13 03:54:59 --> Security Class Initialized
+DEBUG - 2014-07-13 03:54:59 --> Input Class Initialized
+DEBUG - 2014-07-13 03:54:59 --> XSS Filtering completed
+DEBUG - 2014-07-13 03:54:59 --> XSS Filtering completed
+DEBUG - 2014-07-13 03:54:59 --> Global POST and COOKIE data sanitized
+DEBUG - 2014-07-13 03:54:59 --> Language Class Initialized
+DEBUG - 2014-07-13 03:54:59 --> Loader Class Initialized
+DEBUG - 2014-07-13 03:54:59 --> Helper loaded: url_helper
+DEBUG - 2014-07-13 03:54:59 --> Database Driver Class Initialized
+DEBUG - 2014-07-13 03:54:59 --> Session Class Initialized
+DEBUG - 2014-07-13 03:54:59 --> Helper loaded: string_helper
+DEBUG - 2014-07-13 03:54:59 --> Encrypt Class Initialized
+DEBUG - 2014-07-13 03:54:59 --> A session cookie was not found.
+DEBUG - 2014-07-13 03:54:59 --> Session routines successfully run
+DEBUG - 2014-07-13 03:54:59 --> Encrypt class already loaded. Second attempt ignored.
+DEBUG - 2014-07-13 03:54:59 --> Email Class Initialized
+DEBUG - 2014-07-13 03:54:59 --> User Agent Class Initialized
+DEBUG - 2014-07-13 03:54:59 --> Controller Class Initialized
+DEBUG - 2014-07-13 03:54:59 --> Model Class Initialized
+DEBUG - 2014-07-13 03:54:59 --> Model Class Initialized
+DEBUG - 2014-07-13 03:54:59 --> Helper loaded: cookie_helper
+DEBUG - 2014-07-13 03:54:59 --> Helper loaded: json_response_helper
+DEBUG - 2014-07-13 03:54:59 --> Helper loaded: form_helper
+DEBUG - 2014-07-13 03:54:59 --> Form Validation Class Initialized
+DEBUG - 2014-07-13 03:54:59 --> Language file loaded: language/english/form_validation_lang.php
+DEBUG - 2014-07-13 03:54:59 --> XSS Filtering completed
+DEBUG - 2014-07-13 03:54:59 --> XSS Filtering completed
+DEBUG - 2014-07-13 03:54:59 --> Helper loaded: file_helper
+DEBUG - 2014-07-13 03:54:59 --> array (
+  'userid' => '4c4bd155-c212-4b',
+  'username' => 'ubriela',
+  'avatar' => '/images/people/no_image.png',
+  'fullname' => ' ',
+  'signed_in' => true,
+)
+DEBUG - 2014-07-13 03:54:59 --> Final output sent to browser
+DEBUG - 2014-07-13 03:54:59 --> Total execution time: 0.7415
+DEBUG - 2014-07-13 03:55:10 --> Config Class Initialized
+DEBUG - 2014-07-13 03:55:10 --> Hooks Class Initialized
+DEBUG - 2014-07-13 03:55:10 --> Utf8 Class Initialized
+DEBUG - 2014-07-13 03:55:10 --> UTF-8 Support Enabled
+DEBUG - 2014-07-13 03:55:10 --> URI Class Initialized
+DEBUG - 2014-07-13 03:55:10 --> Router Class Initialized
+DEBUG - 2014-07-13 03:55:10 --> Output Class Initialized
+DEBUG - 2014-07-13 03:55:10 --> Security Class Initialized
+DEBUG - 2014-07-13 03:55:10 --> Input Class Initialized
+DEBUG - 2014-07-13 03:55:10 --> XSS Filtering completed
+DEBUG - 2014-07-13 03:55:10 --> Global POST and COOKIE data sanitized
+DEBUG - 2014-07-13 03:55:10 --> Language Class Initialized
+DEBUG - 2014-07-13 03:55:10 --> Loader Class Initialized
+DEBUG - 2014-07-13 03:55:11 --> Helper loaded: url_helper
+DEBUG - 2014-07-13 03:55:11 --> Database Driver Class Initialized
+DEBUG - 2014-07-13 03:55:11 --> Session Class Initialized
+DEBUG - 2014-07-13 03:55:11 --> Helper loaded: string_helper
+DEBUG - 2014-07-13 03:55:11 --> Encrypt Class Initialized
+DEBUG - 2014-07-13 03:55:11 --> A session cookie was not found.
+DEBUG - 2014-07-13 03:55:11 --> Session routines successfully run
+DEBUG - 2014-07-13 03:55:11 --> Encrypt class already loaded. Second attempt ignored.
+DEBUG - 2014-07-13 03:55:11 --> Email Class Initialized
+DEBUG - 2014-07-13 03:55:11 --> User Agent Class Initialized
+DEBUG - 2014-07-13 03:55:11 --> Controller Class Initialized
+DEBUG - 2014-07-13 03:55:11 --> Model Class Initialized
+DEBUG - 2014-07-13 03:55:11 --> Model Class Initialized
+DEBUG - 2014-07-13 03:55:11 --> Helper loaded: json_response_helper
+DEBUG - 2014-07-13 03:55:11 --> Final output sent to browser
+DEBUG - 2014-07-13 03:55:11 --> Total execution time: 0.6006
