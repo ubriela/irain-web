@@ -36,5 +36,15 @@ class Task extends CI_Controller {
             return False;
         $this->task_model->task_request($taskid, $lat, $lng);
     }
+    
+    
+    function get_taskinfo() {
+        if(!$this->session->userdata('signed_in')){
+            $this->_json_response(FALSE);
+            return;
+    	}
+    	// get task info
+    	$this->_json_response($this->task_model->get_taskinfo());
+    }
 
 }
