@@ -267,6 +267,7 @@ function initialize() {
                     
   });
   google.maps.event.addListener(map, 'click', function(event){
+  if(islogin){
     var getlatlng = event.latLng;
     var lat = getlatlng.lat();
     var lng = getlatlng.lng();
@@ -278,7 +279,7 @@ function initialize() {
     });
     $('#overlay').show();
     $('#posttask').show();     
-                         
+     }                    
   });
   
   function getmarker(){
