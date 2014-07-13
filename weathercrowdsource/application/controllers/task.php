@@ -19,7 +19,7 @@ class Task extends CI_Controller {
 
         $this->load->model('task_model', '', True);
 
-//        $this->load->helper('json_response');
+        $this->load->helper('json_response');
         $this->load->helper('url');
     }
 
