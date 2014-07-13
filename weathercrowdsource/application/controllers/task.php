@@ -40,11 +40,20 @@ class Task extends CI_Controller {
     
     function get_taskinfo() {
         if(!$this->session->userdata('signed_in')){
-            $this->_json_response(FALSE);
+            $this->output->set_output(json_encode(array('status' => 'error', "msg" => 'sign in fail')));
             return;
     	}
     	// get task info
-    	$this->_json_response($this->task_model->get_taskinfo());
+    	$this->task_model->get_taskinfo();
+    }
+    
+    private function _json_response($data) {
+        $this->output->set_content_type('application/json');
+        if ($data) {
+            $this->output->set_output(json_encode(array('status' => 'success', "msg" => $data)));
+        } else {
+            $this->output->set_output(json_encode(array('status' => 'error', "msg" => '0')));
+        }
     }
 
 }
