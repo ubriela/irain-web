@@ -36,6 +36,14 @@ class Requester extends Geocrowd{
             $this->requester_model->submitted_task($number);
         }
     }
+    public function submitted_tasks_type(){
+        if(!$this->session->userdata('signed_in')){
+            $this->_json_response(FALSE);
+            return;
+        }else{
+            $this->requester_model->submitted_task_type();
+        }
+    }
     /**
      * task request
      *

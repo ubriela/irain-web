@@ -30,13 +30,32 @@ class User_model extends CI_Model {
 		if ($query->num_rows() == 1) {
 			// Return the row
             $row = $query->result_array()[0];
-            $row['numrequest'] = $this->get_num_taskrequests();
-            $row['numresponse'] = $this->get_num_taskresponses();
+            $row['numrequest'] = $this->get_num_taskrequests($userid);
+            $row['numresponse'] = $this->get_num_taskresponses($userid);
 			return $row;
 		} else {
 			return FALSE;
 		}
 	}
+    public function get_Alluserinfo(){
+        $this->db->select('username, avatar, firstname, lastname, phone_number, email, created_date, userid');
+		$this->db->from('users');
+		//$this->db->where('userid', $userid);
+		$query = $this->db->get();
+        if($query->num_rows()>0){
+            $array = array();
+            foreach ($query->result_array() as $row)
+                {
+                    $userid = $row['userid'];
+                    $row['numrequest'] = $this->get_num_taskrequests($userid);
+                    $row['numresponse'] = $this->get_num_taskresponses($userid);
+                    $array[]=$row;
+                }
+            return $array;
+        }else{
+            return false;
+        }
+    }
 
 	/**
 	 * Update user info
@@ -326,14 +345,14 @@ class User_model extends CI_Model {
             return FALSE;
         }
     }
-    public function get_num_taskrequests(){
-            $userid = $this->session->userdata('userid');
+    public function get_num_taskrequests($userid){
+            //$userid = $this->session->userdata('userid');
             $this->db->where('requesterid',$userid);
             return $this->db->count_all_results('tasks');
            
     }
-    public function get_num_taskresponses(){
-        $userid = $this->session->userdata('userid');
+    public function get_num_taskresponses($userid){
+        //$userid = $this->session->userdata('userid');
             $this->db->where('workerid',$userid);
             return $this->db->count_all_results('responses');
         
