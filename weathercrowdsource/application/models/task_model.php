@@ -52,16 +52,16 @@ class Task_model extends CI_Model {
             $task_info = $query->result_array()[0];
             
             // Find task response
-            $this->db->select('workerid, x(worker_location) AS lat, y(worker_location) AS lng, response_code, level, response_date');
-            $this->db->from('responses');
-            $this->db->where('taskid', $taskid);
-            $this->db->limit(1);
-            $query = $this->db->get();
-            if ($query->num_rows() >= 1) {
-                $taskresponse = $query->result_array();
-                $this->output->set_content_type('application/json');
-                $this->output->set_output(json_encode(array('status' => 'success', "msg" => array('info' => $task_info,'responses' => $taskresponse))));
-            }
+//            $this->db->select('workerid, x(worker_location) AS lat, y(worker_location) AS lng, response_code, level, response_date');
+//            $this->db->from('responses');
+//            $this->db->where('taskid', $taskid);
+//            $this->db->limit(1);
+//            $query = $this->db->get();
+//            if ($query->num_rows() >= 1) {
+//                $taskresponse = $query->result_array();
+//                $this->output->set_content_type('application/json');
+//                $this->output->set_output(json_encode(array('status' => 'success', "msg" => array('info' => $task_info,'responses' => $taskresponse))));
+//            }
             
             $this->output->set_output(json_encode(array('status' => 'success', "msg" => array('info' => $task_info,'responses' => NULL))));
         } else {
