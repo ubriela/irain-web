@@ -24,8 +24,8 @@
                  <div class="form-group">
 					 <label for="exampleInputPassword1">Level</label>
                      <select class="form-control" id="level">
-                    <option value="0">normal</option>
-                    <option value="1">heavy</option>
+                    <option value="1">normal</option>
+                    <option value="2">heavy</option>
                     
                 </select>   
 				</div>
