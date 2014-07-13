@@ -197,6 +197,10 @@ function initialize() {
       disableDoubleClickZoom: false,
       disableDefaultUI: true
   };
+  var iw1 = new google.maps.InfoWindow({
+    content: "Home For Sale"
+                                   
+  });
   var map = new google.maps.Map(document.getElementById('map-canvas'),mapOptions);
   // Create the search box and link it to the UI element.
   var input = /** @type {HTMLInputElement} */(document.getElementById('pac-input'));
@@ -267,7 +271,7 @@ function initialize() {
                     
   });
   google.maps.event.addListener(map, 'click', function(event){
-  if(islogin){
+    if(islogin){
     var getlatlng = event.latLng;
     var lat = getlatlng.lat();
     var lng = getlatlng.lng();
@@ -311,13 +315,26 @@ function initialize() {
                                 };
                         
                               // Create a marker for each place.
-                                var marker = new google.maps.Marker({
+                                var marker = new MarkerWithLabel({
                                     map: map,
-                                    
                                     icon: image,
-                                    title: item.lat+","+item.lng,
+                                    title: item.taskid,
+                                    
                                     position: location
+                                    //labelContent: "$425K",
+                                   //labelAnchor: new google.maps.Point(22, 0),
+                                   //labelClass: "labels", // the CSS class for the label
+                                   //labelStyle: {opacity: 0.75}
                                 });
+                                
+                                 google.maps.event.addListener(marker, "click", function (e) {
+                                    
+                                    iw1.setContent(table);
+                                    iw1.setPosition(this.getPosition());
+                                    iw1.open(map);
+                                    
+                                     
+                                 });
                                 google.maps.event.addListener(marker, 'click', function(event) {       
                                     var getlatlng = event.latLng;
                                      var lat = getlatlng.lat();
@@ -341,6 +358,31 @@ function initialize() {
               
                
 }
+function loadreporttask(taskid){
+    var table = '<table><thead><tr><th>Location</th><th>Response</th><th>Response date</th></tr></thead><tbody>';
+                                    $.post(baseurl+'index.php/weather/getreport',{taskid:taskid},function(data){
+                                         $.each(data, function(i, item) {
+                                            
+                                            var cellLocation = '<td></td>';
+                                            var cellResponsecode = '<td>'+item.response_code+'</td>';
+                                            var cellResponsedate = '<td>'+item.response_date+'</td>';
+                                            
+                                            $.post(baseurl+'index.php/geocrowd/getplace',{lat:item.lat,lng:item.lng},function(data){
+                                            cellLocation = '<td>'+data+'</td>';
+                                            var row = '<tr>'+cellLocation+cellResponsecode+cellResponsedate+'</tr>';
+                                           table+=row;
+                                            alert(table);
+                                         });
+                                         
+                                    });
+                                         
+                                    
+                                        
+                                        
+                                        
+                                    });
+}
+
 google.maps.event.addDomListener(window, 'load', initialize);
 $('#showlogin').click(function(){
     $('#overlay').show();

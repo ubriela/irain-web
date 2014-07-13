@@ -49,6 +49,9 @@ class Weather extends Convert{
     public function getallreport(){
             $this->weather_model->getallreport();
     }
+    public function getreport(){
+        $this->weather_model->getreport();
+    }
      public function rectangle_report(){
         if(!$this->session->userdata('signed_in')){
             $this->_json_response(false);
