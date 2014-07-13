@@ -17,7 +17,7 @@ class Task extends CI_Controller {
     function __construct() {
         parent::__construct();
 
-        $this->load->model('task_model', '', True);
+        $this->load->model('task_model');
 
         $this->load->helper('json_response');
         $this->load->helper('url');
