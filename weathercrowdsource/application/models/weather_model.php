@@ -111,8 +111,15 @@ class Weather_model extends CI_Model{
         }
     }
     public function getallreport(){
-        $this->db->distinct();
-        $query = $this->db->select('x(location) AS lat, y(location) AS lng,response_code, response_date')->from('weather_report')->order_by('response_date','desc')->get();
+        $select = 'SELECT tasks.taskid,x(location) as lat,y(location) as lng,responses.response_code from tasks,responses where tasks.taskid=responses.taskid order by response_date desc';
+        $query = $this->db->query($select);
+        
+        $this->_json_response($query);
+    }
+    public function getreport(){
+        $taskid = $_POST['taskid'];
+        $select = "select x(worker_location) as lat,y(worker_location) as lng,response_code,response_date from responses where taskid=$taskid";
+        $query = $this->db->query($select);
         $this->_json_response($query);
     }
     public function _json_response($data) {

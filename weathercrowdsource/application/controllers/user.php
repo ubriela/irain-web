@@ -519,7 +519,19 @@ class User extends CI_Controller {
 
         return $change_successful;
     }
-    
+    public function getAllinfo(){
+        $flag = $this->user_model->get_Alluserinfo();
+        $this->_json_response($flag);
+    }
+    public function checkusername(){
+        $username = $_POST['username'];
+        $user_exists = $this->user_model->user_exists($username);
+        if(!$user_exists){
+            $this->_json_response(true);
+        }else{
+            $this->_json_response(false);
+        }
+    }
     
 
 }

@@ -56,11 +56,12 @@ class Requester_model extends CI_Model{
         }else{
             $start = 0;
         }
+        
         $id = $this->session->userdata('userid');
-        $this->db->select('taskid,title, x(location) AS lat, y(location) AS lng,request_date,startdate,enddate, iscompleted');
+        $this->db->select('taskid,title, x(location) AS lat, y(location) AS lng,request_date,startdate,enddate, iscompleted, status');
         $this->db->from('tasks');
         $this->db->where("requesterid = '$id'");
-        $this->db->order_by('taskid','desc');
+        $this->db->order_by('taskid desc');
         $this->db->limit($number,$start);
         $query = $this->db->get();
         if($query->num_rows()>0){
@@ -71,7 +72,33 @@ class Requester_model extends CI_Model{
         }
        
     }
-    
+    public function submitted_task_type(){
+        $type = $_POST['type'];
+        $time = strtotime($_POST['time']);
+        $date = date('Y-m-d H:i:s',$time);
+        $id = $this->session->userdata('userid');
+        $this->db->select('taskid,title, x(location) AS lat, y(location) AS lng,request_date,startdate,enddate, iscompleted');
+        $this->db->from('tasks');
+        $this->db->where("requesterid = '$id'");
+        if($type==0){
+           $this->db->where("iscompleted = 0 and enddate >= '$date'");
+        }
+        if($type==1){
+            $this->db->where('iscompleted',1);
+        }
+        if($type==2){
+            $this->db->where("iscompleted = 0 and enddate < '$date'");
+        }
+        $this->db->order_by('startdate','desc');
+        $query = $this->db->get();
+        if($query->num_rows()>0){
+            $this->output->set_content_type('application/json');
+            $this->output->set_output(json_encode(array('status' => 'success', "msg" => $query->result_array())));
+        } else {
+            $this->output->set_output(json_encode(array('status' => 'error', "msg" => 'No task')));
+        }
+       
+    }
      /**
      * get requesterid from taskid
      * @param type $taskid
@@ -91,5 +118,6 @@ class Requester_model extends CI_Model{
             return FALSE;
         }
     }
+    
 }
 ?>

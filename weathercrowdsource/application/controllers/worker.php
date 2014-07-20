@@ -104,14 +104,17 @@ class Worker extends Convert {
         }
         if ($this->form_validation->run('task_response') == FALSE){
                 $this->_json_response(FALSE);
-        }else{ 
+        }else{
             $taskid = $this->input->post('taskid');
             $code = $this->input->post('responsecode');
             $level = $this->input->post('level');
             $time = $this->input->post('responsedate');
+            $lat = $this->input->post('lat');
+            $lng = $this->input->post('lng');
             $flag = $this->worker_model->task_response($taskid,$code,$level,$time);
-            
             if ($flag) {
+                $flag2 = $this->worker_model->update_worker_location($taskid,$lat,$lng);
+                            
             	// update status in tasks table
             	$this->task_model->update_status($taskid, 2);	// assigned
             	
@@ -174,7 +177,10 @@ class Worker extends Convert {
     		$this->_json_response($flag);
     	}
     }
-    
+    public function gettask(){
+        $tmp = $this->worker_model->gettask();
+        $this->_json_response($tmp);
+    }
    
     
     

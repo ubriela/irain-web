@@ -150,6 +150,25 @@ class Worker_model extends CI_Model{
     }
     
     /**
+     * Update worker location
+     * @param type $taskid
+     * @param type $lat
+     * @param type $lng
+     * @return boolean
+     */
+    public function update_worker_location($taskid,$lat,$lng){
+        $userid = $this->session->userdata('userid');
+        $loc = "'POINT($lat $lng)'";
+        $this->db->where('taskid',$taskid);
+        $this->db->where('workerid',$userid);
+        $this->db->set('worker_location', "GeomFromText($loc)",false);
+        if (!$this->db->update('responses'))
+            return FALSE;
+            
+        return TRUE;
+    }
+    
+    /**
      * get task info for a worker based on his id
      *
      * @access	public
@@ -179,12 +198,28 @@ class Worker_model extends CI_Model{
     	$this->db->select('title');
     	$this->db->select('startdate');
     	$this->db->select('enddate');
+        $this->db->select('x(location) AS lat');
+        $this->db->select('y(location) AS lng');
     	$this->db->from('tasks');
     	$this->db->where('taskid',$taskid);
     	$query_taskid = $this->db->get();
     	$row = $query_taskid->row();
     	return $row;
     }
-    
+    public function gettask(){
+        $userid = $this->session->userdata('userid');
+    	$this->db->select('taskid');
+    	$this->db->from('task_worker_matches');
+    	$this->db->where('userid',$userid);
+    	$this->db->where('iscompleted',0);
+    	$this->db->order_by('assigned_date','desc');
+    	$this->db->limit('1');
+    	$query_taskid = $this->db->get();
+    	if ($query_taskid->num_rows()>0){
+    		return  $this->get_taskinfo($query_taskid->row()->taskid);
+    	}else{
+    	   return false;
+    	}
+    }
 }
 ?>

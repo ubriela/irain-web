@@ -60,6 +60,8 @@ body{
 }
 .container{
 	background-color: rgba(255, 255, 255, 0.5);
+    width: 100%;
+    height: 100%;
 }
 #info{
 	text-align: center;
@@ -103,7 +105,7 @@ a:hover{
 }
 div.right-container{
     min-height: 660px;
-    width: 975px;
+    width: 100%;
     margin-left: 0px;
     display: none;
     background-color: rgba(255, 255, 255, 0.7);
@@ -119,11 +121,11 @@ div.right-container{
     left: 450px;
     position: absolute;
     width: 500px;
-    height: 370px;
+    height: 410px;
     border-radius: 5px;
     background-color: white;
     z-index: 9999999;
-     background-color: rgba(255, 255, 255, 0.8);
+     background-color: white;
      padding: 20px;
      display: none;
 }
@@ -155,6 +157,69 @@ th{
 
 #message{
     display: block !important;
+}
+#container_menu{
+    position: fixed;
+    top: 70px;
+    right: 0;
+    
+}
+#logo{
+    position: absolute;
+    top: 30px;
+    right: 0;
+}
+#overlay{
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+}
+#loginform{
+    width: 500px;
+    height: 250px;
+    margin:200px auto;
+    padding: 15px;
+     background-color: white;
+     border-radius: 10px;
+}
+#registerform{
+    width: 600px;
+    
+    margin:100px auto;
+      background-color: white;
+     border-radius: 10px;
+     padding: 15px;
+}
+.error{
+    color: red;
+}
+div.list-group-item:hover{
+    background-color: #66A3FD;
+    cursor: pointer;
+}
+#container_profile{
+    width: 500px;
+    margin:20px auto;
+    padding: 15px;
+     background-color: white;
+     border-radius: 10px;
+}
+#container_response{
+    width: 500px;
+    margin:20px auto;
+    padding: 15px;
+    background-color: white;
+    border-radius: 10px;
+    
+}
+#leftinfo{
+    text-align: center;
+}
+#rightinfo{
+    padding-left: 0px !important;
 }
 #myForm { display: block;  border-radius: 10px;}
 #progress { position:relative; width:400px; border: 1px solid #ddd; padding: 1px; border-radius: 3px;}
