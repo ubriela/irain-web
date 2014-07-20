@@ -343,6 +343,7 @@ function initialize() {
     var lng = getlatlng.lng();
     $('#lat').val(lat);
     $('#lng').val(lng);
+    hideall();
     $.post(baseurl+'index.php/geocrowd/getplace',{lat:lat,lng:lng},function(data){
         $('#location').val(data);
         $('#btnposttask').attr('disabled',false); 
