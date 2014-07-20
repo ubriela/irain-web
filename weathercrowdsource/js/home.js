@@ -302,7 +302,7 @@ function initialize() {
         }
     
         map.fitBounds(bounds);
-        map.setZoom(4);
+        
         var SW_lat = map.getBounds().getSouthWest().lat();
         var SW_lng = map.getBounds().getSouthWest().lng();
         var NE_lat = map.getBounds().getNorthEast().lat();
