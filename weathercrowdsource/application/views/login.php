@@ -11,14 +11,20 @@
     <!-- JAVASCRIPT -->
     
     <script type="text/javascript" src="http://code.jquery.com/jquery-1.7.2.min.js"></script>
-    
-    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places"></script>
-    <script type="text/javascript" src="http://google-maps-utility-library-v3.googlecode.com/svn/trunk/markermanager/src/markermanager.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=visualization,places"></script>
+   <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+   
     <script type="text/javascript" src="<?php echo base_url();?>js/bootstrap.min.js"></script>
     <script type="text/javascript" src="http://google-maps-utility-library-v3.googlecode.com/svn/trunk/markerwithlabel/src/markerwithlabel.js"></script>
+    
     <script src="<?php echo base_url();?>js/function.js"></script>
+    
     <script>
-         var baseurl = '<?php echo base_url();?>';    
+        
+        //google.setOnLoadCallback(drawChart);
+         var baseurl = '<?php echo base_url();?>';
+         
+         
     </script>
     <script type="text/javascript">
       var script = '<script type="text/javascript" src="<?php echo base_url();?>js/markerclusterer';
@@ -28,17 +34,14 @@
       script += '.js"><' + '/script>';
       document.write(script);
     </script>
-    <script src="<?php echo base_url();?>js/home.js"></script>
+    
+    <script src="<?php echo base_url();?>js/login.js"></script>
     
     <!-- END JAVASCRIPT -->
   </head>
   <body>
-      <?php
-        include('sidebar.php');
-      ?>
-    
-    <div id="map-canvas" class="col-md-10 column" style="width: 84.73333333333334%!important;"></div>
-    <div class="lightbox" style="position: fixed; top: 0;right: 6px;width: 84.73333333333334%!important;">
+    <div id="map-canvas"></div>
+    <div class="lightbox" id="boxtop">
         <input id="pac-input" class="controls" type="text" placeholder="Search Box"/>
         <select id="type" class="form-control" style="width: 150px;display: inline;">
             <option value="0">today</option>
@@ -46,20 +49,21 @@
             <option value="2">2 day ago</option>
             <option value="3">3 day ago</option>
             <option value="5">5 day ago</option>
+            
         </select>
         
+        <button type="button" class="btn btn-default" id="showlogin">Login</button>
+        <button type="button" class="btn btn-default" id="showregister">Register</button>
         
     </div>
+    
     <div id="overlay">
         <?php
-            include('taskmanager.php');
-            include('posttask.php');
-            include('response.php');
-            include('admin.php');
-            include('update.php');
+            include('loginform.php');
+            include('registerform.php');
         ?>
     </div>
-    <img src="<?php echo base_url()?>img/loading.gif" id="loading" width="50" height="50"/>
+    
     
   </body>
 </html>

@@ -1,6 +1,7 @@
 <div class="row clearfix">
 		<div class="col-md-12 column">
 			<form role="form" id="registerform">
+           
             <fieldset><legend>iRain - Register</legend>
 				<div class="form-group">
 					 <label for="exampleInputEmail1">Username</label><input type="text" class="form-control" id="resusername" />

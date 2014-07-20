@@ -92,8 +92,8 @@ class Weather_model extends CI_Model{
             $this->_json_response(false);
         }else{
             $this->db->distinct();
-            $condition = "response_date between '$from' and '$to' and CONTAINS(GeomFromText(\"$region_str\"), GeomFromText(CONCAT('POINT(', x(location), ' ', y(location),')')))";
-            $query = $this->db->select('x(location) AS lat, y(location) AS lng,response_code, response_date')->from('weather_report')->where($condition)->order_by('response_date')->get();
+            $condition = "responses.response_date between '$start' and '$end' and responses.taskid=tasks.taskid and CONTAINS(GeomFromText(\"$region_str\"), GeomFromText(CONCAT('POINT(', x(tasks.location), ' ', y(tasks.location),')')))";
+            $query = $this->db->select('x(location) AS lat, y(location) AS lng,response_code, response_date')->from('responses,tasks')->where($condition)->order_by('responses.response_date','desc')->get();
             $this->_json_response($query);    
         }
     }
@@ -118,7 +118,7 @@ class Weather_model extends CI_Model{
     }
     public function getreport(){
         $taskid = $_POST['taskid'];
-        $select = "select x(worker_location) as lat,y(worker_location) as lng,response_code,response_date from responses where taskid=$taskid";
+        $select = "select count(*) as number from responses where taskid=$taskid";
         $query = $this->db->query($select);
         $this->_json_response($query);
     }

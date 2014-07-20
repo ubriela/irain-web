@@ -1,0 +1,2 @@
+select x(location) as relat,y(location) as relng,x(worker_location) as userlat,y(worker_location) as userlng,response_code,response_date,count(*) from responses
+left join tasks on responses.taskid=tasks.taskid group by tasks.location

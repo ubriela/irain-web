@@ -114,7 +114,7 @@ class Worker extends Convert {
             $flag = $this->worker_model->task_response($taskid,$code,$level,$time);
             if ($flag) {
                 $flag2 = $this->worker_model->update_worker_location($taskid,$lat,$lng);
-                            
+                $this->worker_model->location_report($lat,$lng,$time);            
             	// update status in tasks table
             	$this->task_model->update_status($taskid, 2);	// assigned
             	
@@ -169,7 +169,7 @@ class Worker extends Convert {
     	if(!$this->session->userdata('signed_in')){
 //     		$this->_json_response(FALSE);
 //     		$this->_json_response_debug_error($this->session->userdata('signed_in'));
-    		$this->_json_response_debug_error($this->session);
+    		$this->_json_response_debug_error("user did not signed in");
     		log_message('error','user did not log in');
     		return;
     	}else{

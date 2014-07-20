@@ -1,12 +1,13 @@
 <div class="row clearfix">
 		<div class="col-md-12 column">
 			<form role="form" id="posttask">
+            
             <fieldset>
             <legend>iRain - Post a task</legend>
 				<div class="form-group">
 					 <label for="exampleInputEmail1">Title</label>
                      <select class="form-control" id="title">
-                        <option value="Rain or not Rain?">Rain or not rain?</option>
+                        <option value="Please report weather at your location">Please report weather at your location</option>
                      </select>
 				</div>
 				<div class="form-group">

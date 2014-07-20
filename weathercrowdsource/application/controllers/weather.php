@@ -53,9 +53,6 @@ class Weather extends Convert{
         $this->weather_model->getreport();
     }
      public function rectangle_report(){
-        if(!$this->session->userdata('signed_in')){
-            $this->_json_response(false);
-        }
         if ($this->form_validation->run('rectangle_report') == FALSE){
                 $this->_json_response(FALSE);
         }else{
@@ -63,6 +60,7 @@ class Weather extends Convert{
             $SW_lng = $this->input->post('swlng');//"-118.2927";
             $NE_lat = $this->input->post('nelat');//"34.219722";
             $NE_lng = $this->input->post('nelng');//"-118.092785";
+            
             $from = $this->input->post('startdate');
             $to = $this->input->post('enddate');
             $this->weather_model->spatiotemporal_query($SW_lat,$SW_lng,$NE_lat,$NE_lng,$from,$to);

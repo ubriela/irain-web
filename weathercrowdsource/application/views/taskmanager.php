@@ -1,5 +1,6 @@
 <div class="row clearfix" style="background: white;height: 100%;overflow: auto;" id="taskmanager">
 		<div class="col-md-12 column" >
+        
 			<h3>
 				Task manager
 			</h3>
@@ -43,5 +44,5 @@
 			</table>
             
 		</div>
-        <img src="<?php echo base_url()?>img/loading.gif" id="loading"/>
+        
 	</div>

@@ -58,10 +58,10 @@ class Requester_model extends CI_Model{
         }
         
         $id = $this->session->userdata('userid');
-        $this->db->select('taskid,title, x(location) AS lat, y(location) AS lng,request_date,startdate,enddate, iscompleted, status');
+        $this->db->select('taskid,title, x(location) AS lat, y(location) AS lng,request_date,startdate,enddate, iscompleted');
         $this->db->from('tasks');
         $this->db->where("requesterid = '$id'");
-        $this->db->order_by('taskid desc');
+        $this->db->order_by('iscompleted','taskid desc');
         $this->db->limit($number,$start);
         $query = $this->db->get();
         if($query->num_rows()>0){

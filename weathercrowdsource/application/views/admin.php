@@ -1,4 +1,5 @@
 <div class="row clearfix" id="adminboard">
+
 		<div class="col-md-12 column" >
 			<h3>
 				Admin

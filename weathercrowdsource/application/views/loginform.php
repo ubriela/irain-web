@@ -1,6 +1,7 @@
 <div class="row clearfix">
 		<div class="col-md-12 column">
 			<form role="form" id="loginform">
+            <button class="btnback close">x</button>
             <fieldset>
             <legend>iRain - Login</legend>
 				<div class="form-group">

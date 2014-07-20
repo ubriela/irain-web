@@ -15,10 +15,9 @@ class Home extends CI_Controller {
 	{
         if($this->session->userdata('signed_in')){
             $data = $this->user_model->get_userinfo();
-            
             $this->load->view('home_view',$data);
         }else{
-            $this->load->view('home_view');
+            redirect(base_url('index.php'));
         }
 	}
     public function logout(){
