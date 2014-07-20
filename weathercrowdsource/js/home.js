@@ -247,7 +247,7 @@ function initialize() {
           mapTypeId: google.maps.MapTypeId.ROADMAP,
           scrollwheel: true,
           disableDoubleClickZoom: false,
-          disableDefaultUI: true
+          disableDefaultUI: false
       };
    map = new google.maps.Map(document.getElementById('map-canvas'),mapOptions);
       
