@@ -33,12 +33,13 @@
     <!-- END JAVASCRIPT -->
   </head>
   <body>
+  <div id="wrapper">
       <?php
         include('sidebar.php');
       ?>
     
-    <div id="map-canvas" class="col-md-10 column" style="width: 84.73333333333334%!important;"></div>
-    <div class="lightbox" style="position: fixed; top: 0;right: 6px;width: 84.73333333333334%!important;">
+    <div id="map-canvas" style="width: 84.73333333333334%!important;"></div>
+    <div class="lightbox" id="pac-input1"style="position: fixed; top: 0;left: 200px;padding: 0px;">
         <input id="pac-input" class="controls" type="text" placeholder="Search Box"/>
         <select id="type" class="form-control" style="width: 150px;display: inline;">
             <option value="0">today</option>
@@ -60,6 +61,6 @@
         ?>
     </div>
     <img src="<?php echo base_url()?>img/loading.gif" id="loading" width="50" height="50"/>
-    
+    </div>
   </body>
 </html>

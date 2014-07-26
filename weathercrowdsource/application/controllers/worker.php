@@ -131,6 +131,36 @@ class Worker extends Convert {
             $this->_json_response($flag);
         }           
     }
+    
+     public function task_response_web(){
+        if(!$this->session->userdata('signed_in')){
+            $this->_json_response(FALSE);
+            return;
+        }else{
+            $taskid = $this->input->post('taskid');
+            $code = $this->input->post('responsecode');
+            $level = $this->input->post('level');
+            $time = $this->input->post('responsedate');
+            $flag = $this->worker_model->task_response($taskid,$code,$level,$time);
+            if ($flag) {
+                $flag2 = $this->worker_model->update_worker_location_web($taskid);
+                          
+            	// update status in tasks table
+            	$this->task_model->update_status($taskid, 2);	// assigned
+            	
+            	// notify requester
+            	$row = $this->requester_model->requesterid_from_taskid($taskid);
+            	$message = "Your task with id " . $taskid . " has been done.";
+            	if ($row) {
+            		$requesterid = $row->requesterid;
+            		$pushObject = new push();
+            		$pushObject->push_to_userid($requesterid, $message);
+            	}            	
+            }
+                    
+            $this->_json_response($flag);
+        }           
+    }
     /**
      * set_isactive
      * set user's active 

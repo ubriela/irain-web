@@ -40,8 +40,9 @@
     <!-- END JAVASCRIPT -->
   </head>
   <body>
-    <div id="map-canvas"></div>
+    <div id="map-canvas" style="width: 100%!important;"></div>
     <div class="lightbox" id="boxtop">
+        
         <input id="pac-input" class="controls" type="text" placeholder="Search Box"/>
         <select id="type" class="form-control" style="width: 150px;display: inline;">
             <option value="0">today</option>

@@ -143,7 +143,7 @@ $(document).ready(function(){
           mapTypeId: google.maps.MapTypeId.ROADMAP,
           scrollwheel: true,
           disableDoubleClickZoom: false,
-          disableDefaultUI: true
+          disableDefaultUI: false
       };
       
       map = new google.maps.Map(document.getElementById('map-canvas'),mapOptions);
@@ -180,7 +180,7 @@ $(document).ready(function(){
         }
     
         map.fitBounds(bounds);
-        map.setZoom(4);
+        map.setZoom(6);
         var SW_lat = map.getBounds().getSouthWest().lat();
         var SW_lng = map.getBounds().getSouthWest().lng();
         var NE_lat = map.getBounds().getNorthEast().lat();

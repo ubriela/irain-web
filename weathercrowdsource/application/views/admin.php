@@ -6,7 +6,8 @@
 			</h3>
             <button type="button" class="btn btn-default btnback">Back</button>
             <button type="button" class="btn btn-default" id="adminrefresh" onclick="">Refresh</button>
-            
+            <input type="text" class="form-control" id="adminlocation" style="width: 300px;display: inline;float: right;margin-right: 5px;"/>
+            <button type="button" class="btn btn-default" id="adminrequest" style="float: right; margin-right: 5px;" disabled="true">Post request</button>
 			<div class="panel-group" id="panel-378176" style="margin-top: 10px;">
 				<div class="panel panel-default">
 					<div class="panel-heading">

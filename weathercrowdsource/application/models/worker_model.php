@@ -167,7 +167,14 @@ class Worker_model extends CI_Model{
             
         return TRUE;
     }
-    
+    public function update_worker_location_web($taskid){
+        $userid = $this->session->userdata('userid');
+        $select = "select x(location) as lat,y(location) as lng from location_report where userid='$userid'";
+        $query = $this->db->query($select);
+        $lat = $query->row()->lat;
+        $lng = $query->row()->lng;
+        $this->update_worker_location($taskid,$lat,$lng);
+    }
     /**
      * get task info for a worker based on his id
      *

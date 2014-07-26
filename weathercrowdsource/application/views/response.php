@@ -5,24 +5,18 @@
             
             <fieldset><legend>iRain - Task response</legend>
 				<div class="form-group">
-					 <label for="exampleInputEmail1">Your location</label><input type="text" class="form-control" id="currentlocation" />
-				</div>
-                
-				<div class="form-group">
 					 <label for="exampleInputPassword1">Title</label><input type="text" class="form-control" id="responsetitle" disabled="true" />
 				</div>
 		        <div class="form-group">
 					 <label for="exampleInputPassword1">Request location</label><input type="text" class="form-control" id="responselocation" disabled="true"/>
 				</div>
                 <div class="form-group">
-                <label for="exampleInputPassword1">Weather</label>
-                <select class="form-control" id="code">
-                    <option value="0">None</option>
-                    <option value="1">Rain</option>
-                    <option value="2">Snow</option>
-                </select> 
+                <label for="exampleInputPassword1">Weather: </label> <label id="code"></label><br />
+                    <button type="button" id="btnnone"></button>
+                    <button type="button" id="btnrain"></button>
+                    <button type="button" id="btnsnow"></button>
                 </div>
-                 <div class="form-group">
+                 <div class="form-group" id="conlevel">
 					 <label for="exampleInputPassword1">Level</label>
                      <select class="form-control" id="level">
                     <option value="0">Light</option>

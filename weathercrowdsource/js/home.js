@@ -1,8 +1,11 @@
 $(document).ready(function(){
     var currentlat=0;
     var currentlng=0;
+    var adminlat =0;
+    var adminlng = 0;
     var taskid =0;
     var map;
+    var code=null;
     var markers = [];
     var markersnone = [];
     var markersrain = [];
@@ -93,6 +96,20 @@ function getmarker(SW_lat,SW_lng,NE_lat,NE_lng,clunone,clurain,clusnow){
                                    //labelClass: "labels", // the CSS class for the label
                                    //labelStyle: {opacity: 0.75}
                                 });
+                                google.maps.event.addListener(marker, 'click', function(event){
+                                    var getlatlng = event.latLng;
+                                    var lat = getlatlng.lat();
+                                    var lng = getlatlng.lng();
+                                    $('#lat').val(lat);
+                                    $('#lng').val(lng);
+                                    $.post(baseurl+'index.php/geocrowd/getplace',{lat:lat,lng:lng},function(data){
+                                        $('#location').val(data);
+                                        $('#btnposttask').attr('disabled',false); 
+                                    });
+                                    $('#overlay').show();
+                                    $('#posttask').show();     
+                                                       
+                                  });
                                  
                                 
                                      markers.push(marker);
@@ -139,7 +156,7 @@ function getmarker(SW_lat,SW_lng,NE_lat,NE_lng,clunone,clurain,clusnow){
         
     }
     
-        loadinfo();
+        
     
     
     function getTask(){
@@ -147,7 +164,7 @@ function getmarker(SW_lat,SW_lng,NE_lat,NE_lng,clunone,clurain,clusnow){
             if(data.status=='success'){
                 var arrayjson = data.msg;
                 if(arrayjson.taskid==taskid){
-                    //return;
+                    return;
                 }else{
                 taskid = arrayjson.taskid;
                 $('#newtask').show();
@@ -174,7 +191,8 @@ function getmarker(SW_lat,SW_lng,NE_lat,NE_lng,clunone,clurain,clusnow){
         $('#btnposttask').attr('disabled',true);
         $('#responsetask').hide();
         $('#adminboard').hide();
-        $('#uplocation').hide();
+        $('#uplocationform').hide();
+        $('#conlevel').hide();
     }
     function loadTasktype(type){
         $('#loading').show();
@@ -256,20 +274,23 @@ function initialize() {
         mcsnow = new MarkerClusterer(map,markerssnow,snowOptions);
   // Create the search box and link it to the UI element.
   var input = /** @type {HTMLInputElement} */(document.getElementById('pac-input'));
-  var input1 = (document.getElementById('currentlocation'));
+  
   var input2 = (document.getElementById('uplocation'));
-  //map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+  var input3 = (document.getElementById('adminlocation'));
+   //var input4 = /** @type {HTMLInputElement} */(document.getElementById('pac-input1'));
+  //map.controls[google.maps.ControlPosition.TOP_LEFT].push(input4);
 
   var searchBox = new google.maps.places.SearchBox(
     /** @type {HTMLInputElement} */(input));
     var searchBox2 = new google.maps.places.Autocomplete((input2));
-  var searchBox1 = new google.maps.places.Autocomplete(
-    /** @type {HTMLInputElement} */(input1));
-    google.maps.event.addListener(searchBox1, 'place_changed', function () {
-            var place = searchBox1.getPlace();
-            currentlat = place.geometry.location.lat();
-            currentlng = place.geometry.location.lng();
-            $('#btnresponse').attr('disabled',false);
+    var searchBox3 = new google.maps.places.Autocomplete((input3));
+ 
+  
+        google.maps.event.addListener(searchBox3, 'place_changed', function () {
+            var place = searchBox3.getPlace();
+            adminlat = place.geometry.location.lat();
+            adminlng = place.geometry.location.lng();
+            $('#adminrequest').attr('disabled',false);
             
 
         });
@@ -298,11 +319,41 @@ function initialize() {
         markers = [];
         var bounds = new google.maps.LatLngBounds();
         for (var i = 0, place; place = places[i]; i++) {
+            var image = {
+                url: place.icon,
+                size: new google.maps.Size(71, 71),
+                origin: new google.maps.Point(0, 0),
+                anchor: new google.maps.Point(17, 34),
+                scaledSize: new google.maps.Size(25, 25)
+              };
+        
+              // Create a marker for each place.
+              var marker = new google.maps.Marker({
+                map: map,
+                icon: image,
+                title: place.name,
+                position: place.geometry.location
+              });
+              google.maps.event.addListener(marker, 'click', function(event){
+                var getlatlng = event.latLng;
+                var lat = getlatlng.lat();
+                var lng = getlatlng.lng();
+                $('#lat').val(lat);
+                $('#lng').val(lng);
+                $.post(baseurl+'index.php/geocrowd/getplace',{lat:lat,lng:lng},function(data){
+                    $('#location').val(data);
+                    $('#btnposttask').attr('disabled',false); 
+                });
+                $('#overlay').show();
+                $('#posttask').show();     
+                                   
+              });
+              
           bounds.extend(place.geometry.location);
         }
     
         map.fitBounds(bounds);
-        
+       map.setZoom(6);
         var SW_lat = map.getBounds().getSouthWest().lat();
         var SW_lng = map.getBounds().getSouthWest().lng();
         var NE_lat = map.getBounds().getNorthEast().lat();
@@ -343,7 +394,6 @@ function initialize() {
     var lng = getlatlng.lng();
     $('#lat').val(lat);
     $('#lng').val(lng);
-    hideall();
     $.post(baseurl+'index.php/geocrowd/getplace',{lat:lat,lng:lng},function(data){
         $('#location').val(data);
         $('#btnposttask').attr('disabled',false); 
@@ -394,6 +444,7 @@ $('#showresponse').click(function(){
    
 });
 $(document).on('click',"#btnposttask",function(){
+                $('#loading').show();
                  var title = $('#title').val();
                  var lat = $('#lat').val();
                  var lng = $('#lng').val();
@@ -413,6 +464,7 @@ $(document).on('click',"#btnposttask",function(){
                             hideall();
                         }else{
                             alert('error');
+                            $('#loading').hide();
                         }
                     }
                  });
@@ -424,21 +476,25 @@ $('#loadtype').change(function(){
 });
 $('#btnresponse').click(function(){
     $('#loading').show();
-    var code = $('#code').val();
+    if(code==null){
+        alert('please select weather response');
+        return;
+    }
     var level = $('#level').val();
     var now = new Date();
     var timeresponse = $('#timeresponse').val();
     var currenttime = now.getFullYear()+'-'+(now.getMonth()+1)+'-'+now.getDate()+' '+(now.getHours()-timeresponse)+':'+now.getMinutes()+':'+now.getSeconds();
-    $.post(baseurl+'index.php/worker/task_response',{taskid:taskid,lat:currentlat,lng:currentlng,responsecode:code,responsedate:currenttime,level:level},function(data){
+    $.post(baseurl+'index.php/worker/task_response_web',{taskid:taskid,responsecode:code,responsedate:currenttime,level:level},function(data){
        if(data.status=='success'){
             hideall();
             alert('You have response a task!');
             taskid=0;
             $('#newtask').hide();
-            $('#currentlocation').val('');
             $('#responsetitle').val('');
             $('#btnresponse').attr('disabled',true);
             $('#responselocation').val('');
+            code='';
+            $('#code').html('');
        }else{
             alert('error');
             $('#loading').hide();
@@ -447,6 +503,7 @@ $('#btnresponse').click(function(){
 });
 $('#showadmin').click(function(){
    hideall();
+   loadinfo();
    $('#overlay').show();
    $('#adminboard').show();
     
@@ -484,17 +541,59 @@ $(document).on('click','.check',function(){
                 }
             });
             $('#type').change(function(){
-        var SW_lat = map.getBounds().getSouthWest().lat();
-        var SW_lng = map.getBounds().getSouthWest().lng();
-        var NE_lat = map.getBounds().getNorthEast().lat();
-        var NE_lng = map.getBounds().getNorthEast().lng();
-        getmarker(SW_lat,SW_lng,NE_lat,NE_lng,mcnone,mcrain,mcsnow);
-    });
+                var SW_lat = map.getBounds().getSouthWest().lat();
+                var SW_lng = map.getBounds().getSouthWest().lng();
+                var NE_lat = map.getBounds().getNorthEast().lat();
+                var NE_lng = map.getBounds().getNorthEast().lng();
+                getmarker(SW_lat,SW_lng,NE_lat,NE_lng,mcnone,mcrain,mcsnow);
+            });
     $('#showupdate').click(function(){
        hideall();
        $('#overlay').show();
-       $('#uplocation').show(); 
-    });       
+       $('#uplocationform').show(); 
+    });
+    $('#adminrequest').click(function(){
+         var title = 'Please report weather at your location';
+                 var lat = adminlat;
+                 var lng = adminlng;
+                 var now = new Date();
+                 var tomorrow = new Date();
+                    tomorrow.setDate(tomorrow.getDate() + 1);
+                 var requestdate = now.getFullYear()+'-'+(now.getMonth()+1)+'-'+now.getDate()+' '+now.getHours()+':'+now.getMinutes()+':'+now.getSeconds();
+                 var enddate = tomorrow.getFullYear()+'-'+(tomorrow.getMonth()+1)+'-'+tomorrow.getDate()+' '+tomorrow.getHours()+':'+tomorrow.getMinutes()+':'+tomorrow.getSeconds();
+                 var radius = 1000;
+                 $.ajax({
+                    type: 'POST',
+                    url: baseurl+'index.php/requester/task_request',
+                    data: 'title='+title+'&lat='+lat+'&lng='+lng+'&requestdate='+requestdate+'&startdate='+requestdate+'&enddate='+enddate+'&type=0'+'&radius='+radius,
+                    success:function(data){
+                        if(data.status=='success'){
+                            alert('Post success');
+                            $('#adminrequest').attr('disabled',true);
+                        }else{
+                            alert('error');
+                        }
+                    }
+                 });
+    });    
+    $('#btnrain').click(function(){
+        $('#conlevel').show();
+        $('#code').html('rain');
+        code = 1;
+        $('#btnresponse').attr('disabled',false);
+    }) ;  
+    $('#btnnone').click(function(){
+        $('#conlevel').hide();
+        $('#code').html('none');
+        code = 0;
+        $('#btnresponse').attr('disabled',false);
+    }) ;
+    $('#btnsnow').click(function(){
+        $('#conlevel').hide();
+        $('#code').html('snow');
+        code = 2;
+        $('#btnresponse').attr('disabled',false);
+    }) ;
     $('#btnup').click(function(){
         $('#loading').show();
         var now = new Date();
