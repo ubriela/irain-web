@@ -589,7 +589,7 @@ $(document).on('click','.check',function(){
         $('#btnresponse').attr('disabled',false);
     }) ;
     $('#btnsnow').click(function(){
-        $('#conlevel').hide();
+        $('#conlevel').show();
         $('#code').html('snow');
         code = 2;
         $('#btnresponse').attr('disabled',false);
