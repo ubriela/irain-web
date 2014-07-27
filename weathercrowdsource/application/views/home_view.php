@@ -38,7 +38,7 @@
         include('sidebar.php');
       ?>
     
-    <div id="map-canvas" style="width: 84.73333333333334%!important;"></div>
+    <div id="map-canvas" style="width: 84.74333333333334%!important;"></div>
     <div class="lightbox" id="pac-input1"style="position: fixed; top: 0;left: 200px;padding: 0px;">
         <input id="pac-input" class="controls" type="text" placeholder="Search Box"/>
         <select id="type" class="form-control" style="width: 150px;display: inline;">
