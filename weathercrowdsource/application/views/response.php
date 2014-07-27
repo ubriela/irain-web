@@ -12,9 +12,10 @@
 				</div>
                 <div class="form-group">
                 <label for="exampleInputPassword1">Weather: </label> <label id="code"></label><br />
-                    <button type="button" id="btnnone"></button>
                     <button type="button" id="btnrain"></button>
                     <button type="button" id="btnsnow"></button>
+                    <button type="button" id="btnnone"></button>
+                    
                 </div>
                  <div class="form-group" id="conlevel">
 					 <label for="exampleInputPassword1">Level</label>
