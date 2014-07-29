@@ -14,9 +14,7 @@
         height: 100%;
         margin: 0 auto;
       }
-      #map-canvas{
-        width: 84.73333333333334%!important;
-      }
+      
       .labels {
    color: red;
    background-color: white;
@@ -76,7 +74,7 @@
         width: 345px;
       }
 #sidebar{
-    width: 200px;
+    width: 170px;
     height: 100%;
     float: left;
    background: url(../img/images.jpg);
