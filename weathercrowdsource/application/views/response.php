@@ -5,7 +5,7 @@
             
             <fieldset><legend>iRain - Task response</legend>
 				<div class="form-group">
-					 <label for="exampleInputPassword1">Title</label><input type="text" class="form-control" id="responsetitle" disabled="true" />
+					 <label for="exampleInputPassword1">Please report weather at your location</label><input type="text" class="form-control" id="responsetitle" disabled="true" style="display:none;"/>
 				</div>
 		        <div class="form-group">
 					 <label for="exampleInputPassword1">Request location</label><input type="text" class="form-control" id="responselocation" disabled="true"/>
