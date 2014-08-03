@@ -477,7 +477,7 @@ $('#showtask').click(function(){
 $('#showresponse').click(function(){
     hideall();
     if(taskid==0){
-        alert('You have no task!');
+         $.notify('You have no task!','warn');
     }else{
          $('#overlay').show();
          $('#responsetask').show();
