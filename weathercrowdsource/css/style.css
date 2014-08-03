@@ -251,6 +251,10 @@ td{
 }
 #mcTooltip{
     padding: 5px!important;
+    background: white!important;
+}
+.mcTooltipInner{
+    background: white!important;
 }
 #uploader{
     width: 500px;
