@@ -8,9 +8,9 @@ $(document).ready(function(){
     var rain = baseurl+"img/mark_rain_ic.png";
     var snow = baseurl+"img/mark_snow_ic.png";
     var gridsize = 10;
-    var noneStyle = [{textColor: 'red',fontSize: 15, url: none,height: 37,width: 32}];
-    var rainStyle = [{textColor: 'red',fontSize: 15, url: rain,height: 37,width: 32}];
-    var snowStyle = [{textColor: 'red',fontSize: 15, url: snow,height: 37,width: 32}];
+    var noneStyle = [{textColor: 'yellow',fontSize: 20, url: none,height: 37,width: 32}];
+    var rainStyle = [{textColor: 'yellow',fontSize: 20, url: rain,height: 37,width: 32}];
+    var snowStyle = [{textColor: 'yellow',fontSize: 20, url: snow,height: 37,width: 32}];
     var noneOptions = {gridSize: gridsize,styles: noneStyle};
     var rainOptions = {gridSize: gridsize,styles: rainStyle};
     var snowOptions = {gridSize: gridsize,styles: snowStyle};
@@ -94,7 +94,7 @@ $(document).ready(function(){
                                 var marker = new MarkerWithLabel({
                                     map: map,
                                     icon: image,
-                                    title: item.response_date,
+                                   
                                     
                                     position: location
                                     //labelContent: "$425K",
