@@ -5,21 +5,22 @@ $(document).ready(function(){
     var adminlng = 0;
     var taskid =0;
     var map;
-    var code=null;
+    var code=0;
     var markers = [];
     var markersnone = [];
     var markersrain = [];
     var markerssnow = [];
     var xhr = null;
+    var xhr1 = null;
     var none = baseurl+"img/mark_none_ic.png";
     var rain = baseurl+"img/mark_rain_ic.png";
     var snow = baseurl+"img/mark_snow_ic.png";
     var completeimage = baseurl+'img/complete.png';
     var expiredimage = baseurl+'img/expired.png';
     var gridsize = 10;
-    var noneStyle = [{textColor: 'red',fontSize: 15, url: none,height: 37,width: 32}];
-    var rainStyle = [{textColor: 'red',fontSize: 15, url: rain,height: 37,width: 32}];
-    var snowStyle = [{textColor: 'red',fontSize: 15, url: snow,height: 37,width: 32}];
+    var noneStyle = [{textColor: 'yellow',textSize: 21, url: none,height: 37,width: 32}];
+    var rainStyle = [{textColor: 'yellow',textSize: 21, url: rain,height: 37,width: 32}];
+    var snowStyle = [{textColor: 'yellow',textSize: 21, url: snow,height: 37,width: 32}];
     var noneOptions = {gridSize: gridsize,styles: noneStyle};
     var rainOptions = {gridSize: gridsize,styles: rainStyle};
     var snowOptions = {gridSize: gridsize,styles: snowStyle};
@@ -39,6 +40,30 @@ $(document).ready(function(){
     }
     return x;
 }
+    
+function response(level){
+    $('#loading').show()
+    var timeresponse = $('#timeresponse').val();
+    var now = new Date((new Date())*1-1000*3600*timeresponse);
+    var GMTdate = new Date(now.valueOf() + now.getTimezoneOffset() * 60000); 
+    var currenttime = GMTdate.getFullYear()+'-'+(GMTdate.getMonth()+1)+'-'+GMTdate.getDate()+' '+GMTdate.getHours()+':'+GMTdate.getMinutes()+':'+GMTdate.getSeconds();
+    $.post(baseurl+'index.php/worker/task_response_web',{taskid:taskid,responsecode:code,responsedate:currenttime,level:level},function(data){
+       if(data.status=='success'){
+            hideall();
+            $.notify('Thank for your response','success');
+            taskid=0;
+            $('#newtask').hide();
+            $('#responsetitle').val('');
+            $('#btnresponse').attr('disabled',true);
+            $('#responselocation').val('');
+            code=0;
+            
+       }else{
+            $.notify('error','error');
+            $('#loading').hide();
+       }
+    });
+}
 function getmarker(SW_lat,SW_lng,NE_lat,NE_lng,clunone,clurain,clusnow){
                     //var SW_lat = map.getBounds().getSouthWest().lat();
                     //var SW_lng = map.getBounds().getSouthWest().lng();
@@ -57,7 +82,7 @@ function getmarker(SW_lat,SW_lng,NE_lat,NE_lng,clunone,clurain,clusnow){
                             xhr.abort();
                             xhr = null;
                     }
-                     var now = new Date();
+                    var now = new Date();
                     now.setDate(now.getDate() - number); 
                     var from = now.getFullYear()+"-"+(now.getMonth()+1)+"-"+now.getDate()+' 00:00:00';
                     var to = now.getFullYear()+"-"+(now.getMonth()+1)+"-"+now.getDate()+' 24:00:00';
@@ -70,11 +95,15 @@ function getmarker(SW_lat,SW_lng,NE_lat,NE_lng,clunone,clurain,clusnow){
                            $.each(data, function(i, item) {
                                 var location = new google.maps.LatLng(item.lat, item.lng);
                                 var icons =none;
+                                var title = 'none';
+                                
                                 if(item.response_code==1){
                                     icons=rain;
+                                    title = 'Rain'
                                 }
                                 if(item.response_code==2){
                                     icons=snow;
+                                    title = 'Snow'
                                 }
                                 var image = {
                                     url: icons,
@@ -88,7 +117,7 @@ function getmarker(SW_lat,SW_lng,NE_lat,NE_lng,clunone,clurain,clusnow){
                                 var marker = new MarkerWithLabel({
                                     map: map,
                                     icon: image,
-                                    title: item.response_date,
+                                    title: title,
                                     
                                     position: location
                                     //labelContent: "$425K",
@@ -193,12 +222,18 @@ function getmarker(SW_lat,SW_lng,NE_lat,NE_lng,clunone,clurain,clusnow){
         $('#adminboard').hide();
         $('#uplocationform').hide();
         $('#conlevel').hide();
+        $('#upavatar').hide();
     }
     function loadTasktype(type){
+        $('#containertask').html('');
         $('#loading').show();
         var now = new Date();
+        if( xhr1 != null ) {
+                            xhr1.abort();
+                            xhr1 = null;
+        }
         var currenttime = now.getFullYear()+'-'+(now.getMonth()+1)+'-'+now.getDate()+' '+now.getHours()+':'+now.getMinutes()+':'+now.getSeconds();
-                $.ajax({
+                xhr1 = $.ajax({
                    type: 'POST',
                    url: baseurl+'index.php/requester/submitted_tasks_type',
                    data:'type='+type+"&time="+currenttime,
@@ -207,7 +242,12 @@ function getmarker(SW_lat,SW_lng,NE_lat,NE_lng,clunone,clurain,clusnow){
                         if(data.status=='success'){
                             var arrayjson = data.msg;
                              $.each(arrayjson, function(i, item) {
-                                    var there = new Date(item.enddate);
+                                   
+                                    var start = new Date(item.startdate+' GMT');
+                                    var there = new Date(item.enddate+' GMT');
+                                    
+                                    //there = there.setHours(there.getHours() + 7);
+
                                     //if(there>now){
                                     
                                     //var cellID = '<td>'+item.taskid+'</td>';
@@ -215,8 +255,8 @@ function getmarker(SW_lat,SW_lng,NE_lat,NE_lng,clunone,clurain,clusnow){
                                     //var cellLat = '<td>'+item.lat+'</td>';
                                     //var cellLng = '<td>'+item.lng+'</td>';
                                     var cellLocation = '<td></td>';
-                                    var cellStart = '<td class=center>'+item.startdate+'</td>';
-                                    var cellEnd = '<td class=center>'+item.enddate+'</td>';
+                                    var cellStart = '<td class=center>'+start.getFullYear()+'-'+(start.getMonth()+1)+'-'+start.getDate()+' '+start.getHours()+':'+start.getMinutes()+':'+start.getSeconds()+'</td>';
+                                    var cellEnd = '<td class=center>'+there.getFullYear()+'-'+(there.getMonth()+1)+'-'+there.getDate()+' '+there.getHours()+':'+there.getMinutes()+':'+there.getSeconds()+'</td>';
                                     var cellComplete = '<td class=center></td>';
                                     var cellExpired = '<td class=center></td>';
                                     var cellDelete = '<td class="center"><input class="check" type="checkbox" id='+item.taskid+'></td>';
@@ -449,10 +489,12 @@ $(document).on('click',"#btnposttask",function(){
                  var lat = $('#lat').val();
                  var lng = $('#lng').val();
                  var now = new Date();
+                 var GMTdate = new Date(now.valueOf() + now.getTimezoneOffset() * 60000);
                  var tomorrow = new Date();
-                    tomorrow.setDate(tomorrow.getDate() + 1);
-                 var requestdate = now.getFullYear()+'-'+(now.getMonth()+1)+'-'+now.getDate()+' '+now.getHours()+':'+now.getMinutes()+':'+now.getSeconds();
-                 var enddate = tomorrow.getFullYear()+'-'+(tomorrow.getMonth()+1)+'-'+tomorrow.getDate()+' '+tomorrow.getHours()+':'+tomorrow.getMinutes()+':'+tomorrow.getSeconds();
+                 tomorrow.setDate(GMTdate.getDate() + 1);
+                 var GMTtomorrow = new Date(tomorrow.valueOf() +tomorrow.getTimezoneOffset() * 60000);
+                 var requestdate = GMTdate.getFullYear()+'-'+(GMTdate.getMonth()+1)+'-'+GMTdate.getDate()+' '+GMTdate.getHours()+':'+GMTdate.getMinutes()+':'+GMTdate.getSeconds();
+                 var enddate = GMTtomorrow.getFullYear()+'-'+(GMTtomorrow.getMonth()+1)+'-'+GMTtomorrow.getDate()+' '+GMTtomorrow.getHours()+':'+GMTtomorrow.getMinutes()+':'+GMTtomorrow.getSeconds();
                  var radius = $('#radius').val();
                  $.ajax({
                     type: 'POST',
@@ -460,47 +502,21 @@ $(document).on('click',"#btnposttask",function(){
                     data: 'title='+title+'&lat='+lat+'&lng='+lng+'&requestdate='+requestdate+'&startdate='+requestdate+'&enddate='+enddate+'&type=0'+'&radius='+radius,
                     success:function(data){
                         if(data.status=='success'){
-                            alert('Post success');
                             hideall();
+                            $.notify('Post success','success');
                         }else{
-                            alert('error');
                             $('#loading').hide();
+                            $.notify('Error','error');
+                            
                         }
                     }
                  });
 });
-
 $('#loadtype').change(function(){
    var type = $(this).val();
    loadTasktype(type);
 });
-$('#btnresponse').click(function(){
-    $('#loading').show();
-    if(code==null){
-        alert('please select weather response');
-        return;
-    }
-    var level = $('#level').val();
-    var now = new Date();
-    var timeresponse = $('#timeresponse').val();
-    var currenttime = now.getFullYear()+'-'+(now.getMonth()+1)+'-'+now.getDate()+' '+(now.getHours()-timeresponse)+':'+now.getMinutes()+':'+now.getSeconds();
-    $.post(baseurl+'index.php/worker/task_response_web',{taskid:taskid,responsecode:code,responsedate:currenttime,level:level},function(data){
-       if(data.status=='success'){
-            hideall();
-            alert('You have response a task!');
-            taskid=0;
-            $('#newtask').hide();
-            $('#responsetitle').val('');
-            $('#btnresponse').attr('disabled',true);
-            $('#responselocation').val('');
-            code='';
-            $('#code').html('');
-       }else{
-            alert('error');
-            $('#loading').hide();
-       }
-    });
-});
+
 $('#showadmin').click(function(){
    hideall();
    loadinfo();
@@ -568,41 +584,54 @@ $(document).on('click','.check',function(){
                     data: 'title='+title+'&lat='+lat+'&lng='+lng+'&requestdate='+requestdate+'&startdate='+requestdate+'&enddate='+enddate+'&type=0'+'&radius='+radius,
                     success:function(data){
                         if(data.status=='success'){
-                            alert('Post success');
+                            $.notify('Request success','success');
                             $('#adminrequest').attr('disabled',true);
                         }else{
-                            alert('error');
+                            $.notify('Request fail','error');
                         }
                     }
                  });
     });    
     $('#btnrain').click(function(){
-        $('#conlevel').show();
-        $('#code').html('rain');
-        code = 1;
-        $('#btnresponse').attr('disabled',false);
+       code = 1;
+       
+       tooltip.pop(this, '#demo',{ sticky:false, position:0,offsetY: 20 });
     }) ;  
-    $('#btnnone').click(function(){
-        $('#conlevel').hide();
-        $('#code').html('none');
+    $('#btnnone').click(function(){ 
         code = 0;
-        $('#btnresponse').attr('disabled',false);
+        response(0);
     }) ;
     $('#btnsnow').click(function(){
-        $('#conlevel').show();
-        $('#code').html('snow');
         code = 2;
-        $('#btnresponse').attr('disabled',false);
+        tooltip.pop(this, '#demo',{ sticky:false, position:0,offsetY: 20 });
     }) ;
+    $('#light').click(function(){
+        response(0)
+    });
+    $('#moderate').click(function(){
+        response(1)
+    });
+    $('#heavy').click(function(){
+        response(2)
+    });
+    $('#avatar').click(function(){
+      
+    });
     $('#btnup').click(function(){
         $('#loading').show();
         var now = new Date();
         var currenttime = now.getFullYear()+'-'+(now.getMonth()+1)+'-'+now.getDate()+' '+now.getHours()+':'+now.getMinutes()+':'+now.getSeconds();
         $.post(baseurl+'index.php/worker/location_report',{lat:currentlat,lng:currentlng,datetime:currenttime},function(data){
            if(data.status=='success'){
-               alert('Update success');
-               hideall();
+                hideall();
+               $.notify("Your location has been update!","success",{
+                autoHide:true,
+                globalPosition: 'top center'
+                });
+               
                $('#btnup').attr('disabled',true); 
+           }else{
+                $.notify("ERROR","error");
            } 
         });
     });      

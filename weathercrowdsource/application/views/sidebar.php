@@ -1,6 +1,6 @@
 <div id="sidebar">
     <div id="info">
-        <img src="<?php echo base_url().$avatar?>" width="150" height="150" id="avatar"/><br />
+        <img src="<?php echo base_url()?>img/logoFinal.png" width="150" height="150" id="avatar"/><br />
         <label id="lbusername"><?php echo $username?></label>
     </div>
     <div id="nav">
@@ -10,7 +10,7 @@
             <li id="showtask">Task Manager</li>
             <?php 
             if($username=='irainvn'){
-                echo '<li id=showadmin>Admin boards</li>';
+                echo '<li id=showadmin>Admin</li>';
             }
             ?>
             

@@ -36,7 +36,6 @@ class User extends CI_Controller {
         // Load user agent library
         $this->load->helper('json_response');
     }
-
     /**
      * Default function executed when [base_url]/index.php/user is requested
      *

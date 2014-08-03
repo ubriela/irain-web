@@ -56,12 +56,11 @@ class Requester_model extends CI_Model{
         }else{
             $start = 0;
         }
-        
         $id = $this->session->userdata('userid');
         $this->db->select('taskid,title, x(location) AS lat, y(location) AS lng,request_date,startdate,enddate, iscompleted');
         $this->db->from('tasks');
         $this->db->where("requesterid = '$id'");
-        $this->db->order_by('iscompleted','taskid desc');
+        $this->db->order_by('iscompleted desc','taskid desc');
         $this->db->limit($number,$start);
         $query = $this->db->get();
         if($query->num_rows()>0){
@@ -89,7 +88,7 @@ class Requester_model extends CI_Model{
         if($type==2){
             $this->db->where("iscompleted = 0 and enddate < '$date'");
         }
-        $this->db->order_by('startdate','desc');
+        $this->db->order_by('taskid','desc');
         $query = $this->db->get();
         if($query->num_rows()>0){
             $this->output->set_content_type('application/json');
