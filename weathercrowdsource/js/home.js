@@ -492,7 +492,7 @@ $(document).on('click',"#btnposttask",function(){
                  var now = new Date();
                  var GMTdate = new Date(now.valueOf() + now.getTimezoneOffset() * 60000);
                  var tomorrow = new Date();
-                 tomorrow.setDate(GMTdate.getDate() + 1);
+                 tomorrow.setDate(now.getDate() + 1);
                  var GMTtomorrow = new Date(tomorrow.valueOf() +tomorrow.getTimezoneOffset() * 60000);
                  var requestdate = GMTdate.getFullYear()+'-'+(GMTdate.getMonth()+1)+'-'+GMTdate.getDate()+' '+GMTdate.getHours()+':'+GMTdate.getMinutes()+':'+GMTdate.getSeconds();
                  var enddate = GMTtomorrow.getFullYear()+'-'+(GMTtomorrow.getMonth()+1)+'-'+GMTtomorrow.getDate()+' '+GMTtomorrow.getHours()+':'+GMTtomorrow.getMinutes()+':'+GMTtomorrow.getSeconds();
