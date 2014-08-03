@@ -68,6 +68,12 @@
     </div>
     <img src="<?php echo base_url()?>img/loading.gif" id="loading" width="50" height="50"/>
     </div>
-    
+    <div class="hide">
+        <div id="exit">
+            <h3>Do you want logout?</h3>
+            <button type="button" class="btn btn-default" id="yes">Yes</button>
+            <button type="button" class="btn btn-default" id="no">No</button>
+        </div>
+    </div>
   </body>
 </html>
