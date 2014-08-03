@@ -82,12 +82,12 @@ class Geocrowd extends CI_Controller {
      * @param $radius
      * @return array workerid
      */
-    public function task_query($taskid,$lat,$lng,$radius,$message,$userid){
+    public function task_query($taskid,$lat,$lng,$radius,$message){
         $condition = "isactive = 1 and isassigned = 0 and (6373000 * acos (cos ( radians( '$lat' ) )* cos( radians( x(location) ) )* cos( radians( y(location) ) - radians( '$lng' ) )+ sin ( radians( '$lat' ) )* sin( radians( x(location) ) ))) < '$radius'";
         $this->db->select('userid');
         $this->db->from('location_report');
         $this->db->where($condition);
-        $this->db->where_not_in('userid',$userid);
+        
         $query = $this->db->get();
         if($query->num_rows()>0){
            $this->db->trans_start();
