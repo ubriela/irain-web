@@ -459,12 +459,13 @@ $('.btnback').click(function(){
 });
 
 $('#logout').click(function(){
-   var r = confirm("Do you want logout?");
-    if (r == true) {
-        window.location= baseurl+'index.php/home/logout';
-    } else {
-        
-    } 
+   tooltip.pop(this, '#exit',{ sticky:true, position:4,offsetY: 0 });
+});
+$('#no').click(function(){
+    tooltip.hide();
+});
+$('#yes').click(function(){
+   window.location = baseurl+'index.php/home/logout'; 
 });
 
 
