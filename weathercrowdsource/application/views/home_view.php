@@ -33,7 +33,19 @@
       document.write(script);
     </script>
     <script src="<?php echo base_url();?>js/home.js"></script>
-    
+    <script>
+    var _roost = _roost || [];
+    _roost.push(['appkey','c7b0f5e99068489bb0b21aac2e6679ee']);
+
+    !function(d,s,id){
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if(!d.getElementById(id)){
+            js=d.createElement(s); js.id=id;
+            js.src='//cdn.goroost.com/js/roost.js';
+            fjs.parentNode.insertBefore(js,fjs);
+        }
+    }(document, 'script', 'roost-js');
+</script>
     <!-- END JAVASCRIPT -->
   </head>
   <body>
