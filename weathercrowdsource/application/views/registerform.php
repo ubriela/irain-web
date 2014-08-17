@@ -17,7 +17,7 @@
 					 <label for="exampleInputPassword1">Last name</label><input type="password" class="form-control" id="reslastname" />
 				</div>-->
 				 <button type="button" class="btn btn-default" id="btnregister">Register</button>
-                <button type="button" class="btn btn-default btnback">Back</button>
+                <button type="button" class="btn btn-default btnback">Close</button>
                 </fieldset>
 			</form>
 		</div>

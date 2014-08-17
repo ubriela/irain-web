@@ -9,7 +9,7 @@
                      <input type="text" class="form-control" id="uplocation" />
 				</div>
 				<button type="button" class="btn btn-default" id="btnup" disabled="true">Update</button>
-                <button type="button" class="btn btn-default btnback">Back</button>
+                <button type="button" class="btn btn-default btnback">Close</button>
 			</fieldset>
             </form>
             

@@ -69,8 +69,14 @@ class Requester extends Geocrowd{
             $startdate = $this->input->post('startdate');
             $enddate = $this->input->post('enddate');
             $type = $this->input->post('type');
+            if(isset($_POST['place'])){
+                $place = $this->input->post('place');
+            }else{
+                $place = $this->getaddress($lat,$lng);
+            }
+            
             $radius = $this->input->post('radius');
-            if($this->requester_model->task_request($userid,$title,$lat,$lng,$requestdate,$startdate,$enddate,$type,$radius)){
+            if($this->requester_model->task_request($userid,$title,$lat,$lng,$requestdate,$startdate,$enddate,$type,$radius,$place)){
                 $taskid = $this->requester_model->get_taskid($userid);
 //                 if(!$this->task_matched($taskid,$lat,$lng,$startdate,$enddate,$radius)){
                     $this->task_query($taskid,$lat,$lng,$radius,$title);
@@ -109,12 +115,13 @@ class Requester extends Geocrowd{
             $this->_json_response(FALSE);
             return;
         }
-        $taskidarray = explode(',', $_POST['taskids']);
-        $this->db->from('tasks');
-        $this->db->where_in('taskid',$taskidarray);
-        $query = $this->db->delete();
-        
-            $this->_json_response('true');
+        $type = $_POST['type'];
+        if($type==1){
+            $this->requester_model->delete_completed();
+        }
+        if($type==2){
+            $this->requester_model->delete_expired();
+        }
         
     }
      private function _json_response($data) {
@@ -124,6 +131,29 @@ class Requester extends Geocrowd{
         } else {
             $this->output->set_output(json_encode(array('status' => 'error', "msg" => '0')));
         }
+    }
+    private function getaddress($lat,$lng)
+    {
+        $url = 'http://maps.googleapis.com/maps/api/geocode/json?latlng='.trim($lat).','.trim($lng).'&sensor=false';
+        $json = @file_get_contents($url);
+        $data=json_decode($json);
+        $status = $data->status;
+        if($status=="OK")
+            return $data->results[0]->formatted_address;
+        else
+            return 'Unknow';
+    }
+    public function list_pending_task(){
+        $this->requester_model->list_pending_task();
+    }
+    public function list_completed_task(){
+        $this->requester_model->list_completed_task();
+    }
+    public function list_expired_task(){
+        $this->requester_model->list_expired_task();
+    }
+    public function gettimezone(){
+        echo date_default_timezone_get();
     }
 }
 ?>

@@ -13,7 +13,7 @@
 				<div class="checkbox">
 					 <label><input type="checkbox" /> Remember me</label>
 				</div> <button type="button" class="btn btn-default" id="btnlogin">Login</button>
-                <button type="button" class="btn btn-default btnback">Back</button>
+                <button type="button" class="btn btn-default btnback">Close</button>
                 </fieldset>
 			</form>
 		</div>

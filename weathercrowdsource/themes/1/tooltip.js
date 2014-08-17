@@ -6,7 +6,7 @@ var tooltipOptions=
     duration: 300,
     relativeTo: "element",
     position: 1,
-    smartPosition: true,
+    smartPosition: false,
     offsetX: 0,
     offsetY: 0,
     maxWidth: 400,

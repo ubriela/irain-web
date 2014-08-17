@@ -8,7 +8,7 @@ class Requester_model extends CI_Model{
      * @param   number $lat,$lng,$type,$radius
      * @return	TRUE if is successfully set
      */
-    public function task_request($userid,$title,$lat,$lng,$request_date,$start_date,$end_date,$type=1,$radius){
+    public function task_request($userid,$title,$lat,$lng,$request_date,$start_date,$end_date,$type=1,$radius,$place=''){
         //$userid = $this->session->userdata('userid');
         $loc = "'POINT($lat $lng)'";
         $location = "GeomFromText($loc)";
@@ -21,6 +21,7 @@ class Requester_model extends CI_Model{
         $this->db->set('requesterid',$userid);
         $this->db->set('title',$title);
         $this->db->set('location', "GeomFromText($loc)",false);
+        $this->db->set('place',$place);
         $this->db->set('request_date',$requestdate);
         $this->db->set('startdate',$startdate);
         $this->db->set('enddate',$enddate);
@@ -76,7 +77,7 @@ class Requester_model extends CI_Model{
         $time = strtotime($_POST['time']);
         $date = date('Y-m-d H:i:s',$time);
         $id = $this->session->userdata('userid');
-        $this->db->select('taskid,title, x(location) AS lat, y(location) AS lng,request_date,startdate,enddate, iscompleted');
+        $this->db->select('taskid,title, x(location) AS lat, y(location) AS lng,place,request_date,startdate,enddate, iscompleted');
         $this->db->from('tasks');
         $this->db->where("requesterid = '$id'");
         if($type==0){
@@ -117,6 +118,124 @@ class Requester_model extends CI_Model{
             return FALSE;
         }
     }
+    public function list_pending_task(){
+        $tablehead = '<thead><tr><th>Location</th><th>Request date</th><th>Radius</th></tr></thead>';
+        $id = $this->session->userdata('userid');
+        $timezone = $_POST['timezone'];
+        $time = strtotime($_POST['time']);
+        $date = date('Y-m-d H:i:s',$time);
+        $this->db->select('taskid,place,request_date,radius');
+        $this->db->from('tasks');
+        $this->db->where("requesterid = '$id'");
+        $this->db->where("iscompleted = 0 and enddate > '$date'");
+        $this->db->order_by('request_date desc');
+        $query = $this->db->get();
+        if($query->num_rows()>0){
+            $tbody = '';
+            foreach($query->result() as $rows){
+                $local = $this->convert_time_zone($rows->request_date,'UTC',$timezone);
+                $cellLocation = '<td>'.$rows->place.'</td>';
+                $cellRequestdate = '<td class=center>'.$local.'</td>';
+                $cellRadius = '<td class=center>'.$rows->radius.'<td>';
+                $row = '<tr>'.$cellLocation.$cellRequestdate.$cellRadius.'</tr>';
+                $tbody.=$row;
+            }
+            $table =$tablehead.'<tbody>'.$tbody.'</tbody>';
+            echo $table;
+        }else{
+            $table = $tablehead.'<tbody><tr><td class=center colspan="3">No task</td></tr></tbody>';
+            echo $table;
+        }
+    }
+    public function list_completed_task(){
+        $tablehead = '<thead><tr><th>Location</th><th>Response date</th><th>Response</th></tr></thead>';
+        $id = $this->session->userdata('userid');
+        $timezone = $_POST['timezone'];
+        $select = "select place,response_date,response_code,level from `tasks`,`responses` where iscompleted=1 and tasks.taskid=responses.taskid and tasks.requesterid='$id' order by response_date desc";
+        $query = $this->db->query($select);
+        if($query->num_rows()>0){
+            $tbody = '';
+            foreach($query->result() as $rows){
+                $local = $this->convert_time_zone($rows->response_date,'UTC',$timezone);
+                $result = $this->getresult($rows->response_code,$rows->level);
+                $cellLocation = '<td>'.$rows->place.'</td>';
+                $cellResponsedate = '<td class=center>'.$local.'</td>';
+                $cellResponse = '<td class=center>'.$result.'<td>';
+                $row = '<tr>'.$cellLocation.$cellResponsedate.$cellResponse.'</tr>';
+                $tbody.=$row;
+            }
+            $table =$tablehead.'<tbody>'.$tbody.'</tbody>';
+            echo $table;
+        }else{
+            $table = $tablehead.'<tbody><tr><td class=center colspan="3">No task</td></tr></tbody>';
+            echo $table;
+        }
+    }
+    public function list_expired_task(){
+        $tablehead = '<thead><tr><th>Location</th><th>Request date</th></tr></thead>';
+        $id = $this->session->userdata('userid');
+        $timezone = $_POST['timezone'];
+        $time = strtotime($_POST['time']);
+        $date = date('Y-m-d H:i:s',$time);
+        $this->db->select('place,request_date');
+        $this->db->from('tasks');
+        $this->db->where("iscompleted = 0 and enddate <= '$date'");
+        $this->db->order_by('taskid','desc');
+        $query = $this->db->get();
+        if($query->num_rows()>0){
+            $tbody = '';
+            foreach($query->result() as $rows){
+                $local = $this->convert_time_zone($rows->request_date,'UTC',$timezone);
+                $cellLocation = '<td>'.$rows->place.'</td>';
+                $cellRequestdate = '<td class=center>'.$local.'</td>';
+                $row = '<tr>'.$cellLocation.$cellRequestdate.'</tr>';
+                $tbody.=$row;
+            }
+            $table =$tablehead.'<tbody>'.$tbody.'</tbody>';
+            echo $table;
+        }else{
+            $table = $tablehead.'<tbody><tr><td class=center colspan="2">No task</td></tr></tbody>';
+            echo $table;
+        }
+    }
+    private function getresult($code,$level){
+        if($code==0){
+            return 'none';
+        }
+        if($code==1){
+            switch($level){
+                case 0:return 'rain(light)';
+                case 1:return 'rain(moderate)';
+                case 2:return 'rain(heavy)';
+            }
+        }
+        if($code==2){
+            switch($level){
+                case 0:return 'snow(light)';
+                case 1:return 'snow(moderate)';
+                case 2:return 'snow(heavy)';
+            }
+        }  
+    }
+    public function delete_completed(){
+        $id = $this->session->userdata('userid');
+        $this->db->where('iscompleted',1);
+        $this->db->where('requesterid',$id);
+        $this->db->delete('tasks'); 
+    }
+    public function delete_expired(){
+        $id = $this->session->userdata('userid');
+        $time = strtotime($_POST['time']);
+        $date = date('Y-m-d H:i:s',$time);
+        $this->db->where("iscompleted = 0 and enddate <= '$date'");
+        $this->db->delete('tasks');
+    }
+    function convert_time_zone($date_time, $from_tz, $to_tz)
+	{
+    	$time_object = new DateTime($date_time, new DateTimeZone($from_tz));
+    	$time_object->setTimezone(new DateTimeZone($to_tz));
+    	return $time_object->format('Y-m-d H:i:s');
+	}
     
 }
 ?>

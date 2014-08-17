@@ -21,6 +21,7 @@
     <script type="text/javascript" src="<?php echo base_url();?>js1/plupload.full.min.js"></script>
     <script type="text/javascript" src="<?php echo base_url();?>themes/1/tooltip.js"></script>
     <script type="text/javascript" src="<?php echo base_url();?>js/notify.min.js"></script>
+    <script type="text/javascript" src="<?php echo base_url();?>js/jstz-1.0.4.min.js"></script>
     <script>
          var baseurl = '<?php echo base_url();?>';    
     </script>
@@ -31,21 +32,11 @@
       }
       script += '.js"><' + '/script>';
       document.write(script);
+      
     </script>
+    
     <script src="<?php echo base_url();?>js/home.js"></script>
-    <script>
-    var _roost = _roost || [];
-    _roost.push(['appkey','c7b0f5e99068489bb0b21aac2e6679ee']);
-
-    !function(d,s,id){
-        var js, fjs = d.getElementsByTagName(s)[0];
-        if(!d.getElementById(id)){
-            js=d.createElement(s); js.id=id;
-            js.src='//cdn.goroost.com/js/roost.js';
-            fjs.parentNode.insertBefore(js,fjs);
-        }
-    }(document, 'script', 'roost-js');
-</script>
+    
     <!-- END JAVASCRIPT -->
   </head>
   <body>
@@ -72,13 +63,13 @@
             $this->load->view('taskmanager');
             $this->load->view('posttask');
             $this->load->view('response');
-            $this->load->view('admin');
+            //$this->load->view('admin');
             $this->load->view('update');
-            $this->load->view('profile');
-            
+            $this->load->view('weather');
+            $this->load->view('profile');  
         ?>
+        <img src="<?php echo base_url()?>img/loading.gif" id="loading" width="50" height="50"/>
     </div>
-    <img src="<?php echo base_url()?>img/loading.gif" id="loading" width="50" height="50"/>
     </div>
     <div class="hide">
         <div id="exit">

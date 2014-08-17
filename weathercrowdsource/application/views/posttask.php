@@ -29,7 +29,7 @@
                      </select>
 				</div>
 				<button type="button" class="btn btn-default" id="btnposttask" disabled="true">Post task</button>
-                <button type="button" class="btn btn-default btnback">Back</button>
+                <button type="button" class="btn btn-default btnback">Close</button>
                 </fieldset>
 			</form>
 		</div>

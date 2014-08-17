@@ -25,8 +25,12 @@ $(document).ready(function(){
     
     
    
-    
-    
+    function center(select){
+        width = screen.width;
+        height = screen.height;
+        top = (height-$('#'+select).height())/2;
+        $('#'+select).css('margin',''+top+' auto');
+    }
     function hideall(){
         $('#overlay').hide();
         $('#loginform').hide();
@@ -94,7 +98,7 @@ $(document).ready(function(){
                                 var marker = new MarkerWithLabel({
                                     map: map,
                                     icon: image,
-                                   
+                                    
                                     
                                     position: location
                                     //labelContent: "$425K",
@@ -231,11 +235,11 @@ $(document).ready(function(){
     });
     $('#showlogin').click(function(){
        $('#overlay').show();
-       $('#loginform').show(); 
+       $('#loginform').show(200); 
     });
     $('#showregister').click(function(){
        $('#overlay').show();
-       $('#registerform').show(); 
+       $('#registerform').show(200); 
     });
     $('#btnlogin').click(function(){
         var username = $('#username').val();
@@ -248,7 +252,8 @@ $(document).ready(function(){
                 if(data.status=='success'){
                     window.location= baseurl+'index.php/home';
                 }else{
-                    alert("Invalid username or password");
+                
+                    $.notify('Invalid username or password!','warn');
                 }    
         }
         });
@@ -272,7 +277,7 @@ $(document).ready(function(){
                 if(data.status=='success'){
                     $.post(baseurl+'index.php/user/register',{username:res_username,email:rndStr()+'@test.com',password:hasspass,repeatpw:hasspass,channelid:channel},function(data){
                         if(data.status=='success'){
-                            alert('Your account has been create');
+                            $.notify('Your account has been create','success');
                             hideall();
                             $('#overlay').show();
                             $('#loginform').show();
@@ -281,7 +286,7 @@ $(document).ready(function(){
                         }
                     });
                     }else{
-                         alert('Username already exists');
+                         $.notify('Username already exists','warn');
                         return;
                     }
             });

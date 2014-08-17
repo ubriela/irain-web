@@ -99,6 +99,7 @@ class Worker_model extends CI_Model{
      */
     public function task_response($taskid,$code,$level,$date){
         $userid = $this->session->userdata('userid');
+        $requestlocation = $this->getlocation($taskid);
         $this->db->from('responses');
         $this->db->where('taskid',$taskid);
         $this->db->where('workerid',$userid);
@@ -115,6 +116,7 @@ class Worker_model extends CI_Model{
                 'taskid' => $taskid,
                 'workerid' => $userid,
                 'response_code' => $code,
+                'request_location' => $requestlocation,
                 'level' => $level,
                 'response_date' => $date,
                 'response_date_server' => $date_now
@@ -212,6 +214,10 @@ class Worker_model extends CI_Model{
     	$query_taskid = $this->db->get();
     	$row = $query_taskid->row();
     	return $row;
+    }
+    public function getlocation($taskid){
+        $query = $this->db->select('location')->from('tasks')->where('taskid',$taskid)->get();
+        return $query->row()->location;
     }
     public function gettask(){
         $userid = $this->session->userdata('userid');

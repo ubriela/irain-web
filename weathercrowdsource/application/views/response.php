@@ -44,7 +44,7 @@
                     </div>
                 </div>
 				
-                <button type="button" class="btn btn-default btnback">Back</button>
+                <button type="button" class="btn btn-default btnback">Close</button>
 			</fieldset>
             </form>
             

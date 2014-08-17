@@ -47,7 +47,7 @@ class Weather extends Convert{
             
     }
     public function getallreport(){
-            $this->weather_model->getallreport();
+        $this->weather_model->getallreport();
     }
     public function getreport(){
         $this->weather_model->getreport();

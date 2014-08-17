@@ -23,38 +23,16 @@
   <!-- Fav and touch icons -->
   
   <link rel="shortcut icon" href="<?php echo base_url();?>img/icon.png"/>
-  
-	<script type="text/javascript" src="js/jquery.min.js"></script>
+	<script type="text/javascript" src="http://code.jquery.com/jquery-1.7.2.min.js"></script>
+     <script type="text/javascript" src="<?php echo base_url();?>js/notify.min.js"></script>
+     <script type="text/javascript" src="<?php echo base_url();?>themes/1/tooltip.js"></script>
 	<script type="text/javascript" src="js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="js/scripts.js"></script>
+    
     <script type="text/javascript" src="js/login.js"></script>
     
-    <script>
-        $(document).ready(function(){
-            $('#btnlogin').click(function(event){
-                event.preventDefault();
-
-                var username = $('#inputEmail3').val();
-                var hashpass = SHA512($('#inputPassword3').val());
-                $.ajax({
-                   type: 'POST',
-                   url: "<?php echo base_url();?>index.php/user/login",
-                   data: "username="+username+"&password="+hashpass,
-                   success:function(data){
-                        if(data.status=='success'){
-                            
-                            window.location="<?php echo base_url()?>index.php/home";
-                        }else{
-                            alert("Invalid username or password");
-                        }
-                            
-                       
-                   }
-                });
-            });
-        });
    
-    </script>
+    
 </head>
 
 <body>

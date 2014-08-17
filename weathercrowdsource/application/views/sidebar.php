@@ -5,14 +5,12 @@
     </div>
     <div id="nav">
         <ul>
-            <li id="showupdate">Update Location</li>
+            <li id="weather">Weather Report</li>
             <li id="showresponse">Task Response      <label style="color: red;" id="newtask">New</label></li>
+            <li id="showupdate">Update Location</li>
+            
             <li id="showtask">Task Manager</li>
-            <?php 
-            if($username=='irainvn'){
-                echo '<li id=showadmin>Admin</li>';
-            }
-            ?>
+           
             
             <li id="logout">Logout</li>
         </ul>

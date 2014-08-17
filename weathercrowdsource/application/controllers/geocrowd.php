@@ -87,7 +87,6 @@ class Geocrowd extends CI_Controller {
         $this->db->select('userid');
         $this->db->from('location_report');
         $this->db->where($condition);
-        
         $query = $this->db->get();
         if($query->num_rows()>0){
            $this->db->trans_start();
