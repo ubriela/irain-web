@@ -73,24 +73,9 @@ class Requester_model extends CI_Model{
        
     }
     public function submitted_task_type(){
-        $type = $_POST['type'];
-        $time = strtotime($_POST['time']);
-        $date = date('Y-m-d H:i:s',$time);
         $id = $this->session->userdata('userid');
-        $this->db->select('taskid,title, x(location) AS lat, y(location) AS lng,place,request_date,startdate,enddate, iscompleted');
-        $this->db->from('tasks');
-        $this->db->where("requesterid = '$id'");
-        if($type==0){
-           $this->db->where("iscompleted = 0 and enddate >= '$date'");
-        }
-        if($type==1){
-            $this->db->where('iscompleted',1);
-        }
-        if($type==2){
-            $this->db->where("iscompleted = 0 and enddate < '$date'");
-        }
-        $this->db->order_by('taskid','desc');
-        $query = $this->db->get();
+        $select = "select taskid,x(request_location) as lat,y(request_location) as lng,place,response_date,response_code,level from `tasks`,`responses` where iscompleted=1 and tasks.taskid=responses.taskid and tasks.requesterid='$id' order by response_date desc";
+        $query = $this->db->query($select);
         if($query->num_rows()>0){
             $this->output->set_content_type('application/json');
             $this->output->set_output(json_encode(array('status' => 'success', "msg" => $query->result_array())));
