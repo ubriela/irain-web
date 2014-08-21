@@ -151,7 +151,7 @@ class Requester_model extends CI_Model{
         $tablehead = '<thead><tr><th>Location</th><th>Response date</th><th>Response</th></tr></thead>';
         $id = $this->session->userdata('userid');
         $timezone = $_POST['timezone'];
-        $select = "select place,response_date,response_code,level from `tasks`,`responses` where iscompleted=1 and tasks.taskid=responses.taskid and tasks.requesterid='$id' order by response_date desc";
+        $select = "select select x(request_location) as lat,y(request_location) as lng,place,response_date,response_code,level from `tasks`,`responses` where iscompleted=1 and tasks.taskid=responses.taskid and tasks.requesterid='$id' order by response_date desc";
         $query = $this->db->query($select);
         if($query->num_rows()>0){
             $tbody = '';
