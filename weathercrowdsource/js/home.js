@@ -204,9 +204,8 @@ $(document).ready(function(){
                 taskid = arrayjson.taskid;
                 $('#newtask').show();
                 $('#responsetitle').val(arrayjson.title);
-                $.post(baseurl+'index.php/geocrowd/getplace',{lat:arrayjson.lat,lng:arrayjson.lng},function(data){
-                    $('#responselocation').val(data);
-                });
+                $('#responselocation').val(arrayjson.titleplace);
+                
                 
                 }   
             }
