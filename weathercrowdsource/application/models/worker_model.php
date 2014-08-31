@@ -206,6 +206,7 @@ class Worker_model extends CI_Model{
     	$this->db->select('taskid');
     	$this->db->select('title');
     	$this->db->select('startdate');
+        $this->db->select('place');
     	$this->db->select('enddate');
         $this->db->select('x(location) AS lat');
         $this->db->select('y(location) AS lng');
