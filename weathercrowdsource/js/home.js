@@ -202,9 +202,10 @@ $(document).ready(function(){
                     return;
                 }else{
                 taskid = arrayjson.taskid;
+                 $('#responsetitle').val(arrayjson.title);
+                $('#responselocation').val(arrayjson.place);
                 $('#newtask').show();
-                $('#responsetitle').val(arrayjson.title);
-                $('#responselocation').val(arrayjson.titleplace);
+               
                 
                 
                 }   
