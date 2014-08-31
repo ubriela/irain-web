@@ -54,10 +54,9 @@
             <option value="2">2 day ago</option>
             <option value="3">3 day ago</option>
             <option value="5">5 day ago</option>
-        </select>
-        
-        
+        </select>     
     </div>
+    
     <div id="overlay">
         <?php
             $this->load->view('taskmanager');
@@ -66,7 +65,7 @@
             //$this->load->view('admin');
             $this->load->view('update');
             $this->load->view('weather');
-            $this->load->view('profile');  
+              
         ?>
         <img src="<?php echo base_url()?>img/loading.gif" id="loading" width="50" height="50"/>
     </div>

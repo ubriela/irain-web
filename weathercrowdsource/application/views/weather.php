@@ -5,7 +5,7 @@
             
             <fieldset><legend>iRain - Weather report</legend>
 				<div class="form-group">
-					 <label for="exampleInputPassword1">Please report weather at your location!</label><input type="text" class="form-control" id="responsetitle" disabled="true" style="display: none;"/>
+					 <input type="text" class="form-control" id="responsetitle" disabled="true" style="display: none;"/>
 				</div>
 		        <div class="form-group">
 					 <label for="exampleInputPassword1">Your location</label><input type="text" class="form-control" id="locationweather"/>

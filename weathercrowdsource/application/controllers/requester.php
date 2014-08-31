@@ -23,7 +23,12 @@ class Requester extends Geocrowd{
     public function index(){
         
     }
-    
+    /**
+     * function executed when [base_url]/index.php/requester/submitted_tasks
+     *
+     * @access	public
+     * @return	a list submitted tasks
+     */
     public function submitted_tasks(){
         if(!$this->session->userdata('signed_in')){
             $this->_json_response(FALSE);
@@ -36,6 +41,12 @@ class Requester extends Geocrowd{
             $this->requester_model->submitted_task($number);
         }
     }
+    /**
+     * function executed when [base_url]/index.php/requester/submitted_tasks_type
+     *
+     * @access	public
+     * @return	a list completed task
+     */
     public function submitted_tasks_type(){
         if(!$this->session->userdata('signed_in')){
             $this->_json_response(FALSE);
@@ -91,25 +102,14 @@ class Requester extends Geocrowd{
             
         }
     }
-    public function post_from_file(){
-        $arrays = json_decode($_POST["arraytasks"], true);
-        $count = 0;
-        foreach($arrays as $array){
-            $userid = $array['userid'];
-            $title = $array['title'];
-            $lat = $array['lat'];
-            $lng = $array['lng'];
-            $requestdate = $array['requestdate'];
-            $startdate = $array['startdate'];
-            $enddate = $array['enddate'];
-            $type = $array['type'];
-            $radius = $array['radius'];
-            if($this->requester_model->task_request($userid,$title,$lat,$lng,$requestdate,$startdate,$enddate,$type,$radius)){
-                $count+=1;
-            }
-        }
-        $this->_json_response($count);
-    }
+    /**
+     * 
+     *  delete task base type(1:completed task,2: expired task )
+     * [base_url]/index.php/requester/delete_tasks
+     * @access	public
+     * @param int type
+     * @return	void
+     */
     public function delete_tasks(){
         if(!$this->session->userdata('signed_in')){
             $this->_json_response(FALSE);
@@ -132,7 +132,15 @@ class Requester extends Geocrowd{
             $this->output->set_output(json_encode(array('status' => 'error', "msg" => '0')));
         }
     }
-    private function getaddress($lat,$lng)
+    /**
+     * 
+     *  use google API get name location from lat,lng
+     * [base_url]/index.php/requester/delete_tasks
+     * @access	public
+     * @param number lat,lng
+     * @return	String name of location
+     */
+    public function getaddress($lat,$lng)
     {
         $url = 'http://maps.googleapis.com/maps/api/geocode/json?latlng='.trim($lat).','.trim($lng).'&sensor=false';
         $json = @file_get_contents($url);
@@ -143,17 +151,61 @@ class Requester extends Geocrowd{
         else
             return 'Unknow';
     }
+    /**
+     * load all pending task
+     * [base_url]/index.php/requester/delete_tasks
+     * @access	public
+     * @return	list pending task
+     */
     public function list_pending_task(){
+        if(!$this->session->userdata('signed_in')){
+            $this->_json_response(FALSE);
+            return;
+        }
         $this->requester_model->list_pending_task();
     }
+    /**
+     * load all completed task
+     * [base_url]/index.php/requester/delete_tasks
+     * @access	public
+     * @return	list completed task
+     */
     public function list_completed_task(){
+        if(!$this->session->userdata('signed_in')){
+            $this->_json_response(FALSE);
+            return;
+        }
         $this->requester_model->list_completed_task();
     }
+    /**
+     * load all expired task
+     * [base_url]/index.php/requester/delete_tasks
+     * @access	public
+     * @return	list expired task
+     */
     public function list_expired_task(){
+        if(!$this->session->userdata('signed_in')){
+            $this->_json_response(FALSE);
+            return;
+        }
         $this->requester_model->list_expired_task();
     }
-    public function gettimezone(){
-        echo date_default_timezone_get();
+    public function currentlocation(){
+        if(!$this->session->userdata('signed_in')){
+            $this->_json_response(FALSE);
+            return;
+        }
+        $userid = $this->session->userdata('userid');
+        $query = $this->db->select('x(location) as lat,y(location) as lng')->from('location_report')->where('userid',$userid)->get();
+        if($query->num_rows()>0){
+            $lat = $query->row()->lat;
+            $lng = $query->row()->lng;
+            $adress = $this->getaddress($lat,$lng);
+            $array = array('lat'=>$lat,'lng'=>$lng,'adress'=>$adress);
+            $this->_json_response($array);
+        }else{
+            echo '';
+        }
     }
 }
 ?>

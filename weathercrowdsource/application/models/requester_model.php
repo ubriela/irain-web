@@ -74,7 +74,7 @@ class Requester_model extends CI_Model{
     }
     public function submitted_task_type(){
         $id = $this->session->userdata('userid');
-        $select = "select tasks.taskid,x(request_location) as lat,y(request_location) as lng,response_date,response_code,level from `tasks`,`responses` where iscompleted=1 and tasks.taskid=responses.taskid and tasks.requesterid='$id' order by response_date desc";
+        $select = "select tasks.taskid,x(request_location) as lat,y(request_location) as lng,place,response_date,response_code,level from `tasks`,`responses` where iscompleted=1 and tasks.taskid=responses.taskid and tasks.requesterid='$id' order by response_date desc";
         $query = $this->db->query($select);
         if($query->num_rows()>0){
             $this->output->set_content_type('application/json');
@@ -103,6 +103,10 @@ class Requester_model extends CI_Model{
             return FALSE;
         }
     }
+    /**
+     * get a table pending task
+     * 
+     */
     public function list_pending_task(){
         $tablehead = '<thead><tr><th>Location</th><th>Request date</th><th>Radius</th></tr></thead>';
         $id = $this->session->userdata('userid');
@@ -132,6 +136,10 @@ class Requester_model extends CI_Model{
             echo $table;
         }
     }
+    /**
+     * get a table completed task
+     * 
+     */
     public function list_completed_task(){
         $tablehead = '<thead><tr><th>Location</th><th>Response date</th><th>Response</th></tr></thead>';
         $id = $this->session->userdata('userid');
@@ -156,6 +164,10 @@ class Requester_model extends CI_Model{
             echo $table;
         }
     }
+    /**
+     * get a table expired task
+     * 
+     */
     public function list_expired_task(){
         $tablehead = '<thead><tr><th>Location</th><th>Request date</th></tr></thead>';
         $id = $this->session->userdata('userid');

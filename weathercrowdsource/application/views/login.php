@@ -58,7 +58,9 @@
         <button type="button" class="btn btn-default" id="showregister">Register</button>
         
     </div>
-    
+    <div class="lightbox" id="boxbot">
+        <img src="<?php echo base_url();?>img/logoFinal.png" height="70" width="70"/>
+    </div>
     <div id="overlay">
         <?php
             include('loginform.php');

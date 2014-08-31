@@ -42,6 +42,10 @@ class Worker extends Convert {
      * @return	void
      */
     public function unassigned(){
+        if(!$this->session->userdata('signed_in')){
+            $this->_json_response(FALSE);
+            return;
+        }
         $flag = $this->worker_model->unassigned();
         $this->_json_response($flag);
     }
@@ -208,6 +212,10 @@ class Worker extends Convert {
     	}
     }
     public function gettask(){
+        if(!$this->session->userdata('signed_in')){
+            $this->_json_response(FALSE);
+            return;
+        }
         $tmp = $this->worker_model->gettask();
         $this->_json_response($tmp);
     }

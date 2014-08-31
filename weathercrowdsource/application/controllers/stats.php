@@ -27,6 +27,10 @@ class Stats extends Convert{
      * @return	void
      */
     public function summary_tasks(){
+        if(!$this->session->userdata('signed_in')){
+            $this->_json_response(FALSE);
+            return;
+        }
         $this->stats_model->summary_tasks();
     }
     /**
@@ -42,9 +46,17 @@ class Stats extends Convert{
      */
      
     public function summary_workers(){
+        if(!$this->session->userdata('signed_in')){
+            $this->_json_response(FALSE);
+            return;
+        }
         $this->stats_model->summary_workers();
     }
     public function summary_geocrowd(){
+        if(!$this->session->userdata('signed_in')){
+            $this->_json_response(FALSE);
+            return;
+        }
         $this->stats_model->summary_geocrowd();
     }
     /**

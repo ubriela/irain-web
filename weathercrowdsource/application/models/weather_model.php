@@ -110,18 +110,7 @@ class Weather_model extends CI_Model{
             $this->_json_response($query);  
         }
     }
-    public function getallreport(){
-        $select = 'SELECT tasks.taskid,x(location) as lat,y(location) as lng,responses.response_code from tasks,responses where tasks.taskid=responses.taskid order by response_date desc';
-        $query = $this->db->query($select);
-        
-        $this->_json_response($query);
-    }
-    public function getreport(){
-        $taskid = $_POST['taskid'];
-        $select = "select count(*) as number from responses where taskid=$taskid";
-        $query = $this->db->query($select);
-        $this->_json_response($query);
-    }
+    
     public function _json_response($data) {
         $this->output->set_content_type('application/json');
         if ($data) {
