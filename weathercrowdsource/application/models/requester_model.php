@@ -74,7 +74,7 @@ class Requester_model extends CI_Model{
     }
     public function submitted_task_type(){
         $id = $this->session->userdata('userid');
-        $select = "select tasks.taskid,x(request_location) as lat,y(request_location) as lng,place,response_date,response_code,level from `tasks`,`responses` where iscompleted=1 and tasks.taskid=responses.taskid and tasks.requesterid='$id' order by response_date desc";
+        $select = "select tasks.taskid,x(worker_location) as lat,y(worker_location) as lng,place,response_date,response_code,level from `tasks`,`responses` where iscompleted=1 and tasks.taskid=responses.taskid and tasks.requesterid='$id' order by response_date desc";
         $query = $this->db->query($select);
         if($query->num_rows()>0){
             $this->output->set_content_type('application/json');
