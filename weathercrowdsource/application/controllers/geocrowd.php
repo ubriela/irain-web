@@ -114,6 +114,19 @@ class Geocrowd extends CI_Controller {
             return false;
         }
     }
+    public function getplace()
+    {
+        $lat = $_POST['lat'];
+        $lng = $_POST['lng'];
+        $url = 'http://maps.googleapis.com/maps/api/geocode/json?latlng='.trim($lat).','.trim($lng).'&sensor=false';
+        $json = @file_get_contents($url);
+        $data=json_decode($json);
+        $status = $data->status;
+        if($status=="OK")
+            echo $data->results[0]->formatted_address;
+        else
+            echo 'Unknow';
+    }
     private function _json_response($data) {
         $this->output->set_content_type('application/json');
         if ($data) {
