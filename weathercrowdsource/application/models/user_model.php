@@ -1,4 +1,3 @@
-
 <?php
 
 /*
@@ -63,11 +62,11 @@ class User_model extends CI_Model {
      * @access	public
      * @return	true if is successfully set
      */
-    public function update_userinfo($firstname, $lastname, $phone_number){
+    public function update_userinfo($firstname, $lastname, $email){
     	$id = $this->session->userdata('userid');
    		$this->db->set('firstname',$firstname);
    		$this->db->set('lastname',$lastname);
-   		$this->db->set('phone_number',$phone_number);
+   		$this->db->set('email',$email);
    		$this->db->where('userid',$id);
    		if ($this->db->update('users')){
    			return TRUE;
