@@ -112,9 +112,9 @@ class User extends CI_Controller {
     	// get user info
     	$firstname = $this->input->post('firstname');
     	$lastname = $this->input->post('lastname');
-    	$phone_number = $this->input->post('phone_number');
+    	$email = $this->input->post('email');
     	 
-    	$this->_json_response($this->user_model->update_userinfo($firstname,$lastname,$phone_number));
+    	$this->_json_response($this->user_model->update_userinfo($firstname,$lastname,$email));
     }
     
     /**
