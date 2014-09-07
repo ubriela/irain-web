@@ -11,7 +11,7 @@ class Geocrowd extends CI_Controller {
         parent::__construct();
         
         $this->load->database();
-        $this->load->library('session');
+//        $this->load->library('session');
         $this->load->helper('json_response');
         $this->load->helper('form');
         $this->load->model('worker_model');
