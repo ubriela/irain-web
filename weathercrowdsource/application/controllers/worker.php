@@ -83,11 +83,12 @@ class Worker extends Convert {
         }
         if ($this->form_validation->run('report_location') == FALSE){
                 $this->_json_response(FALSE);
-        }else{ 
+        }else{
+            $userid = $this->session->userdata('userid');
             $lat = $this->input->post('lat');
             $lng = $this->input->post('lng');
             $time = $this->input->post('datetime');
-            $this->worker_model->location_report($lat,$lng,$time);
+            $this->worker_model->location_report($userid,$lat,$lng,$time);
             $this->_json_response(TRUE);
         }           
     }
@@ -109,19 +110,19 @@ class Worker extends Convert {
         if ($this->form_validation->run('task_response') == FALSE){
                 $this->_json_response(FALSE);
         }else{
+            $userid = $this->session->userdata('userid');
             $taskid = $this->input->post('taskid');
             $code = $this->input->post('responsecode');
             $level = $this->input->post('level');
             $time = $this->input->post('responsedate');
             $lat = $this->input->post('lat');
             $lng = $this->input->post('lng');
-            $flag = $this->worker_model->task_response($taskid,$code,$level,$time);
+            $flag = $this->worker_model->task_response($taskid,$userid,$code,$level,$time);
             if ($flag) {
-                $flag2 = $this->worker_model->update_worker_location($taskid,$lat,$lng);
-                $this->worker_model->location_report($lat,$lng,$time);            
+                $flag2 = $this->worker_model->update_worker_location($userid,$taskid,$lat,$lng);
+                $this->worker_model->location_report($userid,$lat,$lng,$time);            
             	// update status in tasks table
             	$this->task_model->update_status($taskid, 2);	// assigned
-            	
             	// notify requester
             	$row = $this->requester_model->requesterid_from_taskid($taskid);
             	$message = "Your task with id " . $taskid . " has been done.";
@@ -131,24 +132,24 @@ class Worker extends Convert {
             		$pushObject->push_to_userid($requesterid, $message);
             	}            	
             }
-                    
             $this->_json_response($flag);
+            $this->report_similartask($lat,$lng,$userid,$code,$level,$time);    
+            
         }           
     }
-    
      public function task_response_web(){
         if(!$this->session->userdata('signed_in')){
             $this->_json_response(FALSE);
             return;
         }else{
+            $userid = $this->session->userdata('userid');
             $taskid = $this->input->post('taskid');
             $code = $this->input->post('responsecode');
             $level = $this->input->post('level');
             $time = $this->input->post('responsedate');
-            $flag = $this->worker_model->task_response($taskid,$code,$level,$time);
+            $flag = $this->worker_model->task_response($taskid,$userid,$code,$level,$time);
             if ($flag) {
-                $flag2 = $this->worker_model->update_worker_location_web($taskid);
-                          
+                $flag2 = $this->worker_model->update_worker_location_web($userid,$taskid,$time);
             	// update status in tasks table
             	$this->task_model->update_status($taskid, 2);	// assigned
             	
@@ -161,9 +162,40 @@ class Worker extends Convert {
             		$pushObject->push_to_userid($requesterid, $message);
             	}            	
             }
-                    
             $this->_json_response($flag);
+            //$this->task_model->report_similartask_web($userid,$code,$level,$time);
+            $this->db->select('x(location) as lat,y(location) as lng');
+            $this->db->from('location_report');
+            $this->db->where('userid',$userid);
+            $query = $this->db->get();
+            $lat = $query->row()->lat;
+            $lng = $query->row()->lng;
+            $this->report_similartask($lat,$lng,$userid,$code,$level,$time);      
+            
         }           
+    }
+    public function report_similartask($lat,$lng,$userid,$code,$level,$time){
+        $arr = $this->task_model->get_similartask($lat,$lng);
+            if($arr->num_rows()>0){
+                foreach($arr->result() as $row){
+                    $taskid = $row->taskid;
+                    $this->task_model->matched($taskid,$userid);
+                    $flag3 = $this->worker_model->task_response($taskid,$userid,$code,$level,$time);
+                    if($flag3){
+                        $this->worker_model->update_worker_location_web($userid,$taskid,$time);
+                        $this->task_model->update_status($taskid, 2);
+                        $rows = $this->requester_model->requesterid_from_taskid($taskid);
+                    	$message = "Your task with id " . $taskid . " has been done.";
+                    	if ($rows) {
+                    		$requesterid = $rows->requesterid;
+                    		$pushObject = new push();
+                    		$pushObject->push_to_userid($requesterid, $message);
+                    	}
+                    }
+                   
+                    
+                }
+            }       
     }
     /**
      * set_isactive

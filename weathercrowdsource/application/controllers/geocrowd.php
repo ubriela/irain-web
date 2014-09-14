@@ -83,8 +83,9 @@ class Geocrowd extends CI_Controller {
      * @return array workerid
      */
     public function task_query($taskid,$lat,$lng,$radius,$message){
+        
         $condition = "isactive = 1 and isassigned = 0 and (6373000 * acos (cos ( radians( '$lat' ) )* cos( radians( x(location) ) )* cos( radians( y(location) ) - radians( '$lng' ) )+ sin ( radians( '$lat' ) )* sin( radians( x(location) ) ))) < '$radius'";
-        $this->db->select('userid');
+        $this->db->select('userid,date_server');
         $this->db->from('location_report');
         $this->db->where($condition);
         $query = $this->db->get();
@@ -92,20 +93,23 @@ class Geocrowd extends CI_Controller {
            $this->db->trans_start();
            $pushObject = new push();
            foreach($query->result_array() as $row){
-                $now = date("Y-m-d H:i:s");
-                $data = array(
-                    'taskid' => $taskid,
-                    'userid' => $row['userid'],
-                    'assigned_date' => $now
-                );
-                $this->db->insert('task_worker_matches',$data);
-                $this->worker_model->assigned($row['userid']);
-                
-                //notifice user
-                $pushObject->push_to_userid($row['userid'], $message);
-                
-                // update status in tasks table
-                $this->task_model->update_status($taskid, 1);	// assigned
+                $last_response = $row['date_server'];
+                if($this->checktime($last_response)>5){
+                    $now = date("Y-m-d H:i:s");
+                    $data = array(
+                        'taskid' => $taskid,
+                        'userid' => $row['userid'],
+                        'assigned_date' => $now
+                    );
+                    $this->db->insert('task_worker_matches',$data);
+                    $this->worker_model->assigned($row['userid']);
+                    
+                    //notifice user
+                    $pushObject->push_to_userid($row['userid'], $message);
+                    
+                    // update status in tasks table
+                    $this->task_model->update_status($taskid, 1);	// assigned
+                }
            }
            $this->db->trans_complete();
         $this->_json_response1($query->result_array());
@@ -113,6 +117,12 @@ class Geocrowd extends CI_Controller {
         }else{
             return false;
         }
+    }
+    public function checktime($timein){
+        $date_server = date("Y-m-d H:i:s");
+        $interval  = abs($date_server - $timein);
+        $minutes   = round($interval / 60);
+        return $minutes; 
     }
     public function getplace()
     {

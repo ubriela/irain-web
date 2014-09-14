@@ -85,7 +85,6 @@ class Requester extends Geocrowd{
             }else{
                 $place = $this->getaddress($lat,$lng);
             }
-            
             $radius = $this->input->post('radius');
             if($this->requester_model->task_request($userid,$title,$lat,$lng,$requestdate,$startdate,$enddate,$type,$radius,$place)){
                 $taskid = $this->requester_model->get_taskid($userid);

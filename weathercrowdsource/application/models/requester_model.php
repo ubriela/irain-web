@@ -8,7 +8,7 @@ class Requester_model extends CI_Model{
      * @param   number $lat,$lng,$type,$radius
      * @return	TRUE if is successfully set
      */
-    public function task_request($userid,$title,$lat,$lng,$request_date,$start_date,$end_date,$type=1,$radius,$place=''){
+    public function task_request($userid,$title,$lat,$lng,$request_date,$start_date,$end_date,$type=1,$radius,$place='',$status=0){
         //$userid = $this->session->userdata('userid');
         $loc = "'POINT($lat $lng)'";
         $location = "GeomFromText($loc)";
@@ -26,6 +26,7 @@ class Requester_model extends CI_Model{
         $this->db->set('startdate',$startdate);
         $this->db->set('enddate',$enddate);
         $this->db->set('type',$type);
+        $this->db->set('status',$status);
         $this->db->set('radius',$radius);
         //$query = $this->db->insert('tasks');
         $this->db->trans_start();
@@ -34,6 +35,7 @@ class Requester_model extends CI_Model{
         $this->db->trans_complete();
         return $success;
     }
+   
     
     public function get_taskid($userid){
          $this->db->select('taskid');
@@ -144,14 +146,14 @@ class Requester_model extends CI_Model{
         $tablehead = '<thead><tr><th>Location</th><th>Response date</th><th>Response</th></tr></thead>';
         $id = $this->session->userdata('userid');
         $timezone = $_POST['timezone'];
-        $select = "select x(request_location) as lat,y(request_location) as lng,place,response_date,response_code,level from `tasks`,`responses` where iscompleted=1 and tasks.taskid=responses.taskid and tasks.requesterid='$id' order by response_date desc";
+        $select = "select x(worker_location) as lat,y(worker_location) as lng,worker_place,response_date,response_code,level from `tasks`,`responses` where iscompleted=1 and tasks.taskid=responses.taskid and tasks.requesterid='$id' order by response_date desc";
         $query = $this->db->query($select);
         if($query->num_rows()>0){
             $tbody = '';
             foreach($query->result() as $rows){
                 $local = $this->convert_time_zone($rows->response_date,'UTC',$timezone);
                 $result = $this->getresult($rows->response_code,$rows->level);
-                $cellLocation = '<td>'.$rows->place.'</td>';
+                $cellLocation = '<td>'.$rows->worker_place.'</td>';
                 $cellResponsedate = '<td class=center>'.$local.'</td>';
                 $cellResponse = '<td class=center>'.$result.'<td>';
                 $row = '<tr>'.$cellLocation.$cellResponsedate.$cellResponse.'</tr>';

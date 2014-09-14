@@ -46,20 +46,22 @@ class Worker_model extends CI_Model{
      * @param   number @lat,@lng
      * @return  void
      */
-    public function location_report($lat,$lng,$locationtime){
-        $id = $this->session->userdata('userid');
+    public function location_report($userid,$lat,$lng,$locationtime){
+        
         $time = strtotime($locationtime);
         $date = date('Y-m-d H:i:s',$time);
+        $date_server = date("Y-m-d H:i:s");
         $loc = "'POINT($lat $lng)'";
-        $active = $this->user_model->is_active($id);
+        $active = $this->user_model->is_active($userid);
         $this->db->set('location', "GeomFromText($loc)",false);
         $this->db->set('date', $date );
+        $this->db->set('date_server',$date_server);
         $this->db->set('isactive', $active);
-        if($this->is_exits_location($id)){
-            $this->db->where('userid',$id);
+        if($this->is_exits_location($userid)){
+            $this->db->where('userid',$userid);
             $this->db->update('location_report');
         }else{
-            $this->db->set('userid',$id);
+            $this->db->set('userid',$userid);
             $query = $this->db->insert('location_report');
         }
     }
@@ -97,9 +99,7 @@ class Worker_model extends CI_Model{
      * @param   string $date
      * @return	true if is successfully set
      */
-    public function task_response($taskid,$code,$level,$date){
-        $userid = $this->session->userdata('userid');
-        $requestlocation = $this->getlocation($taskid);
+    public function task_response($taskid,$userid,$code,$level,$date){
         $this->db->from('responses');
         $this->db->where('taskid',$taskid);
         $this->db->where('workerid',$userid);
@@ -116,7 +116,6 @@ class Worker_model extends CI_Model{
                 'taskid' => $taskid,
                 'workerid' => $userid,
                 'response_code' => $code,
-                'request_location' => $requestlocation,
                 'level' => $level,
                 'response_date' => $date,
                 'response_date_server' => $date_now
@@ -158,24 +157,27 @@ class Worker_model extends CI_Model{
      * @param type $lng
      * @return boolean
      */
-    public function update_worker_location($taskid,$lat,$lng){
-        $userid = $this->session->userdata('userid');
+    public function update_worker_location($userid,$taskid,$lat,$lng){
+        //$userid = $this->session->userdata('userid');
+        $place = $this->getaddress($lat,$lng);
         $loc = "'POINT($lat $lng)'";
         $this->db->where('taskid',$taskid);
         $this->db->where('workerid',$userid);
         $this->db->set('worker_location', "GeomFromText($loc)",false);
+        $this->db->set('worker_place',$place);
         if (!$this->db->update('responses'))
             return FALSE;
             
         return TRUE;
     }
-    public function update_worker_location_web($taskid){
-        $userid = $this->session->userdata('userid');
+    public function update_worker_location_web($userid,$taskid,$time){
+        //$userid = $this->session->userdata('userid');
         $select = "select x(location) as lat,y(location) as lng from location_report where userid='$userid'";
         $query = $this->db->query($select);
         $lat = $query->row()->lat;
         $lng = $query->row()->lng;
-        $this->update_worker_location($taskid,$lat,$lng);
+        $this->location_report($userid,$lat,$lng,$time);
+        $this->update_worker_location($userid,$taskid,$lat,$lng);
     }
     /**
      * get task info for a worker based on his id
@@ -216,10 +218,7 @@ class Worker_model extends CI_Model{
     	$row = $query_taskid->row();
     	return $row;
     }
-    public function getlocation($taskid){
-        $query = $this->db->select('location')->from('tasks')->where('taskid',$taskid)->get();
-        return $query->row()->location;
-    }
+    
     public function gettask(){
         $userid = $this->session->userdata('userid');
     	$this->db->select('taskid');
@@ -235,5 +234,20 @@ class Worker_model extends CI_Model{
     	   return false;
     	}
     }
+    
+    public function getaddress($lat,$lng)
+    {
+        $url = 'http://maps.googleapis.com/maps/api/geocode/json?latlng='.trim($lat).','.trim($lng).'&sensor=false';
+        $json = @file_get_contents($url);
+        $data=json_decode($json);
+        $status = $data->status;
+        if($status=="OK")
+            return $data->results[0]->formatted_address;
+        else
+            return 'Unknow';
+    }
+    
+    
+    
 }
 ?>

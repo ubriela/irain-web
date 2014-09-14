@@ -28,4 +28,23 @@ class Task_model extends CI_Model {
     	$this->db->where('taskid', $taskid);
     	$this->db->update('tasks');
     }
+    
+    
+    public function get_similartask($lat,$lng){
+        $condition = "status = 0 and (6373000 * acos (cos ( radians( '$lat' ) )* cos( radians( x(location) ) )* cos( radians( y(location) ) - radians( '$lng' ) )+ sin ( radians( '$lat' ) )* sin( radians( x(location) ) ))) < radius";
+        $this->db->select('taskid');
+        $this->db->from('tasks');
+        $this->db->where($condition);
+        $query = $this->db->get();
+        return $query;
+    }
+    public function matched($taskid,$workerid){
+        $now = date("Y-m-d H:i:s");
+        $this->db->set('taskid',$taskid);
+        $this->db->set('userid',$workerid);
+        $this->db->set('assigned_date',$now);
+        $this->db->insert('task_worker_matches');
+    }
+   
+    
 }
