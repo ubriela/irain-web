@@ -94,7 +94,7 @@ class Geocrowd extends CI_Controller {
            $pushObject = new push();
            foreach($query->result_array() as $row){
                 $last_response = $row['date_server'];
-                if($this->checktime($last_response)>2){
+                if($this->checktime($last_response)>-1){
                     $now = date("Y-m-d H:i:s");
                     $data = array(
                         'taskid' => $taskid,
