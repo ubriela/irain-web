@@ -6,16 +6,10 @@ class Worker_model extends CI_Model{
      * @access	public
      * @return	TRUE if is successfully set
      */
-    public function unassigned(){
-        if($this->session->userdata('signed_in')){
-            $userid = $this->session->userdata('userid');
-            $this->db->set('isassigned','0');
-            $this->db->where('userid',$userid);
-            $this->db->update('location_report');
-            return TRUE;
-        }else{
-            return FALSE;
-        };
+    public function unassigned($userid){
+        $this->db->set('isassigned','0');
+        $this->db->where('userid',$userid);
+        $this->db->update('location_report');
     }
     public function assigned($userid){
             $this->db->set('isassigned','1');
