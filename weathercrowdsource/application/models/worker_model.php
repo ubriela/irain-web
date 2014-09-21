@@ -129,9 +129,9 @@ class Worker_model extends CI_Model{
             // Update related table
             if($success){
             	// Set user free to received new task
-                $this->db->set('isassigned','0');
-                $this->db->where('userid',$userid);
-                $this->db->update('location_report');
+                //$this->db->set('isassigned','0');
+                //$this->db->where('userid',$userid);
+                //$this->db->update('location_report');
                 
                 // Set completion in Task_worker_matches table
                 $this->db->set('iscompleted','1');
