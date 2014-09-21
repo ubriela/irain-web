@@ -93,7 +93,7 @@ class Weather_model extends CI_Model{
         }else{
             $this->db->distinct();
             $condition = "responses.response_date between '$start' and '$end' and CONTAINS(GeomFromText(\"$region_str\"), GeomFromText(CONCAT('POINT(', x(responses.worker_location), ' ', y(responses.worker_location),')')))";
-            $query = $this->db->select('x(worker_location) AS lat, y(worker_location) AS lng,response_code, response_date')->from('responses,tasks')->where($condition)->order_by('responses.response_date','desc')->get();
+            $query = $this->db->select('x(worker_location) AS lat, y(worker_location) AS lng,response_code,level, response_date')->from('responses,tasks')->where($condition)->order_by('responses.response_date','desc')->get();
             $this->_json_response($query);    
         }
     }
