@@ -132,10 +132,11 @@ class Worker extends Convert {
             		$pushObject->push_to_userid($requesterid, $message);
             	}            	
             }
-            $this->_json_response($flag);
-            $this->worker_model->unassigned();
-            $this->report_similartask($lat,$lng,$userid,$code,$level,$time);    
             
+            $this->_json_response($flag);
+            
+            $this->report_similartask($lat,$lng,$userid,$code,$level,$time);    
+            $this->worker_model->unassigned($userid);
         }           
     }
      public function task_response_web(){
@@ -164,6 +165,7 @@ class Worker extends Convert {
             	}            	
             }
             $this->_json_response($flag);
+            
             //$this->task_model->report_similartask_web($userid,$code,$level,$time);
             $this->db->select('x(location) as lat,y(location) as lng');
             $this->db->from('location_report');
@@ -171,7 +173,8 @@ class Worker extends Convert {
             $query = $this->db->get();
             $lat = $query->row()->lat;
             $lng = $query->row()->lng;
-            $this->report_similartask($lat,$lng,$userid,$code,$level,$time);      
+            $this->report_similartask($lat,$lng,$userid,$code,$level,$time);  
+            $this->worker_model->unassigned($userid);
             
         }           
     }
