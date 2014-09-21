@@ -133,6 +133,7 @@ class Worker extends Convert {
             	}            	
             }
             $this->_json_response($flag);
+            $this->worker_model->unassigned();
             $this->report_similartask($lat,$lng,$userid,$code,$level,$time);    
             
         }           
