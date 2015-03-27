@@ -11,7 +11,7 @@
 					 <label for="exampleInputPassword1">Password</label><input type="password" class="form-control" id="password" />
 				</div>
 				<div class="checkbox">
-					 <label><input type="checkbox" /> Remember me</label>
+					 <label><input type="checkbox" ng-model="rememberMe" id="checkremember"/> Remember me</label>
 				</div> <button type="button" class="btn btn-default" id="btnlogin">Login</button>
                 <button type="button" class="btn btn-default btnback">Close</button>
                 </fieldset>

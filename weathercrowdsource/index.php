@@ -1,5 +1,7 @@
-<?php
 
+<?php
+error_reporting(E_ALL);
+ini_set('display_errors',1);
 /*
  *---------------------------------------------------------------
  * APPLICATION ENVIRONMENT
@@ -190,6 +192,10 @@ if (defined('ENVIRONMENT'))
 
 		define('APPPATH', BASEPATH.$application_folder.'/');
 	}
+if( ! ini_get('date.timezone') )
+{
+   date_default_timezone_set('GMT');
+} 
 
 /*
  * --------------------------------------------------------------------

@@ -23,11 +23,6 @@ $config = array(
             'rules' => 'trim|required|min_length[3]|max_length[128]|xss_clean'
         ),
         array(
-            'field' => 'email',
-            'label' => 'Email',
-            'rules' => 'trim|required|valid_email|max_length[128]|xss_clean'
-        ),
-        array(
             'field' => 'password',
             'label' => 'Password',
             'rules' => 'trim|required|max_length[128]|xss_clean|matches[repeatpw]|callback__user_exists|callback__create_user'
@@ -106,19 +101,9 @@ $config = array(
             'field' => 'lng',
             'label' => 'Lng',
             'rules' => 'trim|required|callback_is_number'
-        ),
-        array(
-            'field' => 'datetime',
-            'label' => 'Time',
-            'rules' => 'trim|required|'
         )
     ),
     'task_request' => array(
-        array(
-            'field' => 'title',
-            'label' => 'Title',
-            'rules' => 'trim|required|max_length[100]'
-        ),
         array(
             'field' => 'lat',
             'label' => 'Lat',

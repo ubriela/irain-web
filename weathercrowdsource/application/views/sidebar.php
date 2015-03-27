@@ -1,6 +1,6 @@
 <div id="sidebar">
     <div id="info">
-        <img src="<?php echo base_url()?>img/logoFinal.png" width="150" height="150" id="avatar"/><br />
+        <img src="<?php echo base_url();?>/img/logoFinal.png" width="100" height="100"/>
         <label id="lbusername"><?php echo $username?></label>
     </div>
     <div id="nav">
@@ -11,7 +11,7 @@
             
             <li id="showtask">Task Manager</li>
            
-            
+            <li id="showabout">About</li>
             <li id="logout">Logout</li>
         </ul>
     </div>

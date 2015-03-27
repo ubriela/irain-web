@@ -16,6 +16,7 @@ class Geocrowd extends CI_Controller {
         $this->load->helper('form');
         $this->load->model('worker_model');
         $this->load->model('task_model');
+        $this->load->model('geocrowd_model');
         $this->load->library('form_validation');
     }
      
@@ -29,7 +30,7 @@ class Geocrowd extends CI_Controller {
     public function assign_tasks(){
         $now = date("Y-m-d H:i:s");
         //$condition = 'iscompleted=0';
-        $this->db->select('taskid,x(location) AS lat, y(location) AS lng, radius');
+        $this->db->select('taskid,ST_X(tasks.location) AS lat, ST_Y(tasks.location) AS lng,type, radius');
         $this->db->from('tasks');
         $this->db->where("status = 0 and enddate >= '$now'");
         $query = $this->db->get();
@@ -39,8 +40,9 @@ class Geocrowd extends CI_Controller {
                 $lat = $row['lat'];
                 $lng = $row['lng'];
                 $radius = $row['radius'];
+                $type = $row['type'];
                 $message = "Please report weather at your location. Thank you!";
-                $this->task_query($taskid,$lat,$lng,$radius,$message);
+                $this->task_query($taskid,$lat,$lng,$radius,$message,$type);
             }
         }
         
@@ -60,7 +62,7 @@ class Geocrowd extends CI_Controller {
     public function task_matched($taskid,$lat,$lng,$start_date,$end_date,$radius){
         $start = $this->string_to_time($start_date);
         $end = $this->string_to_time($end_date);
-        $condition = "response_date between '$start' and '$end' and (6373000 * acos (cos ( radians( '$lat' ) )* cos( radians( x(location) ) )* cos( radians( y(location) ) - radians( '$lng' ) )+ sin ( radians( '$lat' ) )* sin( radians( x(location) ) ))) < '$radius'";
+        $condition = "response_date between '$start' and '$end' and (6373000 * acos (cos ( radians( '$lat' ) )* cos( radians( ST_X(weather_report.location) ) )* cos( radians( ST_Y(weather_report.location) ) - radians( '$lng' ) )+ sin ( radians( '$lat' ) )* sin( radians( ST_X(weather_report.location) ) ))) < '$radius'";
         $this->db->select("response_code as code");
         $this->db->from('weather_report')->order_by('response_date','desc');
         $this->db->where($condition);
@@ -82,42 +84,31 @@ class Geocrowd extends CI_Controller {
      * @param $radius
      * @return array workerid
      */
-    public function task_query($taskid,$lat,$lng,$radius,$message){
-        
-        $condition = "isactive = 1 and isassigned = 0 and (6373000 * acos (cos ( radians( '$lat' ) )* cos( radians( x(location) ) )* cos( radians( y(location) ) - radians( '$lng' ) )+ sin ( radians( '$lat' ) )* sin( radians( x(location) ) ))) < '$radius'";
-        $this->db->select('userid,date_server');
-        $this->db->from('location_report');
-        $this->db->where($condition);
-        $query = $this->db->get();
-        if($query->num_rows()>0){
-           $this->db->trans_start();
-           $pushObject = new push();
-           foreach($query->result_array() as $row){
-                $last_response = $row['date_server'];
-                if($this->checktime($last_response)>-1){
-                    $now = date("Y-m-d H:i:s");
-                    $data = array(
-                        'taskid' => $taskid,
-                        'userid' => $row['userid'],
-                        'assigned_date' => $now
-                    );
-                    $this->db->insert('task_worker_matches',$data);
-                    $this->worker_model->assigned($row['userid']);
-                    
-                    //notifice user
-                    $pushObject->push_to_userid($row['userid'], $message);
-                    
-                    // update status in tasks table
-                    $this->task_model->update_status($taskid, 1);	// assigned
-                }
-           }
-           $this->db->trans_complete();
-        $this->_json_response1($query->result_array());
-        return true;
+   
+    public function task_query($userid,$taskid,$lat,$lng,$radius,$message,$type=0,$place){
+        if($place!='unknown'){
+            if($type==0){
+                $this->city_query($userid,$taskid,$lat,$lng,$radius,$message,$place);
+            }
+            if($type==1){
+                $this->state_query($userid,$taskid,$lat,$lng,$radius,$message,$place);
+            }
+            if($type==2){
+                $this->country_query($userid,$taskid,$lat,$lng,$radius,$message,$place);
+            }
+            if($type==3){
+                $this->circle_query($userid,$taskid,$lat,$lng,$radius,$message,$place);
+            }
         }else{
-            return false;
+            $this->circle_query($userid,$taskid,$lat,$lng,$radius,$message,$place);
         }
+        
+        
+            
+        
+        
     }
+   
     public function checktime($timein){
         $date_server = date("Y-m-d H:i:s");
         $interval  = abs($date_server - $timein);
@@ -133,7 +124,11 @@ class Geocrowd extends CI_Controller {
         $data=json_decode($json);
         $status = $data->status;
         if($status=="OK")
-            echo $data->results[0]->formatted_address;
+        {
+            $number = count($data->results);
+            //return $data->results[$number-3]->formatted_address;
+            echo $data->results[$number-3]->formatted_address;
+        }
         else
             echo 'Unknow';
     }
@@ -170,6 +165,89 @@ class Geocrowd extends CI_Controller {
         $date = date('Y-m-d H:i:s',$time);
         return $date;
     }
-    
-    
+    public function city_query($userid,$taskid,$lat,$lng,$radius,$message,$place){
+        //$arrayAddress = $this->getArrayAddress($lat,$lng);
+        //$userid = $this->session->userdata('userid');
+            $condition_city = "isactive = '1' and isassigned = 0 and city = '$place' and userid != '$userid'";
+            $this->db->select('userid');
+            $this->db->from('location_report');
+            $this->db->where($condition_city);
+            $query = $this->db->get();
+            if($query->num_rows()>0){
+                 $this->pushtask($query,$taskid,$message);
+            }
+        
+    }
+    public function country_query($userid,$taskid,$lat,$lng,$radius,$message,$place){
+        //$arrayAddress = $this->getArrayAddress($lat,$lng);
+            $condition_country = "isactive = '1' and isassigned = 0 and country = '$place' and userid != '$userid'";
+            $this->db->select('userid');
+            $this->db->from('location_report');
+            $this->db->where($condition_country);
+            $query = $this->db->get();
+            if($query->num_rows()>0){
+                 $this->pushtask($query,$taskid,$message);
+            }
+        
+    }
+    public function state_query($userid,$taskid,$lat,$lng,$radius,$message,$place){
+            $condition_state = "isactive = '1' and isassigned = 0 and state = '$place' and userid != '$userid'";
+            $this->db->select('userid');
+            $this->db->from('location_report');
+            $this->db->where($condition_state);
+            $query = $this->db->get();
+            if($query->num_rows()>0){
+                 $this->pushtask($query,$taskid,$message);
+            }
+        
+    }
+    public function circle_query($userid,$taskid,$lat,$lng,$radius,$message,$place){
+        $point = "'POINT($lat $lng)'";
+        $condition_radius = "isactive = '1' and userid != '$userid' and isassigned = 0 and (6373000 * acos (cos ( radians( '$lat' ) )* cos( radians( ST_X(location_report.location) ) )* cos( radians( ST_Y(location_report.location) ) - radians( '$lng' ) )+ sin ( radians( '$lat' ) )* sin( radians( ST_X(location_report.location) ) ))) < '$radius'";
+        //$condition_radius = "isactive = '1' and isassigned = 0 and ST_intersects(ST_GeometryFromText(ST_AsText(location)), ST_buffer(ST_GeometryFromText($point), $radius))";
+        $this->db->select('userid');
+        $this->db->from('location_report');
+        $this->db->where($condition_radius);
+        $query = $this->db->get();
+        if($query->num_rows()>0){
+            $this->pushtask($query,$taskid,$message);
+        }
+    }
+    public function getArrayAddress($lat,$lng)
+    {
+        $url = 'http://maps.googleapis.com/maps/api/geocode/json?latlng='.trim($lat).','.trim($lng).'&sensor=true';
+        $json = @file_get_contents($url);
+        $data=json_decode($json);
+        $status = $data->status;
+        if($status=='OK'){
+            $number = count($data->results);
+            $stringaddress = $data->results[$number-3]->formatted_address;
+            $array = explode(',',$stringaddress);
+            return $array;
+        }
+        else
+            return false;
+    }
+    public function pushtask($query,$taskid,$message){
+        $this->db->trans_start();
+        $pushObject = new push();
+        $now = date("Y-m-d H:i:s");
+        foreach($query->result_array() as $row){
+            $data = array(
+                'taskid' => $taskid,
+                'userid' => $row['userid'],
+                'assigned_date' => $now
+            );
+            $this->db->insert('task_worker_matches',$data);
+            $this->worker_model->assigned($row['userid']);
+                            //notifice user
+            $pushObject->push_to_userid($row['userid'], $message);
+                            
+                            // update status in tasks table
+            $this->task_model->update_status($taskid, 1);	// assigned
+                        
+        }
+        $this->db->trans_complete();
+        $this->_json_response1($query->result_array());
+    }
 }

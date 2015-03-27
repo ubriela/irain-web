@@ -32,7 +32,7 @@ class Task_model extends CI_Model {
     
     public function get_similartask($lat,$lng){
         $now = date("Y-m-d H:i:s");
-        $condition = "enddate >= '$now' and status = 0 and (6373000 * acos (cos ( radians( '$lat' ) )* cos( radians( x(location) ) )* cos( radians( y(location) ) - radians( '$lng' ) )+ sin ( radians( '$lat' ) )* sin( radians( x(location) ) ))) < radius";
+        $condition = "enddate >= '$now' and status = 0 and (6373000 * acos (cos ( radians( '$lat' ) )* cos( radians( ST_X(tasks.location) ) )* cos( radians( ST_Y(tasks.location) ) - radians( '$lng' ) )+ sin ( radians( '$lat' ) )* sin( radians( ST_X(tasks.location) ) ))) < radius";
         $this->db->select('taskid');
         $this->db->from('tasks');
         $this->db->where($condition);

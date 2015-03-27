@@ -1,3 +1,581 @@
+function getObjectPlace(lat,lng){
+    $('#typequery').val(1);
+    $('#divradius').hide();
+    var object = null;
+    var geocoder ;
+    geocoder = new google.maps.Geocoder();
+    var latlng = new google.maps.LatLng(lat, lng);
+                   //alert("Else loop" + latlng);
+    geocoder.geocode({'latLng': latlng}, function(results, status){
+    //alert("Else loop1");
+        if (status == google.maps.GeocoderStatus.OK){
+            if (results[0]){
+                var add= results[0].formatted_address ;
+                var  value=add.split(",");
+                count=value.length;
+                country=value[count-1];
+                state=value[count-2];
+                city=value[count-3];
+                if(state==null){
+                    $('#location').val(country);
+                    $('#typequery').val(2);
+                }else{
+                     $('#location').val(state);
+                }
+                $('#typequery').attr('disabled',false);
+                $('#btnposttask').attr('disabled',false);
+                
+            }else {
+                //alert("");
+                $('#location').val(lat+", "+lng);
+                $('#typequery').attr('disabled',true);
+            }
+        }else{
+            $('#location').val(lat+", "+lng);
+                $('#typequery').attr('disabled',true);
+                $('#typequery').val(3);
+                $('#btnposttask').attr('disabled',false);
+            //document.getElementById("location").innerHTML="Geocoder failed due to: " + status;
+            //alert("Geocoder failed due to: " + status);
+        }
+    });
+    
+}
+function msToTime(duration) {
+        var milliseconds = parseInt((duration%1000)/100)
+            , seconds = parseInt((duration/1000)%60)
+            , minutes = parseInt((duration/(1000*60))%60)
+            , hours = parseInt((duration/(1000*60*60))%24);
+
+        if(hours>0){
+            if(hours==1){
+                return hours+" hour ago";
+            }else{
+                return hours+" hours ago";
+            }
+            
+        }else{
+            if(minutes<=1){
+                return minutes+" minute ago";
+            }else{
+                return minutes+" minutes ago";
+            }
+        }
+    }
+function getNormalizedCoord(coord, zoom) {
+      var y = coord.y;
+      var x = coord.x;
+    
+      // tile range in one direction range is dependent on zoom level
+      // 0 = 1 tile, 1 = 2 tiles, 2 = 4 tiles, 3 = 8 tiles, etc
+      var tileRange = 1 << zoom;
+    
+      // don't repeat across y-axis (vertically)
+      if (y < 0 || y >= tileRange) {
+        return null;
+      }
+    
+      // repeat across x-axis
+      if (x < 0 || x >= tileRange) {
+        x = (x % tileRange + tileRange) % tileRange;
+      }
+    
+      return {
+        x: x,
+        y: y
+      };
+    }
+function data24h(arraytiled) {
+        var element25 = new google.maps.ImageMapType({
+                    getTileUrl: function(coord, zoom) { 
+                        var normalizedCoord = getNormalizedCoord(coord, zoom);
+                        if (!normalizedCoord) {
+                            return null;
+                        }
+                        var y = Math.pow(2,zoom)-normalizedCoord.y-1;
+                        if(zoom>0 && zoom<7){
+                            return 'http://persiann.eng.uci.edu/htdocs/apps/gmaps/24h/'+zoom + "/" + normalizedCoord.x + "/" + y + ".png"; 
+                        }else{
+                            return null;
+                        }
+                    },
+                    tileSize: new google.maps.Size(256,256),
+                    isPng: true,
+                    opacity:1
+                    
+                });
+            arraytiled.push(element25);
+             var element26 = new google.maps.ImageMapType({
+                    getTileUrl: function(coord, zoom) { 
+                        var normalizedCoord = getNormalizedCoord(coord, zoom);
+                        if (!normalizedCoord) {
+                            return null;
+                        }
+                        var y = Math.pow(2,zoom)-normalizedCoord.y-1;
+                        if(zoom>0 && zoom<7){
+                            return 'http://persiann.eng.uci.edu/htdocs/apps/gmaps/48h/'+zoom + "/" + normalizedCoord.x + "/" + y + ".png"; 
+                        }else{
+                            return null;
+                        }
+                    },
+                    tileSize: new google.maps.Size(256,256),
+                    isPng: true,
+                    opacity:0
+                });
+            arraytiled.push(element26);
+             var element27 = new google.maps.ImageMapType({
+                    getTileUrl: function(coord, zoom) { 
+                        var normalizedCoord = getNormalizedCoord(coord, zoom);
+                        if (!normalizedCoord) {
+                            return null;
+                        }
+                        var y = Math.pow(2,zoom)-normalizedCoord.y-1;
+                        if(zoom>0 && zoom<7){
+                            return 'http://persiann.eng.uci.edu/htdocs/apps/gmaps/72h/'+zoom + "/" + normalizedCoord.x + "/" + y + ".png"; 
+                        }else{
+                            return null;
+                        }
+                    },
+                    tileSize: new google.maps.Size(256,256),
+                    isPng: true,
+                     opacity:0
+                });
+            arraytiled.push(element27);
+    var element1 = new google.maps.ImageMapType({
+                            getTileUrl: function(coord, zoom) { 
+                                var normalizedCoord = getNormalizedCoord(coord, zoom);
+                                if (!normalizedCoord) {
+                                    return null;
+                                }
+                                var y = Math.pow(2,zoom)-normalizedCoord.y-1;
+                                if(zoom>0 && zoom<7){
+                                    return 'http://persiann.eng.uci.edu/htdocs/app_anim/p1h23/'+zoom + "/" + normalizedCoord.x + "/" + y + ".png";
+                                }else{
+                                    return null;
+                                }
+                            },
+                            tileSize: new google.maps.Size(256,256),
+                            isPng: true,
+                            opacity:0
+                });
+    arraytiled.push(element1);
+    var element2 = new google.maps.ImageMapType({
+                            getTileUrl: function(coord, zoom) { 
+                                var normalizedCoord = getNormalizedCoord(coord, zoom);
+                                if (!normalizedCoord) {
+                                    return null;
+                                }
+                                var y = Math.pow(2,zoom)-normalizedCoord.y-1;
+                                if(zoom>0 && zoom<7){
+                                    return 'http://persiann.eng.uci.edu/htdocs/app_anim/p1h22/'+zoom + "/" + normalizedCoord.x + "/" + y + ".png";
+                                }else{
+                                    return null;
+                                }
+                            },
+                            tileSize: new google.maps.Size(256,256),
+                            isPng: true,
+                            opacity:0
+                });
+            arraytiled.push(element2);
+            var element3 = new google.maps.ImageMapType({
+                            getTileUrl: function(coord, zoom) { 
+                                var normalizedCoord = getNormalizedCoord(coord, zoom);
+                                if (!normalizedCoord) {
+                                    return null;
+                                }
+                                var y = Math.pow(2,zoom)-normalizedCoord.y-1;
+                                if(zoom>0 && zoom<7){
+                                    return 'http://persiann.eng.uci.edu/htdocs/app_anim/p1h21/'+zoom + "/" + normalizedCoord.x + "/" + y + ".png";
+                                }else{
+                                    return null;
+                                }
+                            },
+                            tileSize: new google.maps.Size(256,256),
+                            isPng: true,
+                            opacity:0
+                });
+            arraytiled.push(element3);
+            var element4 = new google.maps.ImageMapType({
+                            getTileUrl: function(coord, zoom) { 
+                                var normalizedCoord = getNormalizedCoord(coord, zoom);
+                                if (!normalizedCoord) {
+                                    return null;
+                                }
+                                var y = Math.pow(2,zoom)-normalizedCoord.y-1;
+                                if(zoom>0 && zoom<7){
+                                    return 'http://persiann.eng.uci.edu/htdocs/app_anim/p1h20/'+zoom + "/" + normalizedCoord.x + "/" + y + ".png";
+                                }else{
+                                    return null;
+                                }
+                            },
+                            tileSize: new google.maps.Size(256,256),
+                            isPng: true,
+                            opacity:0
+                });
+            arraytiled.push(element4);
+             var element5 = new google.maps.ImageMapType({
+                            getTileUrl: function(coord, zoom) { 
+                                var normalizedCoord = getNormalizedCoord(coord, zoom);
+                                if (!normalizedCoord) {
+                                    return null;
+                                }
+                                var y = Math.pow(2,zoom)-normalizedCoord.y-1;
+                                if(zoom>0 && zoom<7){
+                                    return 'http://persiann.eng.uci.edu/htdocs/app_anim/p1h19/'+zoom + "/" + normalizedCoord.x + "/" + y + ".png";
+                                }else{
+                                    return null;
+                                }
+                            },
+                            tileSize: new google.maps.Size(256,256),
+                            isPng: true,
+                            opacity:0
+                });
+            arraytiled.push(element5);
+             var element6 = new google.maps.ImageMapType({
+                            getTileUrl: function(coord, zoom) { 
+                                var normalizedCoord = getNormalizedCoord(coord, zoom);
+                                if (!normalizedCoord) {
+                                    return null;
+                                }
+                                var y = Math.pow(2,zoom)-normalizedCoord.y-1;
+                                if(zoom>0 && zoom<7){
+                                    return 'http://persiann.eng.uci.edu/htdocs/app_anim/p1h18/'+zoom + "/" + normalizedCoord.x + "/" + y + ".png";
+                                }else{
+                                    return null;
+                                }
+                            },
+                            tileSize: new google.maps.Size(256,256),
+                            isPng: true,
+                            opacity:0
+                });
+            arraytiled.push(element6);
+             var element7 = new google.maps.ImageMapType({
+                            getTileUrl: function(coord, zoom) { 
+                                var normalizedCoord = getNormalizedCoord(coord, zoom);
+                                if (!normalizedCoord) {
+                                    return null;
+                                }
+                                var y = Math.pow(2,zoom)-normalizedCoord.y-1;
+                                if(zoom>0 && zoom<7){
+                                    return 'http://persiann.eng.uci.edu/htdocs/app_anim/p1h17/'+zoom + "/" + normalizedCoord.x + "/" + y + ".png";
+                                }else{
+                                    return null;
+                                }
+                            },
+                            tileSize: new google.maps.Size(256,256),
+                            isPng: true,
+                            opacity:0
+                });
+            arraytiled.push(element7);
+             var element8 = new google.maps.ImageMapType({
+                            getTileUrl: function(coord, zoom) { 
+                                var normalizedCoord = getNormalizedCoord(coord, zoom);
+                                if (!normalizedCoord) {
+                                    return null;
+                                }
+                                var y = Math.pow(2,zoom)-normalizedCoord.y-1;
+                                if(zoom>0 && zoom<7){
+                                    return 'http://persiann.eng.uci.edu/htdocs/app_anim/p1h16/'+zoom + "/" + normalizedCoord.x + "/" + y + ".png";
+                                }else{
+                                    return null;
+                                }
+                            },
+                            tileSize: new google.maps.Size(256,256),
+                            isPng: true,
+                            opacity:0
+                });
+            arraytiled.push(element8);
+             var element9 = new google.maps.ImageMapType({
+                            getTileUrl: function(coord, zoom) { 
+                                var normalizedCoord = getNormalizedCoord(coord, zoom);
+                                if (!normalizedCoord) {
+                                    return null;
+                                }
+                                var y = Math.pow(2,zoom)-normalizedCoord.y-1;
+                                if(zoom>0 && zoom<7){
+                                    return 'http://persiann.eng.uci.edu/htdocs/app_anim/p1h15/'+zoom + "/" + normalizedCoord.x + "/" + y + ".png";
+                                }else{
+                                    return null;
+                                }
+                            },
+                            tileSize: new google.maps.Size(256,256),
+                            isPng: true,
+                            opacity:0
+                });
+            arraytiled.push(element9);
+             var element10 = new google.maps.ImageMapType({
+                            getTileUrl: function(coord, zoom) { 
+                                var normalizedCoord = getNormalizedCoord(coord, zoom);
+                                if (!normalizedCoord) {
+                                    return null;
+                                }
+                                var y = Math.pow(2,zoom)-normalizedCoord.y-1;
+                                if(zoom>0 && zoom<7){
+                                    return 'http://persiann.eng.uci.edu/htdocs/app_anim/p1h14/'+zoom + "/" + normalizedCoord.x + "/" + y + ".png";
+                                }else{
+                                    return null;
+                                }
+                            },
+                            tileSize: new google.maps.Size(256,256),
+                            isPng: true,
+                            opacity:0
+                });
+            arraytiled.push(element10);
+             var element11 = new google.maps.ImageMapType({
+                            getTileUrl: function(coord, zoom) { 
+                                var normalizedCoord = getNormalizedCoord(coord, zoom);
+                                if (!normalizedCoord) {
+                                    return null;
+                                }
+                                var y = Math.pow(2,zoom)-normalizedCoord.y-1;
+                                if(zoom>0 && zoom<7){
+                                    return 'http://persiann.eng.uci.edu/htdocs/app_anim/p1h13/'+zoom + "/" + normalizedCoord.x + "/" + y + ".png";
+                                }else{
+                                    return null;
+                                }
+                            },
+                            tileSize: new google.maps.Size(256,256),
+                            isPng: true,
+                            opacity:0
+                });
+            arraytiled.push(element11);
+             var element12 = new google.maps.ImageMapType({
+                            getTileUrl: function(coord, zoom) { 
+                                var normalizedCoord = getNormalizedCoord(coord, zoom);
+                                if (!normalizedCoord) {
+                                    return null;
+                                }
+                                var y = Math.pow(2,zoom)-normalizedCoord.y-1;
+                                if(zoom>0 && zoom<7){
+                                    return 'http://persiann.eng.uci.edu/htdocs/app_anim/p1h12/'+zoom + "/" + normalizedCoord.x + "/" + y + ".png";
+                                }else{
+                                    return null;
+                                }
+                            },
+                            tileSize: new google.maps.Size(256,256),
+                            isPng: true,
+                            opacity:0
+                });
+            arraytiled.push(element12);
+             var element13 = new google.maps.ImageMapType({
+                            getTileUrl: function(coord, zoom) { 
+                                var normalizedCoord = getNormalizedCoord(coord, zoom);
+                                if (!normalizedCoord) {
+                                    return null;
+                                }
+                                var y = Math.pow(2,zoom)-normalizedCoord.y-1;
+                                if(zoom>0 && zoom<7){
+                                    return 'http://persiann.eng.uci.edu/htdocs/app_anim/p1h11/'+zoom + "/" + normalizedCoord.x + "/" + y + ".png";
+                                }else{
+                                    return null;
+                                }
+                            },
+                            tileSize: new google.maps.Size(256,256),
+                            isPng: true,
+                            opacity:0
+                });
+            arraytiled.push(element13);
+             var element14 = new google.maps.ImageMapType({
+                            getTileUrl: function(coord, zoom) { 
+                                var normalizedCoord = getNormalizedCoord(coord, zoom);
+                                if (!normalizedCoord) {
+                                    return null;
+                                }
+                                var y = Math.pow(2,zoom)-normalizedCoord.y-1;
+                                if(zoom>0 && zoom<7){
+                                    return 'http://persiann.eng.uci.edu/htdocs/app_anim/p1h10/'+zoom + "/" + normalizedCoord.x + "/" + y + ".png";
+                                }else{
+                                    return null;
+                                }
+                            },
+                            tileSize: new google.maps.Size(256,256),
+                            isPng: true,
+                            opacity:0
+                });
+            arraytiled.push(element14);
+             var element15 = new google.maps.ImageMapType({
+                            getTileUrl: function(coord, zoom) { 
+                                var normalizedCoord = getNormalizedCoord(coord, zoom);
+                                if (!normalizedCoord) {
+                                    return null;
+                                }
+                                var y = Math.pow(2,zoom)-normalizedCoord.y-1;
+                                if(zoom>0 && zoom<7){
+                                    return 'http://persiann.eng.uci.edu/htdocs/app_anim/p1h09/'+zoom + "/" + normalizedCoord.x + "/" + y + ".png";
+                                }else{
+                                    return null;
+                                }
+                            },
+                            tileSize: new google.maps.Size(256,256),
+                            isPng: true,
+                            opacity:0
+                });
+            arraytiled.push(element15);
+             var element16 = new google.maps.ImageMapType({
+                            getTileUrl: function(coord, zoom) { 
+                                var normalizedCoord = getNormalizedCoord(coord, zoom);
+                                if (!normalizedCoord) {
+                                    return null;
+                                }
+                                var y = Math.pow(2,zoom)-normalizedCoord.y-1;
+                                if(zoom>0 && zoom<7){
+                                    return 'http://persiann.eng.uci.edu/htdocs/app_anim/p1h08/'+zoom + "/" + normalizedCoord.x + "/" + y + ".png";
+                                }else{
+                                    return null;
+                                }
+                            },
+                            tileSize: new google.maps.Size(256,256),
+                            isPng: true,
+                            opacity:0
+                });
+            arraytiled.push(element16);
+             var element17 = new google.maps.ImageMapType({
+                            getTileUrl: function(coord, zoom) { 
+                                var normalizedCoord = getNormalizedCoord(coord, zoom);
+                                if (!normalizedCoord) {
+                                    return null;
+                                }
+                                var y = Math.pow(2,zoom)-normalizedCoord.y-1;
+                                if(zoom>0 && zoom<7){
+                                    return 'http://persiann.eng.uci.edu/htdocs/app_anim/p1h07/'+zoom + "/" + normalizedCoord.x + "/" + y + ".png";
+                                }else{
+                                    return null;
+                                }
+                            },
+                            tileSize: new google.maps.Size(256,256),
+                            isPng: true,
+                            opacity:0
+                });
+            arraytiled.push(element17);
+             var element18 = new google.maps.ImageMapType({
+                            getTileUrl: function(coord, zoom) { 
+                                var normalizedCoord = getNormalizedCoord(coord, zoom);
+                                if (!normalizedCoord) {
+                                    return null;
+                                }
+                                var y = Math.pow(2,zoom)-normalizedCoord.y-1;
+                                if(zoom>0 && zoom<7){
+                                    return 'http://persiann.eng.uci.edu/htdocs/app_anim/p1h06/'+zoom + "/" + normalizedCoord.x + "/" + y + ".png";
+                                }else{
+                                    return null;
+                                }
+                            },
+                            tileSize: new google.maps.Size(256,256),
+                            isPng: true,
+                            opacity:0
+                });
+            arraytiled.push(element18);
+             var element19 = new google.maps.ImageMapType({
+                            getTileUrl: function(coord, zoom) { 
+                                var normalizedCoord = getNormalizedCoord(coord, zoom);
+                                if (!normalizedCoord) {
+                                    return null;
+                                }
+                                var y = Math.pow(2,zoom)-normalizedCoord.y-1;
+                                if(zoom>0 && zoom<7){
+                                    return 'http://persiann.eng.uci.edu/htdocs/app_anim/p1h05/'+zoom + "/" + normalizedCoord.x + "/" + y + ".png";
+                                }else{
+                                    return null;
+                                }
+                            },
+                            tileSize: new google.maps.Size(256,256),
+                            isPng: true,
+                            opacity:0
+                });
+            arraytiled.push(element19);
+             var element20 = new google.maps.ImageMapType({
+                            getTileUrl: function(coord, zoom) { 
+                                var normalizedCoord = getNormalizedCoord(coord, zoom);
+                                if (!normalizedCoord) {
+                                    return null;
+                                }
+                                var y = Math.pow(2,zoom)-normalizedCoord.y-1;
+                                if(zoom>0 && zoom<7){
+                                    return 'http://persiann.eng.uci.edu/htdocs/app_anim/p1h04/'+zoom + "/" + normalizedCoord.x + "/" + y + ".png";
+                                }else{
+                                    return null;
+                                }
+                            },
+                            tileSize: new google.maps.Size(256,256),
+                            isPng: true,
+                            opacity:0
+                });
+            arraytiled.push(element20);
+             var element21 = new google.maps.ImageMapType({
+                            getTileUrl: function(coord, zoom) { 
+                                var normalizedCoord = getNormalizedCoord(coord, zoom);
+                                if (!normalizedCoord) {
+                                    return null;
+                                }
+                                var y = Math.pow(2,zoom)-normalizedCoord.y-1;
+                                if(zoom>0 && zoom<7){
+                                    return 'http://persiann.eng.uci.edu/htdocs/app_anim/p1h03/'+zoom + "/" + normalizedCoord.x + "/" + y + ".png";
+                                }else{
+                                    return null;
+                                }
+                            },
+                            tileSize: new google.maps.Size(256,256),
+                            isPng: true,
+                            opacity:0
+                });
+            arraytiled.push(element21);
+             var element22 = new google.maps.ImageMapType({
+                            getTileUrl: function(coord, zoom) { 
+                                var normalizedCoord = getNormalizedCoord(coord, zoom);
+                                if (!normalizedCoord) {
+                                    return null;
+                                }
+                                var y = Math.pow(2,zoom)-normalizedCoord.y-1;
+                                if(zoom>0 && zoom<7){
+                                    return 'http://persiann.eng.uci.edu/htdocs/app_anim/p1h02/'+zoom + "/" + normalizedCoord.x + "/" + y + ".png";
+                                }else{
+                                    return null;
+                                }
+                            },
+                            tileSize: new google.maps.Size(256,256),
+                            isPng: true,
+                            opacity:0
+                });
+            arraytiled.push(element22);
+             var element23 = new google.maps.ImageMapType({
+                            getTileUrl: function(coord, zoom) { 
+                                var normalizedCoord = getNormalizedCoord(coord, zoom);
+                                if (!normalizedCoord) {
+                                    return null;
+                                }
+                                var y = Math.pow(2,zoom)-normalizedCoord.y-1;
+                                if(zoom>0 && zoom<7){
+                                    return 'http://persiann.eng.uci.edu/htdocs/app_anim/p1h01/'+zoom + "/" + normalizedCoord.x + "/" + y + ".png";
+                                }else{
+                                    return null;
+                                }
+                            },
+                            tileSize: new google.maps.Size(256,256),
+                            isPng: true,
+                            opacity:0
+                });
+            arraytiled.push(element23);
+             var element24 = new google.maps.ImageMapType({
+                            getTileUrl: function(coord, zoom) { 
+                                var normalizedCoord = getNormalizedCoord(coord, zoom);
+                                if (!normalizedCoord) {
+                                    return null;
+                                }
+                                var y = Math.pow(2,zoom)-normalizedCoord.y-1;
+                                if(zoom>0 && zoom<7){
+                                    return 'http://persiann.eng.uci.edu/htdocs/app_anim/p1h00/'+zoom + "/" + normalizedCoord.x + "/" + y + ".png";
+                                }else{
+                                    return null;
+                                }
+                            },
+                            tileSize: new google.maps.Size(256,256),
+                            isPng: true,
+                            opacity:0
+                });
+            arraytiled.push(element24);
+            
+            
+}
 function validateEmail(email) { 
     var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(email);
@@ -267,4 +845,40 @@ function validateEmail(email) {
     binarray.push(H[i].lowOrder);
   }
   return binb2hex(binarray);
+}
+function normalBtnWeather(){
+        $('#btn24h').attr('src',baseurl+'img/report24hr.png');
+        $('#btn48h').attr('src',baseurl+'img/report48hr.png'); 
+        $('#btn72h').attr('src',baseurl+'img/report72hr.png'); 
+    }
+function initAnimate(map,arraytiled){
+        map.overlayMapTypes.push(arraytiled[0]);
+        map.overlayMapTypes.push(arraytiled[1]);
+        map.overlayMapTypes.push(arraytiled[2]);
+        map.overlayMapTypes.push(arraytiled[3]);
+        map.overlayMapTypes.push(arraytiled[4]);
+        map.overlayMapTypes.push(arraytiled[5]);
+        map.overlayMapTypes.push(arraytiled[6]);
+        map.overlayMapTypes.push(arraytiled[7]);
+        map.overlayMapTypes.push(arraytiled[8]);
+        map.overlayMapTypes.push(arraytiled[9]);
+        map.overlayMapTypes.push(arraytiled[10]);
+        map.overlayMapTypes.push(arraytiled[11]);
+        map.overlayMapTypes.push(arraytiled[12]);
+        map.overlayMapTypes.push(arraytiled[13]);
+        map.overlayMapTypes.push(arraytiled[14]);
+        map.overlayMapTypes.push(arraytiled[15]);
+        map.overlayMapTypes.push(arraytiled[16]);
+        map.overlayMapTypes.push(arraytiled[17]);
+        map.overlayMapTypes.push(arraytiled[18]);
+        map.overlayMapTypes.push(arraytiled[19]);
+        map.overlayMapTypes.push(arraytiled[20]);
+        map.overlayMapTypes.push(arraytiled[21]);
+        map.overlayMapTypes.push(arraytiled[22]);
+        map.overlayMapTypes.push(arraytiled[23]);
+        map.overlayMapTypes.push(arraytiled[24]);
+        map.overlayMapTypes.push(arraytiled[25]);
+        map.overlayMapTypes.push(arraytiled[26]);
+    
+    
 }

@@ -19,7 +19,7 @@ class User_model extends CI_Model {
 	
 		$userid = $this->session->userdata('userid');
 		
-		$this->db->select('username, avatar, firstname, lastname, phone_number, email, created_date, userid');
+		$this->db->select('username, avatar, firstname, lastname, created_date, userid');
 		$this->db->from('users');
 		$this->db->where('userid', $userid);
 		$this->db->limit(1);
@@ -28,7 +28,7 @@ class User_model extends CI_Model {
 	
 		if ($query->num_rows() == 1) {
 			// Return the row
-            $row = $query->result_array()[0];
+            $row = $query->row_array();
             $row['numrequest'] = $this->get_num_taskrequests($userid);
             $row['numresponse'] = $this->get_num_taskresponses($userid);
 			return $row;
@@ -66,7 +66,6 @@ class User_model extends CI_Model {
     	$id = $this->session->userdata('userid');
    		$this->db->set('firstname',$firstname);
    		$this->db->set('lastname',$lastname);
-   		$this->db->set('email',$email);
    		$this->db->where('userid',$id);
    		if ($this->db->update('users')){
    			return TRUE;
@@ -88,7 +87,7 @@ class User_model extends CI_Model {
         $this->db->select('userid, username, avatar, firstname, lastname, password, salt, channelid');
         $this->db->from('users');
         $this->db->where('username', $username_or_email);
-        $this->db->or_where('email', $username_or_email);
+        
         $this->db->limit(1);
 
         $query = $this->db->get();
@@ -110,7 +109,6 @@ class User_model extends CI_Model {
      */
     public function user_exists($username_or_email) {
         $this->db->where('username', $username_or_email);
-        $this->db->or_where('email', $username_or_email);
         $query = $this->db->get('users');
         if ($query->num_rows() > 0) {
             return true;
@@ -129,7 +127,7 @@ class User_model extends CI_Model {
      * @param 	string $channelid channelid for push notification service
      * @return	TRUE if user creation was successfull, otherwise FALSE
      */
-    public function create_user($username, $password, $email, $channelid = FALSE) {
+    public function create_user($username, $password, $channelid = FALSE) {
 
         // Generate unique id from application/helpers/uuid_helper.php
         $uuid = gen_uuid();
@@ -152,7 +150,6 @@ class User_model extends CI_Model {
             'userid' => $uuid,
             'username' => $username,
             'password' => $password,
-            'email' => $email,
             'created_date' => $date_now,
             'last_login_date' => $date_now,
             'last_activity_date' => $date_now,
@@ -206,7 +203,7 @@ class User_model extends CI_Model {
         $this->db->select('isactive');
         $this->db->from('users');
         $this->db->where('userid', $email_or_userid);
-        $this->db->or_where('email', $email_or_userid);
+        
 
         $this->db->limit(1);
 

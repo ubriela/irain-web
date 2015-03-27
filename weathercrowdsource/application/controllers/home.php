@@ -4,10 +4,8 @@ class Home extends CI_Controller {
     public function __construct()
     {
         parent::__construct();
+        $this->load->database();
         $this->load->library('session');
-        $this->load->helper('json_response');
-         $this->load->helper('form');
-        $this->load->library('form_validation');
         $this->load->helper('url');
         $this->load->model('user_model');
     }
@@ -21,6 +19,10 @@ class Home extends CI_Controller {
         }
 	}
     public function logout(){
+        $userid = $this->session->userdata('userid');
+        $this->db->set('islogout',1);
+        $this->db->where('userid',$userid);
+        $this->db->update('users');
         $this->session->sess_destroy();
         redirect(base_url('index.php'));
     }

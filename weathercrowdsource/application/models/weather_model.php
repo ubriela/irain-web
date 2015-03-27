@@ -23,13 +23,10 @@ class Weather_model extends CI_Model{
      * @param   number $lat,$lng
      * @return	true if is successfully set
      */
-    public function insert_location($userid,$lat,$lng,$locationtime){
-        $time = strtotime($locationtime);
-        $date = date('Y-m-d H:i:s',$time);
+    public function insert_location($userid,$lat,$lng){
         $loc = "'POINT($lat $lng)'";
         $active = $this->user_model->is_active($userid);
-        $this->db->set('location', "GeomFromText($loc)",false);
-        $this->db->set('date', $date );
+        $this->db->set('location', "ST_GeomFromText($loc, 4326)",false);
         $this->db->set('isactive', $active);
         if($this->is_exits_location($userid)){
             $this->db->where('userid',$userid);
@@ -49,9 +46,10 @@ class Weather_model extends CI_Model{
      * @return	return true if the weather at location already exists else return false
      */
     public function is_exits_weather($userid,$lat,$lng){
-        $loc = "GeomFromText('POINT($lat $lng)')";
+		$loc = "'POINT($lat $lng)'";
+        $location = "ST_GeomFromText($loc, 4326)";
         $this->db->where('userid',$userid);
-        $this->db->where('location',$loc,false);
+        $this->db->where('location',$location,false);
         $query = $this->db->get('weather_report');
         if($query->num_rows()>0){
             return true;
@@ -66,36 +64,35 @@ class Weather_model extends CI_Model{
      * @param   number $lat,@lng,$code
      * @return	true if is successfully set
      */
-    public function insert_weather($userid,$lat,$lng,$code,$level,$responsetime){
+    public function insert_weather($userid,$lat,$lng,$code,$level,$responsetime,$address){
         $time = strtotime($responsetime);
-        $date = date('Y-m-d H:i:s',$time);
+        $response_date = date('Y-m-d H:i:s',$time);
+        $server_date = date("Y-m-d H:i:s");
         $loc = "'POINT($lat $lng)'";
+        
+        $this->db->set('taskid',0);
+        $this->db->set('worker_place',$address);
         $this->db->set('response_code',$code);
         $this->db->set('level',$level);
-        $this->db->set('response_date',$date);
-        if($this->is_exits_weather($userid,$lat,$lng)){
-            $this->db->where('userid',$userid);
-            $this->db->where('location',"GeomFromText($loc)",false);
-            $this->db->update('weather_report');
-        }else{
-            $this->db->set('userid',$userid);
-            $this->db->set('location',"GeomFromText($loc)",false);
-            $this->db->insert('weather_report');
-        }
-        return true;
+        $this->db->set('response_date',$response_date);
+        $this->db->set('response_date_server',$server_date);
+        $this->db->set('worker_location',"ST_GeomFromText($loc, 4326)",false);
+        $this->db->set('workerid',$userid);
+        $this->db->insert('responses');
     }
     public function spatiotemporal_query($SW_lat, $SW_lng, $NE_lat, $NE_lng, $from = '1979-01-01 00:00:00', $to = '2015-01-01 00:00:00') {
-        $region_str = "POLYGON((" . $SW_lat . ' ' . $SW_lng . "," . $NE_lat . ' ' . $SW_lng . "," . $NE_lat . ' ' . $NE_lng . "," . $SW_lat . ' ' . $NE_lng . "," . $SW_lat . ' ' . $SW_lng . "))";
+        //$region_str = "'POLYGON((" . $SW_lat . ' ' . $SW_lng . "," . $NE_lat . ' ' . $SW_lng . "," . $NE_lat . ' ' . $NE_lng . "," . $SW_lat . ' ' . $NE_lng . "," . $SW_lat . ' ' . $SW_lng . "))'";
         $start = $this->string_to_time($from);
         $end = $this -> string_to_time($to);
-        if($start>$end){
-            $this->_json_response(false);
-        }else{
-            $this->db->distinct('worker_location');
-            $condition = "responses.response_date between '$start' and '$end' and CONTAINS(GeomFromText(\"$region_str\"), GeomFromText(CONCAT('POINT(', x(responses.worker_location), ' ', y(responses.worker_location),')')))";
-            $query = $this->db->select('x(worker_location) AS lat, y(worker_location) AS lng,response_code,level, response_date')->from('responses')->where($condition)->order_by('responses.response_date','desc')->get();
-            $this->_json_response($query);    
-        }
+            $condition = "response_date between '$start' and '$end'";
+            $this->db->select('ST_X(worker_location) AS lat, ST_Y(worker_location) AS lng,response_code,level,worker_place, response_date');
+            //$this->db->distinct('worker_location');
+            $this->db->from('responses');  
+            $this->db->where($condition);
+            //$this->db->order_by('response_date');
+            $query = $this->db->get();
+            $this->_json_response($query->result_array());  
+        
     }
     public function spatiotemporal_code_query($code,$SW_lat, $SW_lng, $NE_lat, $NE_lng, $from = '1979-01-01 00:00:00', $to = '2015-01-01 00:00:00') {
         $region_str = "POLYGON((" . $SW_lat . ' ' . $SW_lng . "," . $NE_lat . ' ' . $SW_lng . "," . $NE_lat . ' ' . $NE_lng . "," . $SW_lat . ' ' . $NE_lng . "," . $SW_lat . ' ' . $SW_lng . "))";
@@ -104,9 +101,9 @@ class Weather_model extends CI_Model{
         if($start>$end){
             $this->_json_response(false);
         }else{
-            $condition = "response_date between '$from' and '$to' and response_code = '$code' and CONTAINS(GeomFromText(\"$region_str\"), GeomFromText(CONCAT('POINT(', x(location), ' ', y(location),')')))";
+            $condition = "response_date between '$from' and '$to' and response_code = '$code' and CONTAINS(ST_GeomFromText($region_str), ST_GeomFromText(CONCAT('POINT(', ST_X(responses.worker_location), ' ', ST_X(responses.worker_location),')')))";
             $this->db->distinct();
-            $query = $this->db->select('x(location) AS lat, y(location) AS lng, response_date')->from('weather_report')->where($condition)->order_by('response_date')->get();
+            $query = $this->db->select('ST_X(responses.worker_location) AS lat, ST_Y(responses.worker_location) AS lng,response_code, response_date')->distinct('worker_location')->from('responses')->where($condition)->order_by('responses.response_date','desc')->get();
             $this->_json_response($query);  
         }
     }
@@ -114,7 +111,7 @@ class Weather_model extends CI_Model{
     public function _json_response($data) {
         $this->output->set_content_type('application/json');
         if ($data) {
-            $this->output->set_output(json_encode($data->result_array()));
+            $this->output->set_output(json_encode($data));
         } else {
             $this->output->set_output(json_encode(array('status' => 'error', "msg" => '0')));
         }
@@ -125,7 +122,19 @@ class Weather_model extends CI_Model{
         return $date;
     }
    
-
+    public function getaddress1($lat,$lng)
+    {
+        $url = 'http://maps.googleapis.com/maps/api/geocode/json?latlng='.trim($lat).','.trim($lng).'&sensor=true';
+        $json = @file_get_contents($url);
+        $data=json_decode($json);
+        $status = $data->status;
+        if($status=='OK'){
+            $number = count($data->results);
+            return $data->results[$number-3]->formatted_address;
+        }
+        else
+            return false;
+    }
     
 }
 ?>

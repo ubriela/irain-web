@@ -1,14 +1,14 @@
 <div class="row clearfix">
-		<div class="col-md-12 column">
-        
-			<form role="form" id="weatherform">
+		<div class="col-md-12 column" id="containerweather">
+        <input type="image" src="<?php echo base_url()?>img/closeBtn.gif" class="btnback" style="float: right;"/>
+			<form role="form" >
             
-            <fieldset><legend>iRain - Weather report</legend>
+            <fieldset><legend>iRain - Weather Report</legend>
 				<div class="form-group">
 					 <input type="text" class="form-control" id="responsetitle" disabled="true" style="display: none;"/>
 				</div>
 		        <div class="form-group">
-					 <label for="exampleInputPassword1">Your location</label><input type="text" class="form-control" id="locationweather"/>
+					 <label for="exampleInputPassword1">Your Location</label><input type="text" class="form-control" id="locationweather" disabled="true"/>
 				</div>
                 <div class="form-group">
 					 <label for="exampleInputPassword1">Time</label>
@@ -23,10 +23,10 @@
                 </select>   
 				</div>
                 <div class="form-group">
-                
-                    <button type="button" id="btnnone1"></button>
                     <button type="button" id="btnrain1"></button>
                     <button type="button" id="btnsnow1"></button>
+                    <button type="button" id="btnnone1"></button>
+                    
                 </div>
                  
                 <div class="hide">
@@ -35,9 +35,12 @@
                         <button type="button" class="btn btn-default" id="moderate1">Moderate</button>
                         <button type="button" class="btn btn-default" id="heavy1">Heavy</button>
                     </div>
+                    <div id="hourtooltip" style="margin: 3px;">
+                        weahter <span></span>
+                    </div>
                 </div>
 				
-                <button type="button" class="btn btn-default btnback">Close</button>
+                
 			</fieldset>
             </form>
             

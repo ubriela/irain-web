@@ -1,5 +1,6 @@
 <?php
 require_once('geocrowd.php');
+require_once('push.php');
 class Requester extends Geocrowd{
     /**
      * Constructor
@@ -13,6 +14,7 @@ class Requester extends Geocrowd{
     public function __construct(){
         parent::__construct();
         $this->load->model('requester_model');
+        $this->load->model('worker_model');
     }
      /**
      * Default function executed when [base_url]/index.php/requester
@@ -73,29 +75,29 @@ class Requester extends Geocrowd{
                 $this->_json_response(FALSE);
         }else{
             $userid = $this->session->userdata('userid');
-            $title = $this->input->post('title');
             $lat = $this->input->post('lat');
             $lng = $this->input->post('lng');
             $requestdate = $this->input->post('requestdate');
             $startdate = $this->input->post('startdate');
             $enddate = $this->input->post('enddate');
             $type = $this->input->post('type');
+            $radius = $this->input->post('radius');
+            $message = 'please report weather at your location';
+            $place = '';
             if(isset($_POST['place'])){
                 $place = $this->input->post('place');
             }else{
-                $place = $this->getaddress($lat,$lng);
+                $arrayAddress = $this->worker_model->getArrayAddress($lat,$lng);
+                $place = $arrayAddress[0].",".$arrayAddress[1].",".$arrayAddress[2];
+                
             }
-            $radius = $this->input->post('radius');
-            if($this->requester_model->task_request($userid,$title,$lat,$lng,$requestdate,$startdate,$enddate,$type,$radius,$place)){
-                $taskid = $this->requester_model->get_taskid($userid);
-//                 if(!$this->task_matched($taskid,$lat,$lng,$startdate,$enddate,$radius)){
-                    $this->task_query($taskid,$lat,$lng,$radius,$title);
-                    return $this->_json_response($taskid);
-//                }
-            }else{
-                $this->_json_response(false);
-                return;
-            };
+            $taskid = $this->requester_model->task_request($userid,$lat,$lng,$requestdate,$startdate,$enddate,$type,$radius,$place);
+            if($type!=3){
+                $place = $arrayAddress[$type];
+            }
+            $this->task_query($userid,$taskid,$lat,$lng,$radius,$message,$type,$place);
+            $this->_json_response($taskid);
+            
             
             // 
             
@@ -145,10 +147,26 @@ class Requester extends Geocrowd{
         $json = @file_get_contents($url);
         $data=json_decode($json);
         $status = $data->status;
-        if($status=="OK")
-            return $data->results[0]->formatted_address;
+        if($status=="OK"){
+            $address_components = $data->results[0]->formatted_address;
+            return $address_components;
+        }
         else
-            return 'Unknow';
+            return false;
+    }
+     public function getaddressfromlatlng(){
+        $lat = $_POST['lat'];
+        $lng = $_POST['lng'];
+        $url = 'http://maps.googleapis.com/maps/api/geocode/json?latlng='.trim($lat).','.trim($lng).'&sensor=false';
+        $json = @file_get_contents($url);
+        $data=json_decode($json);
+        $status = $data->status;
+        if($status=="OK"){
+            $number = count($data->results);
+            echo $data->results[$number-3]->formatted_address;
+        }
+        else
+            echo 'false';
     }
     /**
      * load all pending task
@@ -195,15 +213,15 @@ class Requester extends Geocrowd{
             return;
         }
         $userid = $this->session->userdata('userid');
-        $query = $this->db->select('x(location) as lat,y(location) as lng')->from('location_report')->where('userid',$userid)->get();
+        $query = $this->db->select('ST_X(location_report."location") as lat,ST_Y(location_report."location") as lng,address')->from('location_report')->where('userid',$userid)->get();
         if($query->num_rows()>0){
             $lat = $query->row()->lat;
             $lng = $query->row()->lng;
-            $adress = $this->getaddress($lat,$lng);
-            $array = array('lat'=>$lat,'lng'=>$lng,'adress'=>$adress);
+            $address = $query->row()->address;
+            $array = array('lat'=>$lat,'lng'=>$lng,'address'=>$address);
             $this->_json_response($array);
         }else{
-            echo '';
+            $this->_json_response(false);
         }
     }
 }

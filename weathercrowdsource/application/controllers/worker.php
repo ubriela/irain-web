@@ -13,14 +13,9 @@ class Worker extends Convert {
      */
     public function __construct(){
         parent::__construct();
-        
-        
         $this->load->model('worker_model');
-        
         $this->load->model('task_model');
-        
         $this->load->model('user_model');
-
         $this->load->model('requester_model');
     }
     /**
@@ -29,8 +24,7 @@ class Worker extends Convert {
      * @access	public
      * @return	void
      */
-    public function index(){
-        
+    public function index(){   
     }
      /**
      * unassigned
@@ -49,23 +43,7 @@ class Worker extends Convert {
         $flag = $this->worker_model->unassigned();
         $this->_json_response($flag);
     }
-     private function _json_response($data) {
-        $this->output->set_content_type('application/json');
-        if ($data) {
-            $this->output->set_output(json_encode(array('status' => 'success', "msg" => $data)));
-        } else {
-            $this->output->set_output(json_encode(array('status' => 'error', "msg" => '0')));
-        }
-    }
-    
-    private function _json_response_debug_error($data) {
-    	$this->output->set_content_type('application/json');
-    	if ($data) {
-    		$this->output->set_output(json_encode(array('status' => 'error', "msg" => $data)));
-    	} else {
-    		$this->output->set_output(json_encode(array('status' => 'error', "msg" => '0')));
-    	}
-    }
+     
       /**
      * location_report
      * update your location
@@ -87,8 +65,8 @@ class Worker extends Convert {
             $userid = $this->session->userdata('userid');
             $lat = $this->input->post('lat');
             $lng = $this->input->post('lng');
-            $time = $this->input->post('datetime');
-            $this->worker_model->location_report($userid,$lat,$lng,$time);
+            $address = $this->input->post('address');
+            $this->worker_model->location_report($userid,$lat,$lng,$address);
             $this->_json_response(TRUE);
         }           
     }
@@ -117,76 +95,63 @@ class Worker extends Convert {
             $time = $this->input->post('responsedate');
             $lat = $this->input->post('lat');
             $lng = $this->input->post('lng');
-            $flag = $this->worker_model->task_response($taskid,$userid,$code,$level,$time);
+            $address = $this->input->post('address');
+            $flag = $this->worker_model->task_response($taskid,$userid,$code,$level,$time,$lat,$lng,$address);
             if ($flag) {
-                $flag2 = $this->worker_model->update_worker_location($userid,$taskid,$lat,$lng);
-                $this->worker_model->location_report($userid,$lat,$lng,$time);            
+                //$flag2 = $this->worker_model->update_worker_location($userid,$taskid,$lat,$lng);
+                $this->worker_model->location_report($userid,$lat,$lng,$address);            
             	// update status in tasks table
             	$this->task_model->update_status($taskid, 2);	// assigned
             	// notify requester
             	$row = $this->requester_model->requesterid_from_taskid($taskid);
-            	$message = "Your task with id " . $taskid . " has been done.";
+                $weather = "";
+                if($code==0){
+                    $weather = "None";
+                }else{
+                    if($code == 1){
+                        $weather = "Rain";
+                    }else{
+                        $weather = "Snow";
+                    }
+                    switch ($level) {
+                        case 0:
+                            $weather .="(Light)";
+                            break;
+                        case 1:
+                            $weather .="(Moderate)";
+                            break;
+                        case 2:
+                            $weather .="(Heavy)";
+                            break;
+                    }
+                }
+                
+
+
+            	$message = "Crowdsource reported: ".$weather.",".$time.",".$address;
             	if ($row) {
             		$requesterid = $row->requesterid;
             		$pushObject = new push();
             		$pushObject->push_to_userid($requesterid, $message);
-            	}            	
+            	}
+                $this->worker_model->unassigned($userid);            	
             }
             
             $this->_json_response($flag);
-            
-            $this->report_similartask($lat,$lng,$userid,$code,$level,$time);    
-            $this->worker_model->unassigned($userid);
-        }           
-    }
-     public function task_response_web(){
-        if(!$this->session->userdata('signed_in')){
-            $this->_json_response(FALSE);
-            return;
-        }else{
-            $userid = $this->session->userdata('userid');
-            $taskid = $this->input->post('taskid');
-            $code = $this->input->post('responsecode');
-            $level = $this->input->post('level');
-            $time = $this->input->post('responsedate');
-            $flag = $this->worker_model->task_response($taskid,$userid,$code,$level,$time);
-            if ($flag) {
-                $flag2 = $this->worker_model->update_worker_location_web($userid,$taskid,$time);
-            	// update status in tasks table
-            	$this->task_model->update_status($taskid, 2);	// assigned
-            	
-            	// notify requester
-            	$row = $this->requester_model->requesterid_from_taskid($taskid);
-            	$message = "Your task with id " . $taskid . " has been done.";
-            	if ($row) {
-            		$requesterid = $row->requesterid;
-            		$pushObject = new push();
-            		$pushObject->push_to_userid($requesterid, $message);
-            	}            	
-            }
-            $this->_json_response($flag);
-            
-            //$this->task_model->report_similartask_web($userid,$code,$level,$time);
-            $this->db->select('x(location) as lat,y(location) as lng');
-            $this->db->from('location_report');
-            $this->db->where('userid',$userid);
-            $query = $this->db->get();
-            $lat = $query->row()->lat;
-            $lng = $query->row()->lng;
-            $this->report_similartask($lat,$lng,$userid,$code,$level,$time);  
-            $this->worker_model->unassigned($userid);
+            //$this->report_similartask($lat,$lng,$userid,$code,$level,$time);    
             
         }           
     }
+     
     public function report_similartask($lat,$lng,$userid,$code,$level,$time){
         $arr = $this->task_model->get_similartask($lat,$lng);
             if($arr->num_rows()>0){
                 foreach($arr->result() as $row){
                     $taskid = $row->taskid;
                     $this->task_model->matched($taskid,$userid);
-                    $flag3 = $this->worker_model->task_response($taskid,$userid,$code,$level,$time);
-                    if($flag3){
-                        $this->worker_model->update_worker_location_web($userid,$taskid,$time);
+                    $flag = $this->worker_model->task_response($taskid,$userid,$code,$level,$time);
+                    if($flag){
+                        $this->worker_model->update_worker_location($userid,$taskid,$lat,$lng);
                         $this->task_model->update_status($taskid, 2);
                         $rows = $this->requester_model->requesterid_from_taskid($taskid);
                     	$message = "Your task with id " . $taskid . " has been done.";
@@ -252,10 +217,29 @@ class Worker extends Convert {
             $this->_json_response(FALSE);
             return;
         }
-        $tmp = $this->worker_model->gettask();
-        $this->_json_response($tmp);
+        $userid = $this->session->userdata('userid');
+        $response = $this->worker_model->gettask($userid);
+        $this->_json_response($response);
     }
    
+    private function _json_response($data) {
+        $this->output->set_content_type('application/json');
+        if ($data) {
+            $this->output->set_output(json_encode(array('status' => 'success', "msg" => $data)));
+        } else {
+            $this->output->set_output(json_encode(array('status' => 'error', "msg" => '0')));
+        }
+    }
+    
+    private function _json_response_debug_error($data) {
+    	$this->output->set_content_type('application/json');
+    	if ($data) {
+    		$this->output->set_output(json_encode(array('status' => 'error', "msg" => $data)));
+    	} else {
+    		$this->output->set_output(json_encode(array('status' => 'error', "msg" => '0')));
+    	}
+    }
+    
     
     
 }

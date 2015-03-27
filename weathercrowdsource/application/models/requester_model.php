@@ -8,19 +8,13 @@ class Requester_model extends CI_Model{
      * @param   number $lat,$lng,$type,$radius
      * @return	TRUE if is successfully set
      */
-    public function task_request($userid,$title,$lat,$lng,$request_date,$start_date,$end_date,$type=1,$radius,$place='',$status=0){
-        //$userid = $this->session->userdata('userid');
-        $loc = "'POINT($lat $lng)'";
-        $location = "GeomFromText($loc)";
+    public function task_request($userid,$lat,$lng,$request_date,$start_date,$end_date,$type=1,$radius,$place='',$status=0){
+        $loc = "'POINT($lat $lng)'";       
         $requestdate = $this->string_to_time($request_date);
         $startdate = $this->string_to_time($start_date);
         $enddate = $this->string_to_time($end_date);
-        if($startdate >= $enddate)
-            return false;
-        $success = TRUE;
         $this->db->set('requesterid',$userid);
-        $this->db->set('title',$title);
-        $this->db->set('location', "GeomFromText($loc)",false);
+        $this->db->set('location', "ST_GeomFromText($loc, 4326)",false);
         $this->db->set('place',$place);
         $this->db->set('request_date',$requestdate);
         $this->db->set('startdate',$startdate);
@@ -30,10 +24,10 @@ class Requester_model extends CI_Model{
         $this->db->set('radius',$radius);
         //$query = $this->db->insert('tasks');
         $this->db->trans_start();
-        if (!$this->db->insert('tasks'))
-            $success = FALSE;
+        $this->db->insert('tasks');
+        $insert_id = $this->db->insert_id();
         $this->db->trans_complete();
-        return $success;
+        return $insert_id;
     }
    
     
@@ -60,7 +54,7 @@ class Requester_model extends CI_Model{
             $start = 0;
         }
         $id = $this->session->userdata('userid');
-        $this->db->select('taskid,title, x(location) AS lat, y(location) AS lng,request_date,startdate,enddate,iscompleted');
+        $this->db->select('taskid,title, ST_X(tasks.location) AS lat, ST_Y(tasks.location) AS lng,request_date,startdate,enddate,iscompleted');
         $this->db->from('tasks');
         $this->db->where("requesterid = '$id'");
         $this->db->order_by('iscompleted desc');
@@ -76,7 +70,7 @@ class Requester_model extends CI_Model{
     }
     public function submitted_task_type(){
         $id = $this->session->userdata('userid');
-        $select = "select tasks.taskid,x(worker_location) as lat,y(worker_location) as lng,place,response_date,response_code,level from `tasks`,`responses` where iscompleted=1 and tasks.taskid=responses.taskid and tasks.requesterid='$id' order by response_date desc";
+        $select = "select tasks.taskid,ST_X(responses.worker_location) as lat,ST_Y(responses.worker_location) as lng,responses.worker_place,response_date,response_code,level from tasks,responses where iscompleted=1 and tasks.taskid=responses.taskid and tasks.requesterid='$id' order by response_date desc";
         $query = $this->db->query($select);
         if($query->num_rows()>0){
             $this->output->set_content_type('application/json');
@@ -110,12 +104,12 @@ class Requester_model extends CI_Model{
      * 
      */
     public function list_pending_task(){
-        $tablehead = '<thead><tr><th>Location</th><th>Request date</th><th>Radius</th></tr></thead>';
+        $tablehead = '<thead><tr><th>Location</th><th>Request date</th><th>Query method</th></tr></thead>';
         $id = $this->session->userdata('userid');
         $timezone = $_POST['timezone'];
         $time = strtotime($_POST['time']);
         $date = date('Y-m-d H:i:s',$time);
-        $this->db->select('taskid,place,request_date,radius');
+        $this->db->select('taskid,place,request_date,type');
         $this->db->from('tasks');
         $this->db->where("requesterid = '$id'");
         $this->db->where("iscompleted = 0 and enddate > '$date'");
@@ -124,10 +118,20 @@ class Requester_model extends CI_Model{
         if($query->num_rows()>0){
             $tbody = '';
             foreach($query->result() as $rows){
+                $querymethod = 'City';
+                if($rows->type==1){
+                    $querymethod = 'State';
+                }
+                if($rows->type==2){
+                    $querymethod = 'Country';
+                }
+                if($rows->type==3){
+                    $querymethod = 'Radius';
+                }
                 $local = $this->convert_time_zone($rows->request_date,'UTC',$timezone);
                 $cellLocation = '<td>'.$rows->place.'</td>';
                 $cellRequestdate = '<td class=center>'.$local.'</td>';
-                $cellRadius = '<td class=center>'.$rows->radius.'<td>';
+                $cellRadius = '<td class=center>'.$querymethod.'<td>';
                 $row = '<tr>'.$cellLocation.$cellRequestdate.$cellRadius.'</tr>';
                 $tbody.=$row;
             }
@@ -146,8 +150,9 @@ class Requester_model extends CI_Model{
         $tablehead = '<thead><tr><th>Location</th><th>Response date</th><th>Response</th></tr></thead>';
         $id = $this->session->userdata('userid');
         $timezone = $_POST['timezone'];
-        $select = "select x(worker_location) as lat,y(worker_location) as lng,worker_place,response_date,response_code,level from `tasks`,`responses` where iscompleted=1 and tasks.taskid=responses.taskid and tasks.requesterid='$id' order by response_date desc";
+        $select = "select ST_X(responses.worker_location) as lat,ST_Y(responses.worker_location) as lng,worker_place,response_date,response_code,level from tasks,responses where iscompleted=1 and tasks.taskid=responses.taskid and tasks.requesterid='$id' order by response_date desc";
         $query = $this->db->query($select);
+        //$response = '<td class=center>'.$result.'<td>';
         if($query->num_rows()>0){
             $tbody = '';
             foreach($query->result() as $rows){
@@ -178,7 +183,7 @@ class Requester_model extends CI_Model{
         $date = date('Y-m-d H:i:s',$time);
         $this->db->select('place,request_date');
         $this->db->from('tasks');
-        $this->db->where("iscompleted = 0 and enddate <= '$date'");
+        $this->db->where("iscompleted = 0 and enddate <= '$date' and requesterid='$id'");
         $this->db->order_by('taskid','desc');
         $query = $this->db->get();
         if($query->num_rows()>0){

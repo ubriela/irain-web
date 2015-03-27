@@ -183,7 +183,9 @@ class User extends CI_Controller {
                 );
                     
                 log_message('debug', var_export($sess_array, True));
-
+                $this->db->set('islogout',0);
+                $this->db->where('userid',$user_id);
+                $this->db->update('users');
                 $this->session->set_userdata($sess_array);
                 return TRUE;
             }
@@ -246,13 +248,13 @@ class User extends CI_Controller {
      */
     function _user_exists($password) {
         $username = $this->input->post('username');
-        $email = $this->input->post('email');
+        
                 
         // query the database
         $user_exists = $this->user_model->user_exists($username);
-        $email_exists = $this->user_model->user_exists($email);
+        
 
-        if ($user_exists && $email_exists) {
+        if ($user_exists) {
             // Set failed validation message
             $this->form_validation->set_message('_username_exists', 'Username already exists');
             return FALSE;
@@ -278,11 +280,11 @@ class User extends CI_Controller {
         $this->load->helper('uuid');
 
         $username = $this->input->post('username');
-        $email = $this->input->post('email');
+        
         $channelid = $this->input->post('channelid');
 
         // query the database
-        $success = $this->user_model->create_user($username, $password, $email, $channelid);
+        $success = $this->user_model->create_user($username, $password, $channelid);
 
         if ($success) {
             return TRUE;

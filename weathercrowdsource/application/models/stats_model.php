@@ -18,7 +18,7 @@ class Stats_model extends CI_Model{
         $data['num_pending_task'] = $this->get_num_pending_tasks();
         $data['num_expired_tasks'] = $this->get_num_expired_tasks();
         $this->output->set_content_type('application/json');
-        $this->output->set_output(json_encode($data));
+        $this->output->set_output(json_encode(array('status' => 'success', 'msg' => $data)));
     }
     //get total number task_requested
     private function get_num_task_requested(){
@@ -27,20 +27,22 @@ class Stats_model extends CI_Model{
     //get total number complete_task
     private function get_num_complete_tasks(){
         $this->db->where('iscompleted','1');
-        $query = $this->db->get('tasks');
-        return $query->num_rows();
+        $this->db->from('tasks');
+        return $this->db->count_all_results();
     }
      //get total number pending_tasks
     private function get_num_pending_tasks(){
-        return $this->db->count_all_results('task_worker_matches');
+        $this->db->where('iscompleted','0');
+        $this->db->from('tasks');
+        return $this->db->count_all_results();
     }
     //get total number expired_tasks
     private function get_num_expired_tasks(){
         $now = date('Y-m-d H:i:s');
         $this->db->where('enddate <',$now);
         $this->db->where('iscompleted','0');
-        $query = $this->db->get('tasks');
-        return $query->num_rows();
+        $this->db->from('tasks');
+        return $this->db->count_all_results();
     }
     /**
      * summary_workers
@@ -59,21 +61,21 @@ class Stats_model extends CI_Model{
         $data['num_online_workers'] = $this->get_num_online_workers();
         $data['num_available_workers'] = $this->get_num_available();
         $this->output->set_content_type('application/json');
-        $this->output->set_output(json_encode($data));
+        $this->output->set_output(json_encode(array('status' => 'success','msg' => $data)));
     }
     private function get_num_workers(){
         return $this->db->count_all_results('users');
     }
     private function get_num_online_workers(){
         $this->db->where('islogout','0');
-        $query = $this->db->get('users');
-        return $query->num_rows();
+        $this->db->from('users');
+        return $this->db->count_all_results();
     }
     private function get_num_available(){
         $this->db->where('isactive','1');
         $this->db->where('isassigned','0');
-        $query = $this->db->get('location_report');
-        return $query->num_rows();
+        $this->db->from('location_report');
+        return $this->db->count_all_results();
     }
     /**
      * top_contributions
@@ -91,9 +93,9 @@ class Stats_model extends CI_Model{
                 left join task_worker_matches on tasks.taskid = task_worker_matches.taskid
                 left join users on task_worker_matches.userid = users.userid
                 where tasks.iscompleted = 1 and tasks.type=1
-                group by task_worker_matches.userid
+                group by task_worker_matches.userid,users.username
                 order by contributions desc
-                limit 0,10
+               
                 ";
         }else{
             $select = "select weather_report.userid,users.username,users.email,count(*) as contributions
@@ -101,7 +103,7 @@ class Stats_model extends CI_Model{
                 left join users on  weather_report.userid = users.userid
                 group by weather_report.userid
 				order by contributions desc
-				limit 0,10
+				
                 ";
                 
         }

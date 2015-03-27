@@ -14,6 +14,7 @@ class Weather extends Convert{
         
         $this->load->model('user_model');
         $this->load->model('weather_model');
+        $this->load->model('worker_model');
         
        
     }
@@ -40,8 +41,9 @@ class Weather extends Convert{
             $code = $this->input->post('code');
             $level = $this->input->post('level');
             $time = $this->input->post('time');
-            $this->weather_model->insert_location($userid,$lat,$lng,$time);
-            $this->weather_model->insert_weather($userid,$lat,$lng,$code,$level,$time);
+            $address = $this->input->post('address');
+            $this->worker_model->location_report($userid,$lat,$lng,$address);
+            $this->weather_model->insert_weather($userid,$lat,$lng,$code,$level,$time,$address);
             $this->_json_response(TRUE);
         }
             
@@ -85,7 +87,12 @@ class Weather extends Convert{
             $this->output->set_output(json_encode(array('status' => 'error', "msg" => '0')));
         }
     }
-    
+    public function getlagtime(){
+        $homepage = file_get_contents('http://persiann.eng.uci.edu/htdocs/gwadi/data/ascii/current_datetime');
+        $array = explode('-',$homepage);
+        echo $array[3];
+    }
+   
    
      
 }

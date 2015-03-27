@@ -1,8 +1,8 @@
 <div class="row clearfix">
 		<div class="col-md-12 column">
         
-			<form role="form" id="responsetask">
-            
+			<form role="form" id="containerresponsetask">
+            <input type="image" src="<?php echo base_url()?>img/closeBtn.gif" class="btnback" style="float: right;"/>
             <fieldset><legend>iRain - Task response</legend>
 				<div class="form-group">
 					 <label for="exampleInputPassword1">Please report weather at your location!</label><input type="text" class="form-control" id="responsetitle" disabled="true" style="display: none;"/>
@@ -23,10 +23,10 @@
                 </select>   
 				</div>
                 <div class="form-group">
-                
-                    <button type="button" id="btnnone"></button>
                     <button type="button" id="btnrain"></button>
                     <button type="button" id="btnsnow"></button>
+                    <button type="button" id="btnnone"></button>
+                    
                 </div>
                  <div class="form-group" id="conlevel">
 					 <label for="exampleInputPassword1">Level</label>
@@ -44,7 +44,7 @@
                     </div>
                 </div>
 				
-                <button type="button" class="btn btn-default btnback">Close</button>
+               
 			</fieldset>
             </form>
             
