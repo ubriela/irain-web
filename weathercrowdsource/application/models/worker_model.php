@@ -240,14 +240,14 @@ class Worker_model extends CI_Model{
             $tmp = explode(",",$address_components);
             $numberChild = count($tmp);
             if($numberChild>3){
-                $country = trim($tmp[$numberChild-1]);
-                $state = trim($tmp[$numberChild-2]);
-                $city = trim($tmp[$numberChild-3]);
+                $country = str_replace('\'', '', trim($tmp[$numberChild-1]));
+                $state = str_replace('\'', '', trim($tmp[$numberChild-2]));
+                $city = str_replace('\'', '', trim($tmp[$numberChild-3]));
             }else if($numberChild==2){
-                $country = trim($tmp[$numberChild-1]);
-                $state = trim($tmp[$numberChild-2]);
+                $country = str_replace('\'', '', trim($tmp[$numberChild-1]));
+                $state = str_replace('\'', '', trim($tmp[$numberChild-2]));
             }else{
-                $country = trim($tmp[$numberChild-1]);
+                $country = str_replace('\'', '', trim($tmp[$numberChild-1]));
             }
             //$administrative_area_level_2 = $address_components[$numberChild-3]->short_name;
             //$administrative_area_level_1 = $address_components[$numberChild-2]->short_name;
