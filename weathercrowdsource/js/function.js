@@ -31,10 +31,13 @@ function getObjectPlace(lat,lng){
                 $('#typequery').attr('disabled',true);
             }
         }else{
+        	lat = lat.toFixed(3);
+        	lng = lng.toFixed(3);
             $('#location').val(lat+", "+lng);
                 $('#typequery').attr('disabled',true);
                 $('#typequery').val(3);
                 $('#btnposttask').attr('disabled',false);
+                $('#divradius').show();
             //document.getElementById("location").innerHTML="Geocoder failed due to: " + status;
             //alert("Geocoder failed due to: " + status);
         }

@@ -33,7 +33,7 @@ class Geocrowd extends CI_Controller {
     public function assign_tasks(){
         $now = date("Y-m-d H:i:s");
         //$condition = 'iscompleted=0';
-        $this->db->select('taskid,ST_X(tasks.location) AS lat, ST_Y(tasks.location) AS lng,type,radius,place');
+        $this->db->select('taskid,ST_X(tasks.location) AS lat, ST_Y(tasks.location) AS lng,type,radius,place,requesterid');
         $this->db->from('tasks');
         $this->db->where("status = 0 and enddate >= '$now'");
         $query = $this->db->get();
@@ -45,8 +45,16 @@ class Geocrowd extends CI_Controller {
                 $radius = $row['radius'];
                 $type = $row['type'];
                 $place = $row['place'];
+                $userid = $row['requesterid'];
+                $area = 'unknown';
+                if($type<3){
+                    $array = explode(',',$place);
+                    $area = $array[$type];
+                }
+                
+                
                 $message = "Please report weather at your location. Thank you!";
-                $this->task_query($taskid,$lat,$lng,$radius,$message,$type,$place);
+                $this->task_query($userid,$taskid,$lat,$lng,$radius,$message,$type,$area);
             }
         }
     }
@@ -90,20 +98,18 @@ class Geocrowd extends CI_Controller {
      * @param $place : address
      * @return array workerid
      */
-    public function task_query($taskid,$lat,$lng,$radius,$message,$type=0,$place){
-        if($place=='unknown' || $type==3) {
-        	$this->circle_query($taskid,$lat,$lng,$radius,$message);
+    public function task_query($userid,$taskid,$lat,$lng,$radius,$message,$type=0,$area){
+        if($area=='unknown' || $type==3) {
+        	$this->circle_query($userid,$taskid,$lat,$lng,$radius,$message);
         }else{
-            $array = explode(',',$place);
-        	$area = $array[$type];
             if($type==0){
-                $this->city_query($taskid,$lat,$lng,$radius,$message,$area);
+                $this->city_query($userid,$taskid,$lat,$lng,$radius,$message,$area);
             }
             if($type==1){
-                $this->state_query($taskid,$lat,$lng,$radius,$message,$area);
+                $this->state_query($userid,$taskid,$lat,$lng,$radius,$message,$area);
             }
             if($type==2){
-                $this->country_query($taskid,$lat,$lng,$radius,$message,$area);
+                $this->country_query($userid,$taskid,$lat,$lng,$radius,$message,$area);
             }
         }
     }
@@ -114,23 +120,7 @@ class Geocrowd extends CI_Controller {
         $minutes   = round($interval / 60);
         return $minutes; 
     }
-    public function getplace()
-    {
-        $lat = $_POST['lat'];
-        $lng = $_POST['lng'];
-        $url = 'http://maps.googleapis.com/maps/api/geocode/json?latlng='.trim($lat).','.trim($lng).'&sensor=false';
-        $json = @file_get_contents($url);
-        $data=json_decode($json);
-        $status = $data->status;
-        if($status=="OK")
-        {
-            $number = count($data->results);
-            //return $data->results[$number-3]->formatted_address;
-            echo $data->results[$number-3]->formatted_address;
-        }
-        else
-            echo 'Unknow';
-    }
+   
     private function _json_response($data) {
         $this->output->set_content_type('application/json');
         if ($data) {
@@ -164,10 +154,10 @@ class Geocrowd extends CI_Controller {
         $date = date('Y-m-d H:i:s',$time);
         return $date;
     }
-    public function city_query($taskid,$lat,$lng,$radius,$message,$place){
+    public function city_query($userid,$taskid,$lat,$lng,$radius,$message,$place){
         //$arrayAddress = $this->getArrayAddress($lat,$lng);
-        //$userid = $this->session->userdata('userid');
-            $condition_city = "isactive = '1' and isassigned = 0 and city = '$place'";
+            //$userid = $this->session->userdata('userid');
+            $condition_city = "isactive = '1' and isassigned = 0 and city = '$place' and userid != '$userid'";
             $this->db->select('userid');
             $this->db->from('location_report');
             $this->db->where($condition_city);
@@ -177,9 +167,10 @@ class Geocrowd extends CI_Controller {
             }
         
     }
-    public function country_query($taskid,$lat,$lng,$radius,$message,$place){
+    public function country_query($userid,$taskid,$lat,$lng,$radius,$message,$place){
         //$arrayAddress = $this->getArrayAddress($lat,$lng);
-            $condition_country = "isactive = '1' and isassigned = 0 and country = '$place'";
+            $userid = $this->session->userdata('userid');
+            $condition_country = "isactive = '1' and isassigned = 0 and country = '$place' and userid != '$userid'";
             $this->db->select('userid');
             $this->db->from('location_report');
             $this->db->where($condition_country);
@@ -189,9 +180,15 @@ class Geocrowd extends CI_Controller {
             }
         
     }
-    public function state_query($taskid,$lat,$lng,$radius,$message,$place){
-            $condition_state = "isactive = '1' and isassigned = 0 and state = '$place'";
+    public function testtime(){
+
+    }
+    public function state_query($userid,$taskid,$lat,$lng,$radius,$message,$place){
+            $now = date("Y-m-d H:i:s");
+            $condition_state = "isactive = '1' and isassigned = 0 and state = '$place' and userid != '$userid' and extract(minute from ('$now'::timestamp - date_server))>15;
+";
             $this->db->select('userid');
+
             $this->db->from('location_report');
             $this->db->where($condition_state);
             $query = $this->db->get();
@@ -199,10 +196,10 @@ class Geocrowd extends CI_Controller {
                  $this->pushtask($query,$taskid,$message);
             }
     }
-    public function circle_query($taskid,$lat,$lng,$radius,$message){
+    public function circle_query($userid,$taskid,$lat,$lng,$radius,$message){
         $point = "'POINT($lat $lng)'";
-        $condition_radius = "isactive = '1' and isassigned = 0 and ST_Point_Inside_Circle(ST_Point(1,1), $lat, $lng, $radius)";
-        //$condition_radius = "isactive = '1' and isassigned = 0 and (6373000 * acos (cos ( radians( '$lat' ) )* cos( radians( ST_X(location_report.location) ) )* cos( radians( ST_Y(location_report.location) ) - radians( '$lng' ) )+ sin ( radians( '$lat' ) )* sin( radians( ST_X(location_report.location) ) ))) < '$radius'";
+        //$condition_radius = "isactive = '1' and isassigned = 0 and ST_Point_Inside_Circle(ST_Point(1,1), $lat, $lng, $radius) and userid != '$userid'";
+        $condition_radius = "isactive = '1' and isassigned = 0 and (6373000 * acos (cos ( radians( '$lat' ) )* cos( radians( ST_X(location_report.location) ) )* cos( radians( ST_Y(location_report.location) ) - radians( '$lng' ) )+ sin ( radians( '$lat' ) )* sin( radians( ST_X(location_report.location) ) ))) < '$radius'";
         //$condition_radius = "isactive = '1' and isassigned = 0 and ST_intersects(ST_GeometryFromText(ST_AsText(location)), ST_buffer(ST_GeometryFromText($point), $radius))";
         $this->db->select('userid');
         $this->db->from('location_report');

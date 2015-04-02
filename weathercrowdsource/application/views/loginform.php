@@ -1,6 +1,7 @@
 <div class="row clearfix">
-		<div class="col-md-12 column">
-			<form role="form" id="loginform">
+		<div class="col-md-12 column" id="loginform">
+		<input type="image" src="<?php echo base_url()?>img/closeBtn.gif" class="btnback" style="float: right;"/>
+			<form role="form" >
             
             <fieldset>
             <legend>iRain - Login</legend>
@@ -13,7 +14,7 @@
 				<div class="checkbox">
 					 <label><input type="checkbox" ng-model="rememberMe" id="checkremember"/> Remember me</label>
 				</div> <button type="button" class="btn btn-default" id="btnlogin">Login</button>
-                <button type="button" class="btn btn-default btnback">Close</button>
+                
                 </fieldset>
 			</form>
 		</div>

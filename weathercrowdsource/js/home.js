@@ -595,7 +595,7 @@ $(document).ready(function(){
     
     $('#showupdate').click(function(){
        hideall();
-       $('#uplocation').attr('placeholder',currentAddress);
+       currentlocation();
        $('#overlay').show();
        $('#containerlocation').show(200);   
     });
@@ -720,13 +720,7 @@ $(document).ready(function(){
        toMylocation();
         
     });
-    $('#typequery').change(function(){
-       if($(this).val()==3){
-            $('#divradius').show();
-       }else{
-            $('#divradius').hide();
-       }
-    });
+    
     $('#btnup').click(function(){
         $('#loading').show();
         var now = new Date();
@@ -738,7 +732,7 @@ $(document).ready(function(){
         $.post(baseurl+'index.php/worker/location_report',{lat:lat,lng:lng,address:address},function(data){
            if(data.status=='success'){
                 hideall();
-               $.notify("Your location has been update!","success",{
+               $.notify("Your location has been updated!","success",{
                     globalPosition:'top center',
                     elementPosition: 'top center'
                 });
@@ -1043,7 +1037,11 @@ $(document).ready(function(){
         var lng = $('#lng').val();
         var geocoder = new google.maps.Geocoder();
         var latlng = new google.maps.LatLng(lat, lng);
-        
+       if(type==3){
+            $('#divradius').show();
+       }else{
+            $('#divradius').hide();
+       }
         if(type==0){
             geocoder.geocode({'latLng': latlng}, function(results, status){
                 if (status == google.maps.GeocoderStatus.OK){
@@ -1055,6 +1053,7 @@ $(document).ready(function(){
                         state=value[count-2];
                         city=value[count-3];
                         if(city==null){
+                            
                             $('#location').val(lat+", "+lng);
                         }else{
                             $('#location').val(city);
@@ -1084,6 +1083,7 @@ $(document).ready(function(){
                         city=value[count-3];
                         
                         if(state==null){
+                           
                             $('#location').val(lat+", "+lng);
                         }else{
                             $('#location').val(state);
@@ -1112,6 +1112,7 @@ $(document).ready(function(){
                         city=value[count-3];
                         
                         if(country==null){
+                           
                             $('#location').val(lat+", "+lng);
                         }else{
                             $('#location').val(country);

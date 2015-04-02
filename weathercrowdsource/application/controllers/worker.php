@@ -106,7 +106,7 @@ class Worker extends Convert {
             	$row = $this->requester_model->requesterid_from_taskid($taskid);
                 $weather = "";
                 if($code==0){
-                    $weather = "None";
+                    $weather = "No Rain/Snow";
                 }else{
                     if($code == 1){
                         $weather = "Rain";
@@ -128,7 +128,7 @@ class Worker extends Convert {
                 
 
 
-            	$message = "Crowdsource reported: ".$weather.",".$time.",".$address;
+            	$message = "Crowdsource reported: ".$weather.", ".substr($time, 0, 13).", ".$address;
             	if ($row) {
             		$requesterid = $row->requesterid;
             		$pushObject = new push();

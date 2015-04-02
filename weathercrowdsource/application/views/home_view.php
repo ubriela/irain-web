@@ -19,23 +19,16 @@
     <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places"></script>
     <script type="text/javascript" src="http://google-maps-utility-library-v3.googlecode.com/svn/trunk/markermanager/src/markermanager.js"></script>
     <script type="text/javascript" src="<?php echo base_url();?>js/bootstrap.min.js"></script>
+    <script>
+         var baseurl = '<?php echo base_url();?>';    
+    </script>
     <script type="text/javascript" src="http://google-maps-utility-library-v3.googlecode.com/svn/trunk/markerwithlabel/src/markerwithlabel.js"></script>
     <script src="<?php echo base_url();?>js/function.js"></script>
     <script type="text/javascript" src="<?php echo base_url();?>themes/1/tooltip.js"></script>
     <script type="text/javascript" src="<?php echo base_url();?>js/notify.min.js"></script>
     <script type="text/javascript" src="<?php echo base_url();?>js/jstz-1.0.4.min.js"></script>
-    <script>
-         var baseurl = '<?php echo base_url();?>';    
-    </script>
-    <script type="text/javascript">
-      var script = '<script type="text/javascript" src="<?php echo base_url();?>js/markerclusterer';
-      if (document.location.search.indexOf('compiled') !== -1) {
-        script += '_compiled';
-      }
-      script += '.js"><' + '/script>';
-      document.write(script);
-      
-    </script>
+    
+    
     
     <script src="<?php echo base_url();?>js/home.js"></script>
     

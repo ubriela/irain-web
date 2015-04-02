@@ -1,8 +1,8 @@
 <div class="row clearfix">
-		<div class="col-md-12 column">
-        
-			<form role="form" id="containerresponsetask">
+		<div class="col-md-12 column" id="containerresponsetask">
             <input type="image" src="<?php echo base_url()?>img/closeBtn.gif" class="btnback" style="float: right;"/>
+			<form role="form" >
+            
             <fieldset><legend>iRain - Task response</legend>
 				<div class="form-group">
 					 <label for="exampleInputPassword1">Please report weather at your location!</label><input type="text" class="form-control" id="responsetitle" disabled="true" style="display: none;"/>
