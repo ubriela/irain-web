@@ -328,6 +328,10 @@ $(document).ready(function(){
         
        
     });
+    $.notify.defaults({
+        autoHide: true,
+        autoHideDelay: 1500
+    });
     $('#btnlogin').click(function(){
         var username = $('#username').val();
         var hashpass = SHA512($('#password').val());
@@ -352,36 +356,39 @@ $(document).ready(function(){
                     
                     window.location= baseurl+'index.php/home';
                 }else{
-                    $('#loginform').notify('Invalid username or password!',{position:"top center"},'warn')
+                    $.notify.defaults({ className: "error" });
+                    $('#btnlogin').notify('Invalid username or password!',{position:"right middle",className:'error'});
                 
                     //$.notify('Invalid username or password!','warn');
                 }    
         }
         });
     });
+    
     $('#btnregister').click(function(){
         
         var res_username = $('#resusername').val();
         var res_pass = $('#respassword').val();
         var hasspass = SHA512(res_pass);
         var channel = 'iRain_'+res_username;
+        //$.notify.defaults({ className: 'warn' });
             if(res_username==''){
-                
-                 $('#resusername').notify('Please enter username!',{position:"top center"},'warn');
+                //$.notify('#resusername','Please enter username!',{position:"top center", className: 'warn'})
+                 $('#resusername').notify('Please enter username!',{position:"top center",className: 'warn'});
                 return;
             }
             if(res_username.length<7){
                 
-                 $('#resusername').notify('Username must have more than 7 character',{position:"top center"},'warn');
+                 $('#resusername').notify('Username must have more than 7 character',{position:"top center",className: 'warn'});
                 return;
             }
             if(res_pass==''){
-                 $('#respassword').notify('Please enter password',{position:"top center"},'warn');
+                 $('#respassword').notify('Please enter password',{position:"top center",className: 'warn'});
                 
                 return;
             }
             if(res_pass.length<7){
-                $('#respassword').notify('Password must have more than 7 character',{position:"top center"},'warn');
+                $('#respassword').notify('Password must have more than 7 character',{position:"top center",className: 'warn'});
                 return;
             }
             $.post(baseurl+'index.php/user/checkusername',{username:res_username},function(data){
@@ -395,11 +402,12 @@ $(document).ready(function(){
                             $('#loginform').show();
                             $('#username').val(res_username);
                             $('#password').val(res_pass);
-                            $('#loginform').notify('Your account has been create',{position:"top center"},'success');
+                            
+                            $('#btnlogin').notify("Your account has been create",{position:"right middle",className: 'success'});
                         }
                     });
                     }else{
-                        $('#resusername').notify('Username already exists',{position:"top center"},'warn');
+                        $('#resusername').notify('Username already exists',{position:"top center",className: 'warn'});
                         
                         return;
                     }

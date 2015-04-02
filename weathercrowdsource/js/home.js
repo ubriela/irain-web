@@ -109,17 +109,17 @@ $(document).ready(function(){
         var lng = $('#uplocation_lng').val();
         var address = $('#uplocation_address').val();
         if(lat ==0 || lng == 0 || address ==""){
-             $('#pac-input').notify("Please update your location first",{position:"bottom center"},"warn");
+             $('#weather').notify("Please update your location first",{position:"right middle",className:'warn'});
              return;   
         }
         $.post(baseurl+'index.php/weather',{lat:lat,lng:lng,code:code,time:currenttime,level:level,address:address},function(data){
            if(data.status=='success'){
                 hideall();
-                $.notify('Thanks for report','success');
+                $('#weather').notify("Thanks for your report",{position:"right middle",className:'success'});
                 //$('#locationweather').val('');
                 code=0;    
            }else{
-                $.notify('error','error');
+                $('#weather').notify("error",{position:"right middle",className:'error'});
                 $('#loading').hide();
            }
         });
@@ -259,15 +259,20 @@ $(document).ready(function(){
         });   
     }
     function getTask(){
+        
         $.post(baseurl+'index.php/worker/gettask',function(data){
             if(data.status=='success'){
                 var arrayjson = data.msg;
                 if(arrayjson.taskid==taskid){
                     return;
                 }else{
-                taskid = arrayjson.taskid;
-                $('#newtask').show();
-                $('#responselocation').val(arrayjson.place);
+                    taskid = arrayjson.taskid;
+                    $('#newtask').show();
+
+                    $('#responselocation').val(arrayjson.place);
+                    document.getElementById('xyz').play();
+                    $('#newtask').notify("Please report weather at your location. Thank you!",{position:"right middle",className:'success'});
+
                
                 }   
             }else{
@@ -335,6 +340,11 @@ $(document).ready(function(){
            $('#btndel').show();
         }
     }
+    $.notify.defaults({
+        autoHide: true,
+        autoHideDelay: 1500,
+        globalPosition: 'top center',
+    });
     loadTasktype(0);
     hideall();
     $('#refresh').click(function(){
@@ -517,7 +527,8 @@ $(document).ready(function(){
     $('#showresponse').click(function(){
         hideall();
         if(taskid==0){
-            $.notify('You have no task!','warn');
+            $.notify.defaults({ className: 'warn' });
+            $('#showresponse').notify('You have no task!',{position: "right middle" });
         }else{
              $('#overlay').show();
              $('#containerresponsetask').show(200);
@@ -704,7 +715,8 @@ $(document).ready(function(){
         var lng = $('#uplocation_lng').val();
         var address = $('#uplocation_address').val();
         if(lat ==0 || lng == 0 || address ==""){
-             $('#weather').notify("Please update your location first",{position:"right center"},"warn");
+            
+             $('#weather').notify("Please update your location first",{position:"right middle",className:'warn'});
              return;   
         }else{
             $('#overlay').show();
@@ -732,10 +744,8 @@ $(document).ready(function(){
         $.post(baseurl+'index.php/worker/location_report',{lat:lat,lng:lng,address:address},function(data){
            if(data.status=='success'){
                 hideall();
-               $.notify("Your location has been updated!","success",{
-                    globalPosition:'top center',
-                    elementPosition: 'top center'
-                });
+                $('#showupdate').notify("Your location has been updated!",{position:'right middle',className:'success'});
+               
                 currentlocation();
                 var mylocation = new google.maps.LatLng(lat, lng);
                 mymarker.setMap(null);
@@ -1161,6 +1171,7 @@ $(document).ready(function(){
                    //alert("Else loop" + latlng);
     
     });
+    
    setTimeout(function(){
        initAnimate(map,arraytiled);
    },7000);
