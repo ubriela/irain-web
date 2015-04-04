@@ -97,7 +97,7 @@ class Worker extends Convert {
             $lng = $this->input->post('lng');
             $address = $this->input->post('address');
             $flag = $this->worker_model->task_response($taskid,$userid,$code,$level,$time,$lat,$lng,$address);
-            if ($flag) {
+            if ($flag>0) {
                 //$flag2 = $this->worker_model->update_worker_location($userid,$taskid,$lat,$lng);
                 $this->worker_model->location_report($userid,$lat,$lng,$address,1);            
             	// update status in tasks table
@@ -129,15 +129,21 @@ class Worker extends Convert {
 
 
             	$message = "Crowdsource reported: ".$weather.", ".substr($time, 0, 13).", ".$address;
-            	if ($row) {
+            	if ($row && $flag==2) {
             		$requesterid = $row->requesterid;
             		$pushObject = new push();
             		$pushObject->push_to_userid($requesterid, $message);
             	}
-                $this->worker_model->unassigned($userid);            	
+                $this->worker_model->unassigned($userid);
+                           	
+            }
+            if($flag>0){
+                $this->_json_response(TRUE);
+            }else{
+                $this->_json_response(FALSE);
             }
             
-            $this->_json_response($flag);
+            
             //$this->report_similartask($lat,$lng,$userid,$code,$level,$time);    
             
         }           

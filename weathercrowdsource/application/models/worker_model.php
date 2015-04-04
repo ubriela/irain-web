@@ -103,9 +103,8 @@ class Worker_model extends CI_Model{
         $this->db->where('workerid',$userid);
         $check = $this->db->get();
         if($check->num_rows()>0){
-            return false;
+            return 0;
         }else{
-            $success = TRUE;
             $time = strtotime($date);
             $date = date('Y-m-d H:i:s',$time);
             $date_now = date("Y-m-d H:i:s");
@@ -119,32 +118,32 @@ class Worker_model extends CI_Model{
             $this->db->set('response_date',$date);
             $this->db->set('response_date_server',$date_now);
             // Transaction
-            $this->db->trans_start();
-            if (!$this->db->insert('responses'))
-                $success = FALSE;
-            $this->db->trans_complete();
-            
-            // Update related table
-            if($success){
-            	// Set user free to received new task
-                //$this->db->set('isassigned','0');
-                //$this->db->where('userid',$userid);
-                //$this->db->update('location_report');
-                
-                // Set completion in Task_worker_matches table
+           
+            if ($this->db->insert('responses')){
+                $this->db->trans_start();
                 $this->db->set('iscompleted','1');
                 $this->db->set('completed_date',$date);
                 $this->db->where('userid',$userid);
                 $this->db->where('taskid',$taskid);
                 $this->db->update('task_worker_matches');
                 
-		// Set completion in Tasks table                
+        // Set completion in Tasks table                
                 $this->db->set('iscompleted','1');
                 $this->db->where('taskid',$taskid);
                 $this->db->update('tasks');
+                $this->db->trans_complete();
+                $this->db->where("enddate >= '$date'");
+                $this->db->where('taskid',$taskid);
+                $query = $this->db->get('tasks');
+                if($query->num_rows()>0){
+                    return 2;
+                }else{
+                    return 1;
+                }
+            }else{
+                return 0;
             }
-           
-            return $success;
+
         }
     }
     

@@ -22,6 +22,7 @@ class Stats_model extends CI_Model{
     }
     //get total number task_requested
     private function get_num_task_requested(){
+        
         return $this->db->count_all_results('tasks');
     }
     //get total number complete_task

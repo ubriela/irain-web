@@ -56,10 +56,16 @@ class Geocrowd extends CI_Controller {
                 $this->task_query($userid,$taskid,$lat,$lng,$radius,$message,$type,$area);
             }
         }
+        //$this->unassign_tasks();
     }
-    public function unassign_tasks(){
+    // public function unassign_tasks(){
+    //     $now = date("Y-m-d H:i:s");
+    //     $sql = "DELETE FROM task_worker_matches WHERE task_worker_matches.taskid IN (SELECT taskid FROM tasks WHERE tasks.status <2 and tasks.enddate <= '$now')";
+    //     $this->db->query($sql);
         
-    }
+        
+
+    // }
     
     
     
