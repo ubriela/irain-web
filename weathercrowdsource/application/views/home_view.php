@@ -80,7 +80,7 @@
             <button type="button" class="btn btn-default" id="yes">Yes</button>
             <button type="button" class="btn btn-default" id="no" style="margin-left: 30px;">No</button>
         </div>
-        <audio id="xyz" src="<?php echo base_url();?>/sound/notifycation.mp3" preload="auto"></audio>
+        <audio id="xyz" src="<?php echo base_url();?>sound/notifycation.mp3" preload="auto"></audio>
     </div>
   </body>
 </html>

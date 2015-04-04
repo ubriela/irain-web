@@ -1174,5 +1174,5 @@ $(document).ready(function(){
     
    setTimeout(function(){
        initAnimate(map,arraytiled);
-   },7000);
+   },8000);
 })

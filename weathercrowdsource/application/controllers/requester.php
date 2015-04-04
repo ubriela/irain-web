@@ -89,13 +89,8 @@ class Requester extends Geocrowd{
             }else{
                 $arrayAddress = $this->worker_model->getArrayAddress($lat,$lng);
                 $place = $arrayAddress[0].",".$arrayAddress[1].",".$arrayAddress[2];
-                
             }
             $taskid = $this->requester_model->task_request($userid,$lat,$lng,$requestdate,$startdate,$enddate,$type,$radius,$place);
-            if($type!=3){
-                $place = $arrayAddress[$type];
-            }
-            $this->task_query($userid,$taskid,$lat,$lng,$radius,$message,$type,$place);
             $this->_json_response($taskid);
             
             
@@ -133,41 +128,8 @@ class Requester extends Geocrowd{
             $this->output->set_output(json_encode(array('status' => 'error', "msg" => '0')));
         }
     }
-    /**
-     * 
-     *  use google API get name location from lat,lng
-     * [base_url]/index.php/requester/delete_tasks
-     * @access	public
-     * @param number lat,lng
-     * @return	String name of location
-     */
-    public function getaddress($lat,$lng)
-    {
-        $url = 'http://maps.googleapis.com/maps/api/geocode/json?latlng='.trim($lat).','.trim($lng).'&sensor=false';
-        $json = @file_get_contents($url);
-        $data=json_decode($json);
-        $status = $data->status;
-        if($status=="OK"){
-            $address_components = $data->results[0]->formatted_address;
-            return $address_components;
-        }
-        else
-            return false;
-    }
-     public function getaddressfromlatlng(){
-        $lat = $_POST['lat'];
-        $lng = $_POST['lng'];
-        $url = 'http://maps.googleapis.com/maps/api/geocode/json?latlng='.trim($lat).','.trim($lng).'&sensor=false';
-        $json = @file_get_contents($url);
-        $data=json_decode($json);
-        $status = $data->status;
-        if($status=="OK"){
-            $number = count($data->results);
-            echo $data->results[$number-3]->formatted_address;
-        }
-        else
-            echo 'false';
-    }
+    
+     
     /**
      * load all pending task
      * [base_url]/index.php/requester/delete_tasks

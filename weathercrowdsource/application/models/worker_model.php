@@ -40,22 +40,25 @@ class Worker_model extends CI_Model{
      * @param   number @lat,@lng
      * @return  void
      */
-    public function location_report($userid,$lat,$lng,$address){
+    public function location_report($userid,$lat,$lng,$address,$type=0){
         $date_server = date("Y-m-d H:i:s");
         $loc = "'POINT($lat $lng)'";
         $arrayAdress = $this->getArrayAddress($lat,$lng);
-        $active = $this->user_model->is_active($userid);
         $this->db->set('location', "ST_GeomFromText($loc, 4326)",false);
         $this->db->set('city',trim($arrayAdress[0]));
         $this->db->set('state',trim($arrayAdress[1]));
         $this->db->set('country',trim($arrayAdress[2]));
-        $this->db->set('date_server',$date_server);
-        $this->db->set('isactive', $active);
+        if($type==1){
+            $this->db->set('date_server',$date_server);    
+        }
         $this->db->set('address',$address);
         if($this->is_exits_location($userid)){
             $this->db->where('userid',$userid);
             $this->db->update('location_report');
         }else{
+            $active = $this->user_model->is_active($userid);
+            $this->db->set('date_server',$date_server);
+            $this->db->set('isactive', $active);
             $this->db->set('userid',$userid);
             $query = $this->db->insert('location_report');
         }
@@ -199,34 +202,7 @@ class Worker_model extends CI_Model{
     	}
     }
     
-    public function getaddress($lat,$lng)
-    {
-        $url = 'http://maps.googleapis.com/maps/api/geocode/json?latlng='.trim($lat).','.trim($lng).'&sensor=false';
-        $json = @file_get_contents($url);
-        $data=json_decode($json);
-        $status = $data->status;
-        if($status=='OK'){
-            $number = count($data->results);
-            return $data->results[$number-3]->formatted_address;
-        }
-        else
-            return false;
-    }
     
-    public function getstate($lat,$lng)
-    {
-       
-        $url = 'http://maps.googleapis.com/maps/api/geocode/json?latlng='.trim($lat).','.trim($lng).'&sensor=true';
-        $json = @file_get_contents($url);
-        $data=json_decode($json);
-        $status = $data->status;
-        if($status=='OK'){
-            $number = count($data->results);
-            return $data->results[$number-3]->formatted_address;
-        }
-        else
-            return false;
-    }
     public function getArrayAddress($lat,$lng){
         $url = 'http://maps.googleapis.com/maps/api/geocode/json?latlng='.trim($lat).','.trim($lng);
         $json = @file_get_contents($url);

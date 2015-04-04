@@ -99,7 +99,7 @@ class Worker extends Convert {
             $flag = $this->worker_model->task_response($taskid,$userid,$code,$level,$time,$lat,$lng,$address);
             if ($flag) {
                 //$flag2 = $this->worker_model->update_worker_location($userid,$taskid,$lat,$lng);
-                $this->worker_model->location_report($userid,$lat,$lng,$address);            
+                $this->worker_model->location_report($userid,$lat,$lng,$address,1);            
             	// update status in tasks table
             	$this->task_model->update_status($taskid, 2);	// assigned
             	// notify requester

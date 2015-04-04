@@ -52,40 +52,18 @@ class Geocrowd extends CI_Controller {
                     $area = $array[$type];
                 }
                 
-                
                 $message = "Please report weather at your location. Thank you!";
                 $this->task_query($userid,$taskid,$lat,$lng,$radius,$message,$type,$area);
             }
         }
     }
-    
-    
-    /**
-     * checks data weather existing or not
-     * @param $taskid
-     * @param $lat
-     * @param $lng
-     * @param $startdate
-     * @param $enddate
-     * @param $radius
-     * @return true if existing else false
-     */
-    public function task_matched($taskid,$lat,$lng,$start_date,$end_date,$radius){
-        $start = $this->string_to_time($start_date);
-        $end = $this->string_to_time($end_date);
-        $condition = "response_date between '$start' and '$end' and (6373000 * acos (cos ( radians( '$lat' ) )* cos( radians( ST_X(weather_report.location) ) )* cos( radians( ST_Y(weather_report.location) ) - radians( '$lng' ) )+ sin ( radians( '$lat' ) )* sin( radians( ST_X(weather_report.location) ) ))) < '$radius'";
-        $this->db->select("response_code as code");
-        $this->db->from('weather_report')->order_by('response_date','desc');
-        $this->db->where($condition);
-        $query = $this->db->get();
-        if($query->num_rows()>0){
-            $this->_json_response($query->result());
-            return true;
-        }else{
-            return false;
-        }
-       
+    public function unassign_tasks(){
+        
     }
+    
+    
+    
+    
     /**
      * checks and assign a task to all nearby workers
      * 
@@ -98,7 +76,7 @@ class Geocrowd extends CI_Controller {
      * @param $place : address
      * @return array workerid
      */
-    public function task_query($userid,$taskid,$lat,$lng,$radius,$message,$type=0,$area){
+    public function task_query($userid,$taskid,$lat,$lng,$radius,$message,$type=3,$area){
         if($area=='unknown' || $type==3) {
         	$this->circle_query($userid,$taskid,$lat,$lng,$radius,$message);
         }else{
@@ -172,7 +150,7 @@ class Geocrowd extends CI_Controller {
     public function country_query($userid,$taskid,$lat,$lng,$radius,$message,$place){
         //$arrayAddress = $this->getArrayAddress($lat,$lng);
         $now = date("Y-m-d H:i:s");
-            $userid = $this->session->userdata('userid');
+            //$userid = $this->session->userdata('userid');
             $condition_country = "isactive = '1' and isassigned = 0 and country = '$place' and userid != '$userid' and extract(minute from ('$now'::timestamp - date_server))>2";
             $this->db->select('userid');
             $this->db->from('location_report');
@@ -188,8 +166,7 @@ class Geocrowd extends CI_Controller {
     }
     public function state_query($userid,$taskid,$lat,$lng,$radius,$message,$place){
             $now = date("Y-m-d H:i:s");
-            $condition_state = "isactive = '1' and isassigned = 0 and state = '$place' and userid != '$userid' and extract(minute from ('$now'::timestamp - date_server))>2;
-";
+            $condition_state = "isactive = '1' and isassigned = 0 and state = '$place' and userid != '$userid' and extract(minute from ('$now'::timestamp - date_server))>2";
             $this->db->select('userid');
 
             $this->db->from('location_report');
@@ -213,21 +190,7 @@ class Geocrowd extends CI_Controller {
             $this->pushtask($query,$taskid,$message);
         }
     }
-    public function getArrayAddress($lat,$lng)
-    {
-        $url = 'http://maps.googleapis.com/maps/api/geocode/json?latlng='.trim($lat).','.trim($lng).'&sensor=true';
-        $json = @file_get_contents($url);
-        $data=json_decode($json);
-        $status = $data->status;
-        if($status=='OK'){
-            $number = count($data->results);
-            $stringaddress = $data->results[$number-3]->formatted_address;
-            $array = explode(',',$stringaddress);
-            return $array;
-        }
-        else
-            return false;
-    }
+    
     public function pushtask($query,$taskid,$message){
         $this->db->trans_start();
         $pushObject = new push();
