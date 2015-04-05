@@ -96,14 +96,17 @@ class Worker extends Convert {
             $lat = $this->input->post('lat');
             $lng = $this->input->post('lng');
             $address = $this->input->post('address');
+            $this->db->trans_start();
             $flag = $this->worker_model->task_response($taskid,$userid,$code,$level,$time,$lat,$lng,$address);
             if ($flag>0) {
                 //$flag2 = $this->worker_model->update_worker_location($userid,$taskid,$lat,$lng);
                 $this->worker_model->location_report($userid,$lat,$lng,$address,1);            
             	// update status in tasks table
             	$this->task_model->update_status($taskid, 2);	// assigned
-            	// notify requester
-            	$row = $this->requester_model->requesterid_from_taskid($taskid);
+                $this->worker_model->unassigned($userid);
+            	// notify requester 
+                $row = $this->requester_model->requesterid_from_taskid($taskid);
+
                 $weather = "";
                 if($code==0){
                     $weather = "No Rain/Snow";
@@ -128,15 +131,16 @@ class Worker extends Convert {
                 
 
 
-            	$message = "Crowdsource reported: ".$weather.", ".substr($time, 0, 13).", ".$address;
-            	if ($row && $flag==2) {
-            		$requesterid = $row->requesterid;
-            		$pushObject = new push();
-            		$pushObject->push_to_userid($requesterid, $message);
-            	}
-                $this->worker_model->unassigned($userid);
-                           	
+                $message = "Crowdsource reported: ".$weather.", ".substr($time, 0, 13).", ".$address;
+                if ($row && $flag==2) {
+                    $requesterid = $row->requesterid;
+                    $pushObject = new push();
+                    $pushObject->push_to_userid($requesterid, $message);
+                }               	
             }
+            $this->db->trans_complete();
+
+            
             if($flag>0){
                 $this->_json_response(TRUE);
             }else{

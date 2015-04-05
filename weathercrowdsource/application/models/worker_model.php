@@ -131,7 +131,7 @@ class Worker_model extends CI_Model{
                 $this->db->set('iscompleted','1');
                 $this->db->where('taskid',$taskid);
                 $this->db->update('tasks');
-                $this->db->trans_complete();
+                
                 $this->db->where("enddate >= '$date'");
                 $this->db->where('taskid',$taskid);
                 $query = $this->db->get('tasks');
@@ -140,11 +140,13 @@ class Worker_model extends CI_Model{
                 }else{
                     return 1;
                 }
+                $this->db->trans_complete();
             }else{
                 return 0;
             }
 
         }
+        return 0;
     }
     
     

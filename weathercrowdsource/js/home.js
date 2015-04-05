@@ -527,8 +527,8 @@ $(document).ready(function(){
     $('#showresponse').click(function(){
         hideall();
         if(taskid==0){
-            $.notify.defaults({ className: 'warn' });
-            $('#showresponse').notify('You have no task!',{position: "right middle" });
+            
+            $('#showresponse').notify('You have no task!',{position: "right middle",className: 'warn' });
         }else{
              $('#overlay').show();
              $('#containerresponsetask').show(200);
@@ -711,20 +711,21 @@ $(document).ready(function(){
     });
     
     $('#weather').click(function(){
-        var lat = $('#uplocation_lat').val();
-        var lng = $('#uplocation_lng').val();
-        var address = $('#uplocation_address').val();
-        if(lat ==0 || lng == 0 || address ==""){
-            
-             $('#weather').notify("Please update your location first",{position:"right middle",className:'warn'});
-             return;   
-        }else{
-            $('#overlay').show();
-       
-        //$("#locationweather").val(currentAddress)
-            $('#containerweather').show(200); 
-        }
-       
+        $.post(baseurl+'index.php/requester/currentlocation',function(data){
+            if(data.status=='success'){
+                var arrayjson = data.msg;
+                $('#uplocation_lat').val(arrayjson.lat);
+                $('#uplocation_lng').val(arrayjson.lng);
+                $('#uplocation_address').val(arrayjson.address);
+                $('#locationweather').val(arrayjson.address);
+                  
+                $('#overlay').show();
+                $('#containerweather').show(200); 
+            }else{
+                $('#weather').notify("Please update your location first",{position:"right middle",className:'warn'});
+                return; 
+            }
+        });
     });
     
     
