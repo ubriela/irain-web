@@ -202,10 +202,14 @@ class Worker_model extends CI_Model{
     	   return false;
     	}
     }
+          
+
+
+
     
     
     public function getArrayAddress($lat,$lng){
-        $url = 'http://maps.googleapis.com/maps/api/geocode/json?latlng='.trim($lat).','.trim($lng);
+        $url = 'http://maps.googleapis.com/maps/api/geocode/json?latlng='.trim($lat).','.trim($lng).'&sensor=false&language=en';
         $json = @file_get_contents($url);
         $data=json_decode($json);
         $status = $data->status;
@@ -229,7 +233,8 @@ class Worker_model extends CI_Model{
             //$administrative_area_level_2 = $address_components[$numberChild-3]->short_name;
             //$administrative_area_level_1 = $address_components[$numberChild-2]->short_name;
             //$administrative_area_level_0 = $address_components[$numberChild-1]->short_name;
-            $arrayAdress = array($city,$state,$country);
+            $arrayAdress = array(removesign($city),removesign($state),removesign($country));
+            //$arrayAdress = array($this->convert_vi_to_en($city),$this->convert_vi_to_en($state),$this->convert_vi_to_en($country));
             return $arrayAdress;
         }
         else

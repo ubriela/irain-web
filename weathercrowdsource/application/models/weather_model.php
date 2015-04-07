@@ -69,7 +69,7 @@ class Weather_model extends CI_Model{
         $response_date = date('Y-m-d H:i:s',$time);
         $server_date = date("Y-m-d H:i:s");
         $loc = "'POINT($lat $lng)'";
-        
+        $address = removesign($address);
         $this->db->set('taskid',0);
         $this->db->set('worker_place',$address);
         $this->db->set('response_code',$code);

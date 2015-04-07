@@ -15,6 +15,9 @@ class Requester extends Geocrowd{
         parent::__construct();
         $this->load->model('requester_model');
         $this->load->model('worker_model');
+        $this->load->helper('text');
+        $this->load->model('task_model');
+        $this->load->model('geocrowd_model');
     }
      /**
      * Default function executed when [base_url]/index.php/requester
@@ -74,6 +77,7 @@ class Requester extends Geocrowd{
         if ($this->form_validation->run('task_request') == FALSE){
                 $this->_json_response(FALSE);
         }else{
+            
             $userid = $this->session->userdata('userid');
             $lat = $this->input->post('lat');
             $lng = $this->input->post('lng');
@@ -82,17 +86,28 @@ class Requester extends Geocrowd{
             $enddate = $this->input->post('enddate');
             $type = $this->input->post('type');
             $radius = $this->input->post('radius');
-            $message = 'please report weather at your location';
-            $place = '';
+            $message = 'please report weather at your location, Thank you';
             if(isset($_POST['place'])){
-                $place = $this->input->post('place');
+                $arrayAddress = explode(',',removesign($this->input->post('place')));
             }else{
-                $arrayAddress = $this->worker_model->getArrayAddress($lat,$lng);
+                $arrayAddress = $this->worker_model->getArrayAddress($lat,$lng);     
+            }
+            if($arrayAddress){
                 $place = $arrayAddress[0].",".$arrayAddress[1].",".$arrayAddress[2];
+            }else{
+                $place = round($lat,3).', '.round($lng,3);
             }
             $taskid = $this->requester_model->task_request($userid,$lat,$lng,$requestdate,$startdate,$enddate,$type,$radius,$place);
-            $this->_json_response($taskid);
             
+            //$this->assign_tasks();
+            if($type<3)
+                $area = trim($arrayAddress[$type]);
+            $this->task_query($userid,$taskid,$lat,$lng,$radius,$message,$type,$area);
+            
+            $this->_json_response($taskid);
+            $req = curl_init();
+            curl_setopt($req, CURLOPT_URL,"http://irain.eng.uci.edu/index.php/geocrowd/assign_tasks");
+            curl_exec($req);
             
             // 
             
@@ -109,6 +124,7 @@ class Requester extends Geocrowd{
     public function delete_tasks(){
         if(!$this->session->userdata('signed_in')){
             $this->_json_response(FALSE);
+            redirect(base_url('index.php'));
             return;
         }
         $type = $_POST['type'];
@@ -139,6 +155,7 @@ class Requester extends Geocrowd{
     public function list_pending_task(){
         if(!$this->session->userdata('signed_in')){
             $this->_json_response(FALSE);
+            redirect(base_url('index.php'));
             return;
         }
         $this->requester_model->list_pending_task();
@@ -152,6 +169,7 @@ class Requester extends Geocrowd{
     public function list_completed_task(){
         if(!$this->session->userdata('signed_in')){
             $this->_json_response(FALSE);
+            redirect(base_url('index.php'));
             return;
         }
         $this->requester_model->list_completed_task();
@@ -165,6 +183,7 @@ class Requester extends Geocrowd{
     public function list_expired_task(){
         if(!$this->session->userdata('signed_in')){
             $this->_json_response(FALSE);
+            redirect(base_url('index.php'));
             return;
         }
         $this->requester_model->list_expired_task();
@@ -172,6 +191,7 @@ class Requester extends Geocrowd{
     public function currentlocation(){
         if(!$this->session->userdata('signed_in')){
             $this->_json_response(FALSE);
+            redirect(base_url('index.php'));
             return;
         }
         $userid = $this->session->userdata('userid');

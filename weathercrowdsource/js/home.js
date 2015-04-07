@@ -1,7 +1,4 @@
 $(document).ready(function(){
-    var currentlat=0;
-    var currentlng=0;
-    var currentAddress = "";
     var adminlat =0;
     var adminlng = 0;
     var taskid =0;
@@ -27,9 +24,10 @@ $(document).ready(function(){
     var showccs = true;
     var animSpeed = 1000;
     var weatherbyhour = false;
-    var objectPlace;
+   
     $('#newtask').hide();
     hideall();
+    
     $.ajax({
         type:'POST',
         url: baseurl+'index.php/weather/getlagtime',
@@ -53,8 +51,24 @@ $(document).ready(function(){
         }
      });
      function toMylocation(){
-                var mylocation = new google.maps.LatLng( $('#uplocation_lat').val(),  $('#uplocation_lng').val());
-                map.panTo(mylocation);
+                $.post(baseurl+'index.php/requester/currentlocation',function(data){
+                    if(data.status=='success'){
+                        var arrayjson = data.msg;
+                        $('#uplocation_lat').val(arrayjson.lat);
+                        $('#uplocation_lng').val(arrayjson.lng);
+                        $('#uplocation_address').val(arrayjson.address);
+                        $('#locationweather').val(arrayjson.address);
+                        
+                        var mylocation = new google.maps.LatLng( $('#uplocation_lat').val(),  $('#uplocation_lng').val());
+                            var marker = new MarkerWithLabel({
+                            map: map,
+                            labelVisible:false,
+                            position: mylocation              
+                        });
+                        map.panTo(mylocation);
+                    }
+                });
+                
     }
     function currentlocation(){
         $.post(baseurl+'index.php/requester/currentlocation',function(data){
@@ -64,8 +78,8 @@ $(document).ready(function(){
                 $('#uplocation_lng').val(arrayjson.lng);
                 $('#uplocation_address').val(arrayjson.address);
                 $('#locationweather').val(arrayjson.address);
-                //alert(currentAddress);
-                toMylocation();
+                var mylocation = new google.maps.LatLng( $('#uplocation_lat').val(),  $('#uplocation_lng').val());
+                map.panTo(mylocation);
             }
         });
     }
@@ -540,7 +554,7 @@ $(document).ready(function(){
         var lat = $('#lat').val();
         var lng = $('#lng').val();
         var type = $('#typequery').val();
-                     //var place = $('#location').val();
+        var place = $('#location').val();
         var now = new Date();
         var GMTdate = new Date(now.valueOf() + now.getTimezoneOffset() * 60000);
         var tomorrow = new Date();
@@ -1173,7 +1187,7 @@ $(document).ready(function(){
     
     });
     
-   setTimeout(function(){
-       initAnimate(map,arraytiled);
-   },8000);
+   //setTimeout(function(){
+       //initAnimate(map,arraytiled);
+   //},8000);
 })

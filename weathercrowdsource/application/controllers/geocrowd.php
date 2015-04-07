@@ -79,10 +79,10 @@ class Geocrowd extends CI_Controller {
      * @param $radius
      * @param $message
      * @param $type : query type
-     * @param $place : address
+     * @param $area : address
      * @return array workerid
      */
-    public function task_query($userid,$taskid,$lat,$lng,$radius,$message,$type=3,$area){
+    public function task_query($userid,$taskid,$lat,$lng,$radius,$message,$type=3,$area='unknown'){
         if($area=='unknown' || $type==3) {
         	$this->circle_query($userid,$taskid,$lat,$lng,$radius,$message);
         }else{
@@ -167,14 +167,11 @@ class Geocrowd extends CI_Controller {
             }
         
     }
-    public function testtime(){
-
-    }
+    
     public function state_query($userid,$taskid,$lat,$lng,$radius,$message,$place){
             $now = date("Y-m-d H:i:s");
             $condition_state = "isactive = '1' and isassigned = 0 and state = '$place' and userid != '$userid' and extract(minute from ('$now'::timestamp - date_server))>2";
             $this->db->select('userid');
-
             $this->db->from('location_report');
             $this->db->where($condition_state);
             $query = $this->db->get();
@@ -217,6 +214,6 @@ class Geocrowd extends CI_Controller {
                         
         }
         $this->db->trans_complete();
-        $this->_json_response1($query->result_array());
+        //$this->_json_response1($query->result_array());
     }
 }

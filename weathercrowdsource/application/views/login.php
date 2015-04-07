@@ -13,7 +13,7 @@
     <!-- JAVASCRIPT -->
     
     <script type="text/javascript" src="http://code.jquery.com/jquery-1.7.2.min.js"></script>
-    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=visualization,places"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&language=en&sensor=false&libraries=visualization,places"></script>
     <script type="text/javascript" src="<?php echo base_url();?>js/bootstrap.min.js"></script>
     <script type="text/javascript" src="<?php echo base_url();?>themes/1/tooltip.js"></script>
     <script type="text/javascript" src="<?php echo base_url();?>js/notify.min.js"></script>

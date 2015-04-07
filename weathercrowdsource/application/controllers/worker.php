@@ -17,6 +17,7 @@ class Worker extends Convert {
         $this->load->model('task_model');
         $this->load->model('user_model');
         $this->load->model('requester_model');
+        $this->load->helper('text');
     }
     /**
      * Default function executed when [base_url]/index.php/worker
@@ -43,7 +44,6 @@ class Worker extends Convert {
         $flag = $this->worker_model->unassigned();
         $this->_json_response($flag);
     }
-     
       /**
      * location_report
      * update your location
@@ -57,6 +57,7 @@ class Worker extends Convert {
     public function location_report(){
         if(!$this->session->userdata('signed_in')){
             $this->_json_response_(FALSE);
+            redirect(base_url('index.php'));
             return;
         }
         if ($this->form_validation->run('report_location') == FALSE){
@@ -66,10 +67,12 @@ class Worker extends Convert {
             $lat = $this->input->post('lat');
             $lng = $this->input->post('lng');
             $address = $this->input->post('address');
+            $address = removesign($address);
             $this->worker_model->location_report($userid,$lat,$lng,$address);
             $this->_json_response(TRUE);
         }           
     }
+    
      /**
      * task_response
      * user response a task
@@ -83,6 +86,7 @@ class Worker extends Convert {
     public function task_response(){
         if(!$this->session->userdata('signed_in')){
             $this->_json_response(FALSE);
+            redirect(base_url('index.php'));
             return;
         }
         if ($this->form_validation->run('task_response') == FALSE){
@@ -96,6 +100,7 @@ class Worker extends Convert {
             $lat = $this->input->post('lat');
             $lng = $this->input->post('lng');
             $address = $this->input->post('address');
+            $address = removesign($address);
             $this->db->trans_start();
             $flag = $this->worker_model->task_response($taskid,$userid,$code,$level,$time,$lat,$lng,$address);
             if ($flag>0) {
@@ -131,7 +136,7 @@ class Worker extends Convert {
                 
 
 
-                $message = "Crowdsource reported: ".$weather.", ".substr($time, 0, 13).", ".$address;
+                $message = "Crowdsource reported: ".$weather.", ".substr($time, 0, 13)." UTC, ".$address;
                 if ($row && $flag==2) {
                     $requesterid = $row->requesterid;
                     $pushObject = new push();
@@ -249,7 +254,6 @@ class Worker extends Convert {
     		$this->output->set_output(json_encode(array('status' => 'error', "msg" => '0')));
     	}
     }
-    
     
     
 }

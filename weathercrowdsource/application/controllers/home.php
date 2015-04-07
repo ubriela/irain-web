@@ -19,11 +19,13 @@ class Home extends CI_Controller {
         }
 	}
     public function logout(){
-        $userid = $this->session->userdata('userid');
-        $this->db->set('islogout',1);
-        $this->db->where('userid',$userid);
-        $this->db->update('users');
-        $this->session->sess_destroy();
+         if($this->session->userdata('signed_in')){
+            $userid = $this->session->userdata('userid');
+            $this->db->set('islogout',1);
+            $this->db->where('userid',$userid);
+            $this->db->update('users');
+            $this->session->sess_destroy();
+        }
         redirect(base_url('index.php'));
     }
    

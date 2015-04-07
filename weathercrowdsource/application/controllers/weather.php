@@ -15,6 +15,7 @@ class Weather extends Convert{
         $this->load->model('user_model');
         $this->load->model('weather_model');
         $this->load->model('worker_model');
+        $this->load->helper('text');
         
        
     }
@@ -30,6 +31,7 @@ class Weather extends Convert{
         $signed = $this->session->userdata('signed_in'); 
         if(!$signed){
              $this->_json_response(FALSE);
+             redirect(base_url('index.php'));
              return;
         }
         if ($this->form_validation->run('report_location_weather') == FALSE){

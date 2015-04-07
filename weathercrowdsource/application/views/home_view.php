@@ -16,7 +16,7 @@
     <script type="text/javascript" src="http://code.jquery.com/jquery-1.7.2.min.js"></script>
     <script src="<?php echo base_url();?>js/jquery.velocity.min.js"></script>
     
-    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places&language=en"></script>
     <script type="text/javascript" src="http://google-maps-utility-library-v3.googlecode.com/svn/trunk/markermanager/src/markermanager.js"></script>
     <script type="text/javascript" src="<?php echo base_url();?>js/bootstrap.min.js"></script>
     <script>
