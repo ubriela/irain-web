@@ -56,8 +56,9 @@ class Worker extends Convert {
      */
     public function location_report(){
         if(!$this->session->userdata('signed_in')){
-            $this->_json_response_(FALSE);
             redirect(base_url('index.php'));
+            $this->_json_response_(FALSE);
+            
             return;
         }
         if ($this->form_validation->run('report_location') == FALSE){

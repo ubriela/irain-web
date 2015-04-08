@@ -1,9 +1,8 @@
+
 function getObjectPlace(lat,lng){
     $('#typequery').val(1);
     $('#divradius').hide();
-    var object = null;
-    var geocoder ;
-    geocoder = new google.maps.Geocoder();
+    var geocoder = new google.maps.Geocoder();
     var latlng = new google.maps.LatLng(lat, lng);
                    //alert("Else loop" + latlng);
     geocoder.geocode({'latLng': latlng}, function(results, status){

@@ -14,10 +14,6 @@ class Requester extends Geocrowd{
     public function __construct(){
         parent::__construct();
         $this->load->model('requester_model');
-        $this->load->model('worker_model');
-        $this->load->helper('text');
-        $this->load->model('task_model');
-        $this->load->model('geocrowd_model');
     }
      /**
      * Default function executed when [base_url]/index.php/requester
@@ -87,11 +83,7 @@ class Requester extends Geocrowd{
             $type = $this->input->post('type');
             $radius = $this->input->post('radius');
             $message = 'please report weather at your location, Thank you';
-            if(isset($_POST['place'])){
-                $arrayAddress = explode(',',removesign($this->input->post('place')));
-            }else{
-                $arrayAddress = $this->worker_model->getArrayAddress($lat,$lng);     
-            }
+            $arrayAddress = $this->worker_model->getArrayAddress($lat,$lng);     
             if($arrayAddress){
                 $place = $arrayAddress[0].",".$arrayAddress[1].",".$arrayAddress[2];
             }else{

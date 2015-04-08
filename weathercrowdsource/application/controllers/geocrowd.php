@@ -17,6 +17,7 @@ class Geocrowd extends CI_Controller {
         $this->load->model('worker_model');
         $this->load->model('task_model');
         $this->load->model('geocrowd_model');
+        $this->load->helper('text');
         $this->load->library('form_validation');
     }
      
@@ -111,7 +112,7 @@ class Geocrowd extends CI_Controller {
     private function _json_response($data) {
         $this->output->set_content_type('application/json');
         if ($data) {
-            $this->output->set_output(json_encode(array('matched ' => 'True', "data" => $data)));
+            $this->output->set_output(json_encode(array('matched' => 'true', "data" => $data)));
         } else {
             $this->output->set_output(json_encode(array('matched' => 'false', "data" => 'none')));
         }
@@ -219,4 +220,10 @@ class Geocrowd extends CI_Controller {
         $this->db->trans_complete();
         $this->_json_response1($query->result_array());
     }
+    public function change(){
+        $lat = $_POST['lat'];
+        $lng = $_POST['lng'];
+        $arr = $this->worker_model->getArrayAddress($lat,$lng);
+        $this->_json_response($arr);
+    }    
 }

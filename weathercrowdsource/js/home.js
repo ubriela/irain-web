@@ -4,6 +4,7 @@ $(document).ready(function(){
     var taskid =0;
     var map;
     var code=0;
+    var arrAddress = [];
     var markers = [];
     var mymarker = null;
     var xhr = null;
@@ -231,10 +232,8 @@ $(document).ready(function(){
                         var lng = getlatlng.lng();
                         $('#lat').val(lat);
                         $('#lng').val(lng);
-                        getObjectPlace(lat,lng);
-                        
-                        $('#overlay').show();
-                        $('#containerposttask').show();     
+                        $('#btnposttask').attr('disabled','disabled');
+                        showposttask(lat,lng);
                                                        
                     });
                     google.maps.event.addListener(marker, 'mouseover', function(event){
@@ -365,6 +364,53 @@ $(document).ready(function(){
        var type = $('#loadtype').val();
        loadTasktype(type); 
     });
+    function showposttask(lat,lng){
+        $.post(baseurl+'index.php/geocrowd/change',{lat:lat,lng:lng},function(data){
+                
+                    arrAddress = data.data;
+                    //alert(arrAddress);
+                    if(arrAddress[0]=='unknown'){
+                        $("#typequery option[value=" + 0 + "]").attr('disabled','disabled');
+                    }else{
+                        $("#typequery option[value=" + 0 + "]").removeAttr('disabled');
+                    }
+                    if(arrAddress[1]=='unknown'){
+                        $("#typequery option[value=" + 1 + "]").attr('disabled','disabled');
+                    }else{
+                        $("#typequery option[value=" + 1 + "]").removeAttr('disabled');
+                    }
+                    if(arrAddress[2]=='unknown'){
+                        $("#typequery option[value=" + 2 + "]").attr('disabled','disabled');
+                    }else{
+                        $("#typequery option[value=" + 2 + "]").removeAttr('disabled');
+                    }
+                    if(arrAddress[1]!='unknown'){
+                        $('#location').val(arrAddress[1]);
+                        $('#typequery').val(1);
+                        $('#divradius').hide();
+                    }else if(arrAddress[2]!='unknown'){
+                        $('#location').val(arrAddress[2]);
+                        $('#typequery').val(2);
+                        $('#divradius').hide();
+                    }else{
+                        $('#location').val(lat.toFixed(3)+", "+lng.toFixed(3));
+                        $('#divradius').show();
+                        $('#typequery').val(3);
+                        
+                    }
+                    
+                   
+                    
+                        //getObjectPlace(lat,lng);
+                    $('#overlay').show();
+                    $('#btnposttask').removeAttr('disabled');
+                    $('#containerposttask').show(); 
+                    
+                    
+            });
+    }       
+    
+
   
     
 
@@ -401,12 +447,17 @@ $(document).ready(function(){
       // Create the search box and link it to the UI element.
       var input = /** @type {HTMLInputElement} */(document.getElementById('pac-input'));
       var input2 = (document.getElementById('uplocation_address'));
+      var options = {
+          types: ['(cities)']
+          
+          
+        };
       var input3 = (document.getElementById('locationweather'));
        //var input4 = /** @type {HTMLInputElement} */(document.getElementById('pac-input1'));
       //map.controls[google.maps.ControlPosition.TOP_LEFT].push(input4);
       var searchBox = new google.maps.places.SearchBox(
-        /** @type {HTMLInputElement} */(input));
-      var searchBox2 = new google.maps.places.Autocomplete((input2));
+        /** @type {HTMLInputElement} */input,options);
+      var searchBox2 = new google.maps.places.Autocomplete(input2,options);
       var searchBox3 = new google.maps.places.Autocomplete((input3));
       google.maps.event.addListener(searchBox3, 'place_changed', function () {
         var place = searchBox3.getPlace();
@@ -448,10 +499,8 @@ $(document).ready(function(){
                 var lng = getlatlng.lng();
                 $('#lat').val(lat);
                 $('#lng').val(lng);
-                getObjectPlace(lat,lng);
-                
-                $('#overlay').show();
-                $('#containerposttask').show();     
+                $('#btnposttask').attr('disabled','disabled');
+                showposttask(lat,lng);
                                        
             });
                   
@@ -484,20 +533,21 @@ $(document).ready(function(){
       });
       
       google.maps.event.addListener(map, 'rightclick', function(event){
-                var getlatlng = event.latLng;
-                var lat = getlatlng.lat();
-                var lng = getlatlng.lng();
-                $('#lat').val(lat);
-                $('#lng').val(lng);
-                getObjectPlace(lat,lng);
+            var getlatlng = event.latLng;
+            var lat = getlatlng.lat();
+            var lng = getlatlng.lng();
+            $('#lat').val(lat);
+            $('#lng').val(lng);
+            $('#btnposttask').attr('disabled','disabled');
+            showposttask(lat,lng);
+            
+            
                 
-                $('#overlay').show();
-                $('#containerposttask').show();   
                            
       });
       google.maps.event.addListener(map, 'zoom_changed', function() {
             if (map.getZoom()>=7) {
-                $('#pac-input').notify("no satellite rainfall data at current zoom level",{position:"bottom center"},'warn')
+                $.notify("no satellite rainfall data at current zoom level",{position:"top center",className: 'warn'});
                 
              }
        
@@ -1058,136 +1108,24 @@ $(document).ready(function(){
     });
     $('#typequery').change(function(){
         var type = $(this).val();
-        var lat = $('#lat').val();
-        var lng = $('#lng').val();
-        var geocoder = new google.maps.Geocoder();
-        var latlng = new google.maps.LatLng(lat, lng);
-       if(type==3){
-            $('#divradius').show();
-       }else{
+       if(type!=3){
             $('#divradius').hide();
+             $('#location').val(arrAddress[type]);
+            
+       }else{
+            $('#divradius').show();
+             $('#location').val(arrAddress[0]+','+arrAddress[1]+','+arrAddress[2]);
        }
-        if(type==0){
-            geocoder.geocode({'latLng': latlng}, function(results, status){
-                if (status == google.maps.GeocoderStatus.OK){
-                    if (results[0]){
-                        var add= results[0].formatted_address ;
-                        var  value=add.split(",");
-                        count=value.length;
-                        country=value[count-1];
-                        state=value[count-2];
-                        city=value[count-3];
-                        if(city==null){
-                            
-                            $('#location').val(lat+", "+lng);
-                        }else{
-                            $('#location').val(city);
-                        }
-                        
-                        
-                    }else {
-                        //alert("address not found");
-                        $('#location').val('unknown');
-                        $('#btnposttask').attr('disabled',true);
-                    }
-                }else{
-                    //document.getElementById("location").innerHTML="Geocoder failed due to: " + status;
-                    //alert("Geocoder failed due to: " + status);
-                }
-            });
-        }
-        if(type==1){
-            geocoder.geocode({'latLng': latlng}, function(results, status){
-                if (status == google.maps.GeocoderStatus.OK){
-                    if (results[0]){
-                        var add= results[0].formatted_address ;
-                        var  value=add.split(",");
-                        count=value.length;
-                        country=value[count-1];
-                        state=value[count-2];
-                        city=value[count-3];
-                        
-                        if(state==null){
-                           
-                            $('#location').val(lat+", "+lng);
-                        }else{
-                            $('#location').val(state);
-                        }
-                        
-                    }else {
-                        //alert("address not found");
-                        $('#location').val('unknown');
-                        $('#btnposttask').attr('disabled',true);
-                    }
-                }else{
-                    //document.getElementById("location").innerHTML="Geocoder failed due to: " + status;
-                    //alert("Geocoder failed due to: " + status);
-                }
-            });
-        }
-        if(type==2){
-            geocoder.geocode({'latLng': latlng}, function(results, status){
-                if (status == google.maps.GeocoderStatus.OK){
-                    if (results[0]){
-                        var add= results[0].formatted_address ;
-                        var  value=add.split(",");
-                        count=value.length;
-                        country=value[count-1];
-                        state=value[count-2];
-                        city=value[count-3];
-                        
-                        if(country==null){
-                           
-                            $('#location').val(lat+", "+lng);
-                        }else{
-                            $('#location').val(country);
-                        }
-                        
-                    }else {
-                        //alert("address not found");
-                        $('#location').val('unknown');
-                        $('#btnposttask').attr('disabled',true);
-                    }
-                }else{
-                    //document.getElementById("location").innerHTML="Geocoder failed due to: " + status;
-                    //alert("Geocoder failed due to: " + status);
-                }
-            });
-        }
-        if(type==3){
-            geocoder.geocode({'latLng': latlng}, function(results, status){
-                if (status == google.maps.GeocoderStatus.OK){
-                    if (results[0]){
-                        var add= results[0].formatted_address ;
-                        var  value=add.split(",");
-                        count=value.length;
-                        country=value[count-1];
-                        state=value[count-2];
-                        city=value[count-3];
-                        if(add==null){
-                            $('#location').val(lat+", "+lng);
-                        }else{
-                            $('#location').val(add);
-                        }
-                        
-                        
-                    }else {
-                        $('#location').val('unknown');
-                        $('#btnposttask').attr('disabled',true);
-                    }
-                }else{
-                    //document.getElementById("location").innerHTML="Geocoder failed due to: " + status;
-                    //alert("Geocoder failed due to: " + status);
-                }
-            });
-        }
+      
+       
+        
         
     
                    //alert("Else loop" + latlng);
-    
+     
     });
     
-   //setTimeout(function(){
-       //initAnimate(map,arraytiled);
-   //},8000);
+   setTimeout(function(){
+       initAnimate(map,arraytiled);
+    },8000);
 })

@@ -213,32 +213,43 @@ class Worker_model extends CI_Model{
         $json = @file_get_contents($url);
         $data=json_decode($json);
         $status = $data->status;
+        $arr = array('unknown','unknown','unknown');
+        $lv1 = false;
+        $lv2 = false;
+        $lv3 = false;
         if($status=='OK'){
-            $address_components = $data->results[0]->formatted_address;
-            $city = 'unknown';
-            $state = 'unknown';
-            $country = 'unknown';
-            $tmp = explode(",",$address_components);
-            $numberChild = count($tmp);
-            if($numberChild>3){
-                $country = str_replace('\'', '', trim($tmp[$numberChild-1]));
-                $state = str_replace('\'', '', trim($tmp[$numberChild-2]));
-                $city = str_replace('\'', '', trim($tmp[$numberChild-3]));
-            }else if($numberChild==2){
-                $country = str_replace('\'', '', trim($tmp[$numberChild-1]));
-                $state = str_replace('\'', '', trim($tmp[$numberChild-2]));
-            }else{
-                $country = str_replace('\'', '', trim($tmp[$numberChild-1]));
+            $k = count($data->results);
+            for($i=0;$i<$k;$i++){
+                if($data->results[$i]->types[0]=='administrative_area_level_2'){
+                    $lv1 = removesign($data->results[$i]->formatted_address);             
+                }
+                if($data->results[$i]->types[0]=='locality'){
+                    $lv2 = removesign($data->results[$i]->formatted_address);
+                }
+                
+                if($data->results[$i]->types[0]=='street_address'){
+                    $lv3 = removesign($data->results[$i]->formatted_address);
+                }
             }
-            //$administrative_area_level_2 = $address_components[$numberChild-3]->short_name;
-            //$administrative_area_level_1 = $address_components[$numberChild-2]->short_name;
-            //$administrative_area_level_0 = $address_components[$numberChild-1]->short_name;
-            $arrayAdress = array(removesign($city),removesign($state),removesign($country));
-            //$arrayAdress = array($this->convert_vi_to_en($city),$this->convert_vi_to_en($state),$this->convert_vi_to_en($country));
-            return $arrayAdress;
         }
-        else
-            return false;
+        if($lv1){
+            $address = explode(",",$lv1);
+            $arr[0] = str_replace('\'', '', trim($address[0]));
+            $arr[1] = str_replace('\'', '', trim($address[1]));
+            $arr[2] = str_replace('\'', '', trim($address[2]));
+        }elseif($lv2){
+            $address = explode(",",$lv2);
+            $arr[0] = str_replace('\'', '', trim($address[0]));
+            $arr[1] = str_replace('\'', '', trim($address[1]));
+            $arr[2] = str_replace('\'', '', trim($address[2]));
+        }elseif($lv3){
+            $address = explode(",",$lv3);
+            $num = count($address);
+            $arr[0] = str_replace('\'', '', trim($address[$num-3]));
+            $arr[1] = str_replace('\'', '', trim($address[$num-2]));
+            $arr[2] = str_replace('\'', '', trim($address[$num-1]));
+        }
+        return $arr;
     }
     
 }
