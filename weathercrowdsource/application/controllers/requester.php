@@ -100,14 +100,14 @@ class Requester extends Geocrowd{
             $taskid = $this->requester_model->task_request($userid,$lat,$lng,$requestdate,$startdate,$enddate,$type,$radius,$place);
             
             //$this->assign_tasks();
-            if($type<3)
-                $area = trim($arrayAddress[$type]);
-            $this->task_query($userid,$taskid,$lat,$lng,$radius,$message,$type,$area);
-            
+            //if($type<3)
+                //$area = trim($arrayAddress[$type]);
+            //$this->task_query($userid,$taskid,$lat,$lng,$radius,$message,$type,$area);
+            //$req = curl_init();
+            //curl_setopt($req, CURLOPT_URL,"http://127.0.0.1/weather-crowdsource/weathercrowdsource/index.php/geocrowd/assign_tasks");
+            //curl_exec($req);
             $this->_json_response($taskid);
-            $req = curl_init();
-            curl_setopt($req, CURLOPT_URL,"http://irain.eng.uci.edu/index.php/geocrowd/assign_tasks");
-            curl_exec($req);
+            
             
             // 
             

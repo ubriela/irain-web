@@ -47,6 +47,9 @@ class Geocrowd extends CI_Controller {
                 $place = $row['place'];
                 $userid = $row['requesterid'];
                 $area = 'unknown';
+                if($type<0 || $type>3){
+                    $type =3;
+                }
                 if($type<3){
                     $array = explode(',',$place);
                     $area = $array[$type];
@@ -183,7 +186,7 @@ class Geocrowd extends CI_Controller {
         $point = "'POINT($lat $lng)'";
         $now = date("Y-m-d H:i:s");
         //$condition_radius = "isactive = '1' and isassigned = 0 and ST_Point_Inside_Circle(ST_Point(1,1), $lat, $lng, $radius) and userid != '$userid'";
-        $condition_radius = "isactive = '1' and isassigned = 0 and extract(minute from ('$now'::timestamp - date_server))>2 and (6373000 * acos (cos ( radians( '$lat' ) )* cos( radians( ST_X(location_report.location) ) )* cos( radians( ST_Y(location_report.location) ) - radians( '$lng' ) )+ sin ( radians( '$lat' ) )* sin( radians( ST_X(location_report.location) ) ))) < '$radius'";
+        $condition_radius = "isactive = '1' and isassigned = 0 and userid != '$userid' and (6373000 * acos (cos ( radians( '$lat' ) )* cos( radians( ST_X(location_report.location) ) )* cos( radians( ST_Y(location_report.location) ) - radians( '$lng' ) )+ sin ( radians( '$lat' ) )* sin( radians( ST_X(location_report.location) ) ))) < '$radius' and extract(minute from ('$now'::timestamp - date_server))>2";
         //$condition_radius = "isactive = '1' and isassigned = 0 and ST_intersects(ST_GeometryFromText(ST_AsText(location)), ST_buffer(ST_GeometryFromText($point), $radius))";
         $this->db->select('userid');
         $this->db->from('location_report');
@@ -214,6 +217,6 @@ class Geocrowd extends CI_Controller {
                         
         }
         $this->db->trans_complete();
-        //$this->_json_response1($query->result_array());
+        $this->_json_response1($query->result_array());
     }
 }
