@@ -128,6 +128,22 @@ class Requester_model extends CI_Model{
                 if($rows->type==3){
                     $querymethod = 'Radius';
                 }
+                $place = '';
+                if($rows->type!=3){
+                    $arr = explode(',',$rows->place);
+                    if($arr[0]!='unknown'){
+                        $place.=$arr[0].', ';
+                    }
+                    if($arr[1]!='unknown'){
+                        $place.=$arr[1].', ';
+                    }
+                    if($arr[2]!='unknown'){
+                        $place.=$arr[2];
+                    }
+                    $rows->place = $place;
+                }
+                
+                
                 $local = $this->convert_time_zone($rows->request_date,'UTC',$timezone);
                 $cellLocation = '<td>'.$rows->place.'</td>';
                 $cellRequestdate = '<td class=center>'.$local.'</td>';

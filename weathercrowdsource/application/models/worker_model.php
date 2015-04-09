@@ -186,7 +186,19 @@ class Worker_model extends CI_Model{
     	$this->db->where('taskid',$taskid);
     	$query_taskid = $this->db->get();
     	$row = $query_taskid->row();
-    	return $row;
+        $place = '';
+        $arr = explode(',',$row->place);
+        if($arr[0]!='unknown'){
+            $place.=$arr[0].', ';
+        }
+        if($arr[1]!='unknown'){
+            $place.=$arr[1].', ';
+        }
+        if($arr[2]!='unknown'){
+            $place.=$arr[2];
+        }
+        $row->place = $place;
+       	return $row;
     }
     
     public function gettask($userid){
@@ -214,40 +226,83 @@ class Worker_model extends CI_Model{
         $data=json_decode($json);
         $status = $data->status;
         $arr = array('unknown','unknown','unknown');
-        $lv1 = false;
-        $lv2 = false;
-        $lv3 = false;
+        $ad2 = false;
+        $ad1 = false;
+        $locality = false;
+        $street_address = false;
+        $route = false;
         if($status=='OK'){
             $k = count($data->results);
             for($i=0;$i<$k;$i++){
                 if($data->results[$i]->types[0]=='administrative_area_level_2'){
-                    $lv1 = removesign($data->results[$i]->formatted_address);             
+                    $ad2 = removesign($data->results[$i]->formatted_address);             
                 }
                 if($data->results[$i]->types[0]=='locality'){
-                    $lv2 = removesign($data->results[$i]->formatted_address);
+                    $locality = removesign($data->results[$i]->formatted_address);
                 }
                 
                 if($data->results[$i]->types[0]=='street_address'){
-                    $lv3 = removesign($data->results[$i]->formatted_address);
+                    $street_address = removesign($data->results[$i]->formatted_address);
+                }
+                if($data->results[$i]->types[0]=='route'){
+                    $route = removesign($data->results[$i]->formatted_address);
+                }
+                if($data->results[$i]->types[0]=='administrative_area_level_1'){
+                    $ad1 = removesign($data->results[$i]->formatted_address);
                 }
             }
         }
-        if($lv1){
-            $address = explode(",",$lv1);
-            $arr[0] = str_replace('\'', '', trim($address[0]));
-            $arr[1] = str_replace('\'', '', trim($address[1]));
-            $arr[2] = str_replace('\'', '', trim($address[2]));
-        }elseif($lv2){
-            $address = explode(",",$lv2);
-            $arr[0] = str_replace('\'', '', trim($address[0]));
-            $arr[1] = str_replace('\'', '', trim($address[1]));
-            $arr[2] = str_replace('\'', '', trim($address[2]));
-        }elseif($lv3){
-            $address = explode(",",$lv3);
+        if($ad2){
+            $address = explode(",",$ad2);
             $num = count($address);
-            $arr[0] = str_replace('\'', '', trim($address[$num-3]));
-            $arr[1] = str_replace('\'', '', trim($address[$num-2]));
-            $arr[2] = str_replace('\'', '', trim($address[$num-1]));
+            if(isset($address[$num-1])){
+                $arr[2] = str_replace('\'', '', trim($address[$num-1]));
+            }
+            if(isset($address[$num-2])){
+                $arr[1] = str_replace('\'', '', trim($address[$num-2]));
+            }
+            if(isset($address[$num-3])){
+                $arr[0] = str_replace('\'', '', trim($address[$num-3]));
+            }
+            
+           
+        }elseif($locality){
+            $address = explode(",",$locality);
+
+            $num = count($address);
+            if(isset($address[$num-1])){
+                $arr[2] = str_replace('\'', '', trim($address[$num-1]));
+            }
+            if(isset($address[$num-2])){
+                $arr[1] = str_replace('\'', '', trim($address[$num-2]));
+            }
+            if(isset($address[$num-3])){
+                $arr[0] = str_replace('\'', '', trim($address[$num-3]));
+            }
+        }elseif($street_address){
+            $address = explode(",",$street_address);
+            $num = count($address);
+            if(isset($address[$num-1])){
+                $arr[2] = str_replace('\'', '', trim($address[$num-1]));
+            }
+            if(isset($address[$num-2])){
+                $arr[1] = str_replace('\'', '', trim($address[$num-2]));
+            }
+            if(isset($address[$num-3])){
+                $arr[0] = str_replace('\'', '', trim($address[$num-3]));
+            }
+        }elseif($ad1){
+            $address = explode(",",$ad1);
+            $num = count($address);
+            if(isset($address[$num-1])){
+                $arr[2] = str_replace('\'', '', trim($address[$num-1]));
+            }
+            if(isset($address[$num-2])){
+                $arr[1] = str_replace('\'', '', trim($address[$num-2]));
+            }
+            if(isset($address[$num-3])){
+                $arr[0] = str_replace('\'', '', trim($address[$num-3]));
+            }
         }
         return $arr;
     }

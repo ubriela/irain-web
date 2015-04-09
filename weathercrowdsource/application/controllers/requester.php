@@ -85,7 +85,12 @@ class Requester extends Geocrowd{
             $message = 'please report weather at your location, Thank you';
             $arrayAddress = $this->worker_model->getArrayAddress($lat,$lng);     
             if($arrayAddress){
-                $place = $arrayAddress[0].",".$arrayAddress[1].",".$arrayAddress[2];
+                if($arrayAddress[0]=='unknown' && $arrayAddress[1]=='unknown' && $arrayAddress[2]=='unknown'){
+                    $place = round($lat,3).', '.round($lng,3);
+                }else{
+                    $place = $arrayAddress[0].",".$arrayAddress[1].",".$arrayAddress[2];
+                }
+                
             }else{
                 $place = round($lat,3).', '.round($lng,3);
             }

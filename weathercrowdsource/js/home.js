@@ -9,6 +9,7 @@ $(document).ready(function(){
     var mymarker = null;
     var xhr = null;
     var xhr1 = null;
+    var xhr2 = null;
     var none = baseurl+"img/mark_none_ic.png";
     var rainlv3 = baseurl+"img/mark_rain_ic_lv3.png";
     var rainlv2 = baseurl+"img/mark_rain_ic_lv2.png";
@@ -365,7 +366,11 @@ $(document).ready(function(){
        loadTasktype(type); 
     });
     function showposttask(lat,lng){
-        $.post(baseurl+'index.php/geocrowd/change',{lat:lat,lng:lng},function(data){
+        if(xhr2!=null){
+            xhr2.abort();
+            xhr2 = null;
+        }
+        xhr2 = $.post(baseurl+'index.php/geocrowd/change',{lat:lat,lng:lng},function(data){
                 
                     arrAddress = data.data;
                     //alert(arrAddress);
@@ -1114,7 +1119,15 @@ $(document).ready(function(){
             
        }else{
             $('#divradius').show();
-             $('#location').val(arrAddress[0]+','+arrAddress[1]+','+arrAddress[2]);
+            $address = '';
+            if(arrAddress[0]!='unknown'){
+                $('#location').val(arrAddress[0]+','+arrAddress[1]+','+arrAddress[2]);
+            }else if(arrAddress[1]!='unknown'){
+                $('#location').val(arrAddress[1]+','+arrAddress[2]);
+            }else{
+                $('#location').val(arrAddress[2]);
+            }
+            
        }
       
        
