@@ -8,6 +8,7 @@ class Admin extends CI_Controller{
         $this->load->helper('json_response');
         $this->load->helper('form');
         $this->load->model('admin_model');
+        $this->load->model('user_model');
        
     }
     public function index(){
@@ -16,13 +17,42 @@ class Admin extends CI_Controller{
     public function login(){
         $username = $this->input->post('username');
         $password = $this->input->post('password');
-        if($username == 'irainadmin' && $password == 'chrs2015'){
-            $sess_array = array(
-                    'signed_in' => True,
-                    'type' => 1
-            );
-            $this->session->set_userdata($sess_array);
-            $this->_json_response(true);
+        if($username == 'irainadmin'){
+            $row = $this->user_model->get_user($username);
+            if ($row) {
+                $user_id = $row->userid;
+                $username = $row->username;
+                $avatar = $row->avatar;
+                $fullname = $row->firstname . ' ' . $row->lastname;
+                $db_password = $row->password;
+                $salt = $row->salt;
+                $password = hash('sha512', hash('sha512',$password) . $salt);
+                // Passwords must match
+                if ($db_password == $password) {
+                // Create a session
+                    $sess_array = array(
+                        'userid' => $user_id,
+                        'username' => $username,
+                        'avatar' => $avatar,
+                        'fullname' => $fullname,
+                        'signed_in' => True,
+                        'type' => 1
+                    );    
+                    log_message('debug', var_export($sess_array, True));
+                    $this->db->set('islogout',0);
+                    $this->db->where('userid',$user_id);
+                    $this->db->update('users');
+                    $this->session->set_userdata($sess_array);
+                    
+                   $this->session->set_userdata($sess_array);
+                   $this->_json_response(true);
+                }else{
+                    $this->_json_response(false);
+                }
+            }else{
+                $this->_json_response(false);
+            }
+            
         }else{
             $this->_json_response(false);
         }

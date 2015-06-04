@@ -37,7 +37,7 @@ class User_model extends CI_Model {
 		}
 	}
     public function get_Alluserinfo(){
-        $this->db->select('username, avatar, firstname, lastname, phone_number, email, created_date, userid');
+        $this->db->select('username, avatar, firstname, lastname, created_date, userid');
 		$this->db->from('users');
 		//$this->db->where('userid', $userid);
 		$query = $this->db->get();
@@ -62,7 +62,7 @@ class User_model extends CI_Model {
      * @access	public
      * @return	true if is successfully set
      */
-    public function update_userinfo($firstname, $lastname, $email){
+    public function update_userinfo($firstname, $lastname){
     	$id = $this->session->userdata('userid');
    		$this->db->set('firstname',$firstname);
    		$this->db->set('lastname',$lastname);

@@ -39,10 +39,11 @@ class Worker extends Convert {
     public function unassigned(){
         if(!$this->session->userdata('signed_in')){
             $this->_json_response(FALSE);
-            return;
+        }else{
+            $flag = $this->worker_model->unassigned();
+            $this->_json_response($flag);
         }
-        $flag = $this->worker_model->unassigned();
-        $this->_json_response($flag);
+        
     }
       /**
      * location_report
@@ -56,9 +57,7 @@ class Worker extends Convert {
      */
     public function location_report(){
         if(!$this->session->userdata('signed_in')){
-            redirect(base_url('index.php'));
             $this->_json_response_(FALSE);
-            
             return;
         }
         if ($this->form_validation->run('report_location') == FALSE){

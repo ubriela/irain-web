@@ -10,6 +10,7 @@ class Worker_model extends CI_Model{
             $this->db->set('isassigned','0');
             $this->db->where('userid',$userid);
             $this->db->update('location_report');
+            return $this->db->affected_rows();
     }
     public function assigned($userid){
             $this->db->set('isassigned','1');

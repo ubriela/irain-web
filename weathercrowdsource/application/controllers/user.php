@@ -70,7 +70,7 @@ class User extends CI_Controller {
 
             // Log 'Login'
             log_message('info', date("Y-m-d H:i:s") . "\tUser logged in (session created): " . $username);
-
+           
             $this->_json_response($this->session->userdata('userid'));
         }
     }
@@ -107,14 +107,15 @@ class User extends CI_Controller {
     public function update_userinfo() {
     	if(!$this->session->userdata('signed_in')){
     		$this->_json_response(FALSE);
-    		return;
+    	}else{
+    	   	// get user info
+        	$firstname = $this->input->post('firstname');
+        	$lastname = $this->input->post('lastname');
+        	//$email = $this->input->post('email');
+        	 
+        	$this->_json_response($this->user_model->update_userinfo($firstname,$lastname));
     	}
-    	// get user info
-    	$firstname = $this->input->post('firstname');
-    	$lastname = $this->input->post('lastname');
-    	$email = $this->input->post('email');
-    	 
-    	$this->_json_response($this->user_model->update_userinfo($firstname,$lastname,$email));
+    
     }
     
     /**
