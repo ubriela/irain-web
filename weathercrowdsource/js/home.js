@@ -627,7 +627,7 @@ $(document).ready(function(){
        
     });
     $(document).on('click',"#btnposttask",function(){
-        $('#loading').show();
+       
         var lat = $('#lat').val();
         var lng = $('#lng').val();
         var type = $('#typequery').val();
@@ -640,6 +640,8 @@ $(document).ready(function(){
         var requestdate = GMTdate.getFullYear()+'-'+(GMTdate.getMonth()+1)+'-'+GMTdate.getDate()+' '+GMTdate.getHours()+':'+GMTdate.getMinutes()+':'+GMTdate.getSeconds();
         var enddate = GMTtomorrow.getFullYear()+'-'+(GMTtomorrow.getMonth()+1)+'-'+GMTtomorrow.getDate()+' '+GMTtomorrow.getHours()+':'+GMTtomorrow.getMinutes()+':'+GMTtomorrow.getSeconds();
         var radius = $('#radius').val();
+        var target = document.getElementById('#containerposttask');
+        var spinner = new Spinner().spin(target);
         $.ajax({
             type: 'POST',
             url: baseurl+'index.php/requester/task_request',
@@ -652,8 +654,12 @@ $(document).ready(function(){
                     $('#loading').hide();
                     $.notify('Error','error');             
                 }
+                spinner.stop();
             }
+            
+            
         });
+        
     });
     $('#loadtype').change(function(){
        var type = $(this).val();

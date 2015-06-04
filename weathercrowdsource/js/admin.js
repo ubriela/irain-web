@@ -75,7 +75,8 @@ $(document).ready(function(){
                     var arr = data.msg;
                     for(i=0;i<arr.length;i++){
                         var taskid = arr[i].taskid;
-                        var locationrequest = arr[i].place;
+                        var locationrequest = arr[i].place.replace("unknown,", "");
+                        
                         var requestdate = arr[i].request_date;
                         var querymethod = "circle";
                         if(arr[i].type==0){
@@ -176,6 +177,10 @@ $(document).ready(function(){
     function listResponses(offset){
         var target = document.getElementById('test');
         var spinner = new Spinner().spin(target);
+        for (var i = 0, marker; marker = markers[i]; i++) {
+                        marker.setMap(null);
+                    }          
+                    markers = [];
         if( xhr != null ) {
                         xhr.abort();
                         xhr = null;
@@ -188,56 +193,53 @@ $(document).ready(function(){
                 if(data.status=='success'){
                     $('#tableresponses tbody tr').remove();
                     $("#tableresponses tbody").append("<tr></tr>");
-                    for (var i = 0, marker; marker = markers[i]; i++) {
-                        marker.setMap(null);
-                    }          
-                    markers = [];
+                    
                     var arr = data.msg;
-                    for(i=0;i<arr.length;i++){
-                        var tmp = arr[i];
-                        var taskid = tmp.taskid;
-                        var locationresponse = tmp.worker_place;
-                        var responsedate = tmp.response_date_server;
+                    $.each(arr, function(i, item) {
+                   
+                        var taskid = item.taskid;
+                        var locationresponse = item.worker_place.replace("unknown,", "");
+                        var responsedate = item.response_date_server;
                         var response = "";
-                        var responsecode = tmp.response_code;
-                        var id = tmp.id;
+                        var responsecode = item.response_code;
+                        var id =item.id;
                         
-                        var location = new google.maps.LatLng(tmp.lat, tmp.lng);
+                        var location = new google.maps.LatLng(item.lat, item.lng);
                         var icons=none;
                         var weather = "No Rain/Snow";
-                        var namelocation = tmp.worker_place;
                         
-                        if(tmp.response_code==0){
+                        
+                        if(item.response_code==0){
                             icons = none;
                             weather = "No Rain/Snow";
                             response = "No Rain/Snow";
                         }
-                        if(tmp.response_code==1 && tmp.level==0){
+                        if(item.response_code==1 && item.level==0){
                             icons = rainlv3;
                             weather = "LIGHT RAIN";
                             response = "Rain(Light)";
                         }
-                        if(tmp.response_code==1 && tmp.level==1){
+                        if(item.response_code==1 && item.level==1){
                             icons = rainlv2;
                             weather = "MODERATE RAIN";
                             response = "Rain(Moderate)";
                         }
-                        if(tmp.response_code==1 && tmp.level==2){
+                        if(item.response_code==1 && item.level==2){
                             icons = rainlv1;
                             weather = "HEAVY RAIN";
                             response = "Rain(Heavy)";
                         }
-                         if(tmp.response_code==2 && tmp.level==0){
+                         if(item.response_code==2 && item.level==0){
                             icons = snowlv3;
                             weather = "LIGHT SNOW";
                             response = "Snow(Light)";
                         }
-                        if(tmp.response_code==2 && tmp.level==1){
+                        if(item.response_code==2 && item.level==1){
                             icons = snowlv2;
                             weather = "MODERATE SNOW";
                             response = "Snow(Moderate)";
                         }
-                        if(tmp.response_code==2 && tmp.level==2){
+                        if(item.response_code==2 && item.level==2){
                             icons = snowlv1;
                             weather = "HEAVY SNOW";
                             response = "Snow(Heavy)";
@@ -248,31 +250,35 @@ $(document).ready(function(){
                         };
                             
                                   // Create a marker for each place.
+                        
+                        var actionDel = '<button type="button" class="btn btn-default btn-sm res-del" name="'+id+'"><span class="glyphicon glyphicon-trash"></span></button>';
+                        var actionView = '<button type="button" class="btn btn-default btn-sm res-view" name="'+i+'"><span class="glyphicon glyphicon-eye-open"></span></button>';
+                        var row = "<tr><td>"+locationresponse+"</td><td class='text-center'>"+response+"</td><td class='text-center'>"+responsedate+"</td><td class='text-center'>"+actionDel+actionView+"</td></tr>";
+                        $('#tableresponses tr:last').after(row);
                         var marker = new MarkerWithLabel({
                             map: map,
                             icon: image,
                             labelVisible:false,
-                            labelContent: namelocation,  
+                            labelContent: locationresponse,  
                             position: location               
                         });
                         google.maps.event.addListener(marker, 'mouseover', function(event){
+
                             var contentString = marker.get('labelContent');
+                          
                             iw1 = new google.maps.InfoWindow({
-                                        content: "<p style='text-align:center;min-width:250px;min-height:30px'><b>"+namelocation+"</b><br/>"+weather+", "+responsedate+"</p>"                                
+                                        content: "<p style='text-align:center;min-width:250px;min-height:30px'><b>"+locationresponse+"</b><br/>"+weather+", "+responsedate+"</p>"                                
                                     }); 
                             
-                            iw1.open(map,this);                              
+                            iw1.open(map,this);   
+                                                       
                         }); 
                         google.maps.event.addListener(marker, 'mouseout', function(event){
                             iw1.close(map,this);                               
                         });                       
                         markers.push(marker);
-                        var actionDel = '<button type="button" class="btn btn-default btn-sm res-del" name="'+id+'"><span class="glyphicon glyphicon-trash"></span></button>';
-                        var actionView = '<button type="button" class="btn btn-default btn-sm res-view" name="'+i+'"><span class="glyphicon glyphicon-eye-open"></span></button>';
-                        var row = "<tr><td>"+namelocation+"</td><td class='text-center'>"+response+"</td><td class='text-center'>"+responsedate+"</td><td class='text-center'>"+actionDel+actionView+"</td></tr>";
-                        $('#tableresponses tr:last').after(row);
                         
-                    }
+                    });
                     
                     
                     
