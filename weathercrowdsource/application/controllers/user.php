@@ -159,7 +159,7 @@ class User extends CI_Controller {
         // Field validation succeeded.  Validate against database
 
         $username = $this->input->post('username');
-
+        
         // Query the database
         $row = $this->user_model->get_user($username);
                 
@@ -179,14 +179,17 @@ class User extends CI_Controller {
                     'username' => $username,
                     'avatar' => $avatar,
                     'fullname' => $fullname,
-                    'signed_in' => True
+                    'signed_in' => True,
+                    'type' => 0
                 );
+                
                     
                 log_message('debug', var_export($sess_array, True));
                 $this->db->set('islogout',0);
                 $this->db->where('userid',$user_id);
                 $this->db->update('users');
                 $this->session->set_userdata($sess_array);
+                
                 return TRUE;
             }
             // Validation failed

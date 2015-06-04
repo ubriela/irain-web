@@ -15,6 +15,9 @@ class Worker_model extends CI_Model{
             $this->db->set('isassigned','1');
             $this->db->where('userid',$userid);
             $this->db->update('location_report');
+            $this->db->set('num_notifi', 'num_notifi+1', FALSE);
+            $this->db->where('userid',$userid);
+            $this->db->update('location_report');
             return TRUE;
     }
       /**
@@ -98,13 +101,9 @@ class Worker_model extends CI_Model{
      * @return	true if is successfully set
      */
     public function task_response($taskid,$userid,$code,$level,$date,$lat,$lng,$address){
-        $this->db->from('responses');
-        $this->db->where('taskid',$taskid);
-        $this->db->where('workerid',$userid);
-        $check = $this->db->get();
-        if($check->num_rows()>0){
-            return 0;
-        }else{
+            $this->db->where('taskid',$taskid);
+            $this->db->where('workerid',$userid);
+            $this->db->delete('responses');
             $time = strtotime($date);
             $date = date('Y-m-d H:i:s',$time);
             $date_now = date("Y-m-d H:i:s");
@@ -118,7 +117,6 @@ class Worker_model extends CI_Model{
             $this->db->set('response_date',$date);
             $this->db->set('response_date_server',$date_now);
             // Transaction
-           
             if ($this->db->insert('responses')){
                 $this->db->trans_start();
                 $this->db->set('iscompleted','1');
@@ -143,10 +141,7 @@ class Worker_model extends CI_Model{
                 $this->db->trans_complete();
             }else{
                 return 0;
-            }
-
-        }
-        return 0;
+            }    
     }
     
     

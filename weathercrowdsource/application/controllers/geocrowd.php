@@ -52,8 +52,14 @@ class Geocrowd extends CI_Controller {
                     $type =3;
                 }
                 if($type<3){
+                    
                     $array = explode(',',$place);
-                    $area = $array[$type];
+                    if(count($array)==3){
+                        $area = $array[$type];
+                    }else{
+                        $area = 'unknown';
+                    }
+                        
                 }
                 
                 $message = "Please report weather at your location. Thank you!";
@@ -61,6 +67,10 @@ class Geocrowd extends CI_Controller {
             }
         }
         //$this->unassign_tasks();
+    }
+    public function reset(){
+        $this->db->set('num_notifi',0);
+        $this->db->update('location_report');
     }
     // public function unassign_tasks(){
     //     $now = date("Y-m-d H:i:s");
@@ -147,7 +157,7 @@ class Geocrowd extends CI_Controller {
         //$arrayAddress = $this->getArrayAddress($lat,$lng);
             //$userid = $this->session->userdata('userid');
         $now = date("Y-m-d H:i:s");
-            $condition_city = "isactive = '1' and isassigned = 0 and city = '$place' and userid != '$userid' and extract(minute from ('$now'::timestamp - date_server))>2";
+            $condition_city = "isactive = '1' and isassigned = 0 and city = '$place' and num_notifi < 2 and userid != '$userid' and extract(hour from ('$now'::timestamp - date_server))>=6";
             $this->db->select('userid');
             $this->db->from('location_report');
             $this->db->where($condition_city);
@@ -161,7 +171,7 @@ class Geocrowd extends CI_Controller {
         //$arrayAddress = $this->getArrayAddress($lat,$lng);
         $now = date("Y-m-d H:i:s");
             //$userid = $this->session->userdata('userid');
-            $condition_country = "isactive = '1' and isassigned = 0 and country = '$place' and userid != '$userid' and extract(minute from ('$now'::timestamp - date_server))>2";
+            $condition_country = "isactive = '1' and isassigned = 0 and country = '$place' and num_notifi < 2 and userid != '$userid' and extract(hour from ('$now'::timestamp - date_server))>=6";
             $this->db->select('userid');
             $this->db->from('location_report');
             $this->db->where($condition_country);
@@ -174,7 +184,7 @@ class Geocrowd extends CI_Controller {
     
     public function state_query($userid,$taskid,$lat,$lng,$radius,$message,$place){
             $now = date("Y-m-d H:i:s");
-            $condition_state = "isactive = '1' and isassigned = 0 and state = '$place' and userid != '$userid' and extract(minute from ('$now'::timestamp - date_server))>2";
+            $condition_state = "isactive = '1' and isassigned = 0 and state = '$place' and num_notifi < 2 and userid != '$userid' and extract(hour from ('$now'::timestamp - date_server))>=6";
             $this->db->select('userid');
             $this->db->from('location_report');
             $this->db->where($condition_state);
@@ -187,7 +197,7 @@ class Geocrowd extends CI_Controller {
         $point = "'POINT($lat $lng)'";
         $now = date("Y-m-d H:i:s");
         //$condition_radius = "isactive = '1' and isassigned = 0 and ST_Point_Inside_Circle(ST_Point(1,1), $lat, $lng, $radius) and userid != '$userid'";
-        $condition_radius = "isactive = '1' and isassigned = 0 and userid != '$userid' and (6373000 * acos (cos ( radians( '$lat' ) )* cos( radians( ST_X(location_report.location) ) )* cos( radians( ST_Y(location_report.location) ) - radians( '$lng' ) )+ sin ( radians( '$lat' ) )* sin( radians( ST_X(location_report.location) ) ))) < '$radius' and extract(minute from ('$now'::timestamp - date_server))>2";
+        $condition_radius = "isactive = '1' and isassigned = 0 and userid != '$userid' and num_notifi < 2 and (6373000 * acos (cos ( radians( '$lat' ) )* cos( radians( ST_X(location_report.location) ) )* cos( radians( ST_Y(location_report.location) ) - radians( '$lng' ) )+ sin ( radians( '$lat' ) )* sin( radians( ST_X(location_report.location) ) ))) < '$radius' and extract(hour from ('$now'::timestamp - date_server))>=6";
         //$condition_radius = "isactive = '1' and isassigned = 0 and ST_intersects(ST_GeometryFromText(ST_AsText(location)), ST_buffer(ST_GeometryFromText($point), $radius))";
         $this->db->select('userid');
         $this->db->from('location_report');
@@ -225,5 +235,6 @@ class Geocrowd extends CI_Controller {
         $lng = $_POST['lng'];
         $arr = $this->worker_model->getArrayAddress($lat,$lng);
         $this->_json_response($arr);
-    }    
+    }
+    
 }

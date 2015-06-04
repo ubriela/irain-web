@@ -27,6 +27,7 @@
     <script type="text/javascript" src="<?php echo base_url();?>themes/1/tooltip.js"></script>
     <script type="text/javascript" src="<?php echo base_url();?>js/notify.min.js"></script>
     <script type="text/javascript" src="<?php echo base_url();?>js/jstz-1.0.4.min.js"></script>
+    <script type="text/javascript" src="<?php echo base_url();?>js/spin.js"></script>
     
     
     

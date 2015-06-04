@@ -13,11 +13,14 @@ class Login extends CI_Controller {
     }
 	public function index()
 	{
-        if($this->session->userdata('signed_in')){
-            redirect(base_url('index.php/home'));
-        }else{
-            $this->load->view('login');
-        }
+	   if($this->session->userdata('userid')){
+	       $data = $this->user_model->get_userinfo();
+            $this->load->view('home_view',$data);
+	   }else{
+	       $this->load->view('login');
+	   }
+        
+       //$this->load->view('login');
 	}
     public function logout(){
         $this->session->sess_destroy();

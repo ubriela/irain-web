@@ -220,20 +220,20 @@ class Requester_model extends CI_Model{
     }
     private function getresult($code,$level){
         if($code==0){
-            return 'none';
+            return 'No Rain/Snow';
         }
         if($code==1){
             switch($level){
-                case 0:return 'rain(light)';
-                case 1:return 'rain(moderate)';
-                case 2:return 'rain(heavy)';
+                case 0:return 'Rain(light)';
+                case 1:return 'Rain(moderate)';
+                case 2:return 'Rain(heavy)';
             }
         }
         if($code==2){
             switch($level){
-                case 0:return 'snow(light)';
-                case 1:return 'snow(moderate)';
-                case 2:return 'snow(heavy)';
+                case 0:return 'Snow(light)';
+                case 1:return 'Snow(moderate)';
+                case 2:return 'Snow(heavy)';
             }
         }  
     }

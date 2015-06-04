@@ -98,8 +98,8 @@ class push extends CI_Controller {
 	public function push_service($message, $channelId){
 		// Global informatin
 		$url = "https://api.parse.com/1/push";
-		$appId = 'vFC9MKOu108Rpn4lSEUZLiKpVrefLmmJTIR7z4cQ';
-		$restKey = '2LkqFeJJ6y9X1APwOyVtYXJ84znsgF6GZYKdqPTC';
+		$appId = 'Sn9ARToiahV5jEievCRDJDphUpMtA5v3howSgy7B';
+		$restKey = '8fZyNOHbRxE8cDWgePvax8GS9J9pBDES8JoozVCI';
 		
 		$push_payload = json_encode(array(
 				"channels" =>

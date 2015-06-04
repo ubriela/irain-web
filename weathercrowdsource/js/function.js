@@ -578,6 +578,65 @@ function data24h(arraytiled) {
             
             
 }
+function setCookie(cname, cvalue, exdays) {
+        var d = new Date();
+        d.setTime(d.getTime() + (exdays*24*60*60*1000));
+        var expires = "expires="+d.toUTCString();
+        document.cookie = cname + "=" + cvalue + "; " + expires;
+    }
+    function getCookie(cname) {
+        var name = cname + "=";
+        var ca = document.cookie.split(';');
+        for(var i=0; i<ca.length; i++) {
+            var c = ca[i];
+            while (c.charAt(0)==' ') c = c.substring(1);
+            if (c.indexOf(name) == 0) return c.substring(name.length,c.length);
+        }
+        return "";
+    }
+    function checkCookie() {
+        var username = getCookie("username");
+        var password = getCookie("password");
+        if (username!="" && password!="") {
+            $('#username').val(username);
+            $('#password').val(password);
+            document.getElementById("checkremember").checked = true;
+            //login(username,password,true);
+        }else{
+            $('#username').val(null);
+            $('#password').val(null);
+            document.getElementById("checkremember").checked = false;
+        }
+    }
+ function login(username,password,remember){
+        var hashpass = SHA512(password);
+        var target = document.getElementById('loginform');
+        var spinner = new Spinner().spin(target);
+        $.ajax({
+            type: 'POST',
+            url: baseurl+'index.php/user/login',
+            data: "username="+username+"&password="+hashpass,
+            success:function(data){
+                if(data.status=='success'){
+                    if(remember){
+                        setCookie("username",username,30);
+                        setCookie("password",$('#password').val(),30);
+                    }else{
+                        setCookie("username","",30);
+                        setCookie("password","",30);
+                    }
+                    
+                    window.location= baseurl+'index.php/home';
+                }else{
+                    $.notify.defaults({ className: "error" });
+                    $('#btnlogin').notify('Invalid username or password!',{position:"right middle",className:'error'});
+                
+                    //$.notify('Invalid username or password!','warn');
+                }  
+              spinner.stop();  
+        }
+        });
+    }
 function validateEmail(email) { 
     var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(email);

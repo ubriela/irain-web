@@ -31,35 +31,7 @@ $(document).ready(function(){
        
     }
     
-    function setCookie(cname, cvalue, exdays) {
-        var d = new Date();
-        d.setTime(d.getTime() + (exdays*24*60*60*1000));
-        var expires = "expires="+d.toUTCString();
-        document.cookie = cname + "=" + cvalue + "; " + expires;
-    }
-    function getCookie(cname) {
-        var name = cname + "=";
-        var ca = document.cookie.split(';');
-        for(var i=0; i<ca.length; i++) {
-            var c = ca[i];
-            while (c.charAt(0)==' ') c = c.substring(1);
-            if (c.indexOf(name) == 0) return c.substring(name.length,c.length);
-        }
-        return "";
-    }
-    function checkCookie() {
-        var username = getCookie("username");
-        var password = getCookie("password");
-        if (username!="" && password!="") {
-            $('#username').val(username);
-            $('#password').val(password);
-            document.getElementById("checkremember").checked = true;
-        }else{
-            $('#username').val(null);
-            $('#password').val(null);
-            document.getElementById("checkremember").checked = false;
-        }
-    }
+    
     
     function hideall(){
         $('#overlay').hide();
@@ -316,7 +288,7 @@ $(document).ready(function(){
     });
     $('#showlogin').click(function(){
         $('#overlay').show();
-       $('#loginform').show(200); 
+       $('#loginform').show(); 
         //tooltip.pop(this, '#loginview',{ position:4,duration:0,overlay:true,offsetX:50});
     });
     $('#showregister').click(function(){
@@ -324,7 +296,7 @@ $(document).ready(function(){
         $('#overlay').show();
         $('#resusername').val('');
         $('#respassword').val('');
-        $('#registerform').show(200); 
+        $('#registerform').show(); 
         
        
     });
@@ -334,36 +306,12 @@ $(document).ready(function(){
     });
     $('#btnlogin').click(function(){
         var username = $('#username').val();
-        var hashpass = SHA512($('#password').val());
+        var password = $('#password').val();
         var flag = document.getElementById("checkremember").checked;
-        if(!flag){
-            setCookie("username"," ",30);
-            setCookie("password"," ",30);
-        }
-        $.ajax({
-            type: 'POST',
-            url: baseurl+'index.php/user/login',
-            data: "username="+username+"&password="+hashpass,
-            success:function(data){
-                if(data.status=='success'){
-                    if(flag){
-                        setCookie("username",username,30);
-                        setCookie("password",$('#password').val(),30);
-                    }else{
-                        setCookie("username","",30);
-                        setCookie("password","",30);
-                    }
-                    
-                    window.location= baseurl+'index.php/home';
-                }else{
-                    $.notify.defaults({ className: "error" });
-                    $('#btnlogin').notify('Invalid username or password!',{position:"right middle",className:'error'});
-                
-                    //$.notify('Invalid username or password!','warn');
-                }    
-        }
-        });
+        login(username,password,flag);
+        
     });
+   
     
     $('#btnregister').click(function(){
         
@@ -391,11 +339,12 @@ $(document).ready(function(){
                 $('#respassword').notify('Password must have more than 7 character',{position:"top center",className: 'warn'});
                 return;
             }
+            var target = document.getElementById('registerform');
+            var spinner = new Spinner().spin(target);
             $.post(baseurl+'index.php/user/checkusername',{username:res_username},function(data){
                 if(data.status=='success'){
                     $.post(baseurl+'index.php/user/register',{username:res_username,password:hasspass,repeatpw:hasspass,channelid:channel},function(data){
                         if(data.status=='success'){
-                            
                             
                             hideall();
                             $('#overlay').show();
@@ -405,12 +354,13 @@ $(document).ready(function(){
                             
                             $('#btnlogin').notify("Your account has been create",{position:"right middle",className: 'success'});
                         }
-                    });
-                    }else{
-                        $('#resusername').notify('Username already exists',{position:"top center",className: 'warn'});
                         
-                        return;
-                    }
+                    });
+                }else{
+                    $('#resusername').notify('Username already exists',{position:"top center",className: 'warn'});
+                        
+                }
+                spinner.stop();
             });
                 
                 
@@ -718,9 +668,9 @@ $(document).ready(function(){
         }
     });
     
-   setTimeout(function(){
-        initAnimate(map,arraytiled);
-     },7000);
+   //setTimeout(function(){
+        //initAnimate(map,arraytiled);
+     //},7000);
      
    
     

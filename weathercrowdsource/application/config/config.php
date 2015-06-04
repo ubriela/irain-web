@@ -249,7 +249,7 @@ $config['encryption_key'] = 'olivay40cSJZHa22iNhRJWPSDzaqStOn';
 */
 $config['sess_cookie_name']		= 'ci_session';
 $config['sess_expiration']		= 60 * 60 * 24 * 256;
-$config['sess_expire_on_close']	= FALSE;
+$config['sess_expire_on_close']	= TRUE;
 $config['sess_encrypt_cookie']	= TRUE;
 $config['sess_use_database']	= TRUE;
 $config['sess_table_name']		= 'ci_sessions';

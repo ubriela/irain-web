@@ -132,6 +132,7 @@
     height: 100%;
     width: 100%;
     padding: 10px;
+    display: none;
     background: rgba(0, 0, 0, 0.3);
 }
 #login{
@@ -150,8 +151,9 @@
     color: red;
 }
 #loginform{
-    width: 500px;
     background: white;
+    width: 500px;
+    border: 1px solid;
     border-radius: 5px;
     padding: 15px;
     margin:10% auto;
@@ -381,4 +383,14 @@ label{
 }
 #speed:focus{
     outline: 0;
+}
+#profile{
+    background: white;
+    width: 700px;
+    margin: 150px auto;
+    padding: 15px;
+    border-radius: 5px;
+}
+.info-title{
+    font-weight: bold;
 }

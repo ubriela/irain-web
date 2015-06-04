@@ -33,7 +33,9 @@ class Stats_model extends CI_Model{
     }
      //get total number pending_tasks
     private function get_num_pending_tasks(){
+        $now = date("Y-m-d H:i:s");
         $this->db->where('iscompleted','0');
+        $this->db->where("enddate >= '$now'");
         $this->db->from('tasks');
         return $this->db->count_all_results();
     }

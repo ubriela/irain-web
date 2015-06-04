@@ -87,7 +87,6 @@ class Worker extends Convert {
     public function task_response(){
         if(!$this->session->userdata('signed_in')){
             $this->_json_response(FALSE);
-            redirect(base_url('index.php'));
             return;
         }
         if ($this->form_validation->run('task_response') == FALSE){
@@ -136,8 +135,9 @@ class Worker extends Convert {
                 }
                 
 
-
-                $message = "Crowdsource reported: ".$weather.", ".substr($time, 0, 13)." UTC, ".$address;
+                $totime = strtotime($time);
+                $date = date('Y-m-d H:i',$totime);
+                $message = "Crowdsource reported: ".$weather.", ".$date." UTC, ".$address;
                 if ($row && $flag==2) {
                     $requesterid = $row->requesterid;
                     $pushObject = new push();
