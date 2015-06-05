@@ -81,18 +81,21 @@ class Weather_model extends CI_Model{
         $this->db->insert('responses');
     }
     public function spatiotemporal_query($SW_lat, $SW_lng, $NE_lat, $NE_lng, $from = '1979-01-01 00:00:00', $to = '2015-01-01 00:00:00') {
+    	log_message('info', "spatiotemporal_query: \t" . $SW_lat. "\t" . $SW_lng . "\t" . $NE_lat. "\t". $NE_lng. "\t". $from . "\t" . $to);
         //$region_str = "'POLYGON((" . $SW_lat . ' ' . $SW_lng . "," . $NE_lat . ' ' . $SW_lng . "," . $NE_lat . ' ' . $NE_lng . "," . $SW_lat . ' ' . $NE_lng . "," . $SW_lat . ' ' . $SW_lng . "))'";
         $start = $this->string_to_time($from);
         $end = $this -> string_to_time($to);
-            $condition = "response_date between '$start' and '$end'";
-            $this->db->select('ST_X(worker_location) AS lat, ST_Y(worker_location) AS lng,response_code,level,worker_place, response_date');
-            //$this->db->distinct('worker_location');
-            $this->db->from('responses');  
-            $this->db->where($condition);
-            //$this->db->order_by('response_date');
-            $query = $this->db->get();
-            $this->_json_response($query->result_array());  
-        
+        $condition = "response_date between '$start' and '$end'";
+		$this->db->select('ST_X(worker_location) AS lat, ST_Y(worker_location) AS lng,response_code,level,worker_place, response_date');
+		$this->db->limit(100);
+		//$this->db->distinct('worker_location');
+		$this->db->from('responses');  
+		$this->db->where($condition);
+		//$this->db->order_by('response_date');
+		$query = $this->db->get();
+		log_message('info', "spatiotemporal_query: \t" . var_export($query->result_array(), True));
+		$this->_json_response($query->result_array());
+// 		$this->_json_response(FALSE);
     }
     public function spatiotemporal_code_query($code,$SW_lat, $SW_lng, $NE_lat, $NE_lng, $from = '1979-01-01 00:00:00', $to = '2015-01-01 00:00:00') {
         $region_str = "POLYGON((" . $SW_lat . ' ' . $SW_lng . "," . $NE_lat . ' ' . $SW_lng . "," . $NE_lat . ' ' . $NE_lng . "," . $SW_lat . ' ' . $NE_lng . "," . $SW_lat . ' ' . $SW_lng . "))";

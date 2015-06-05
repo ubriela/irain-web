@@ -69,8 +69,8 @@ class User extends CI_Controller {
             $username = $this->input->post('username');
 
             // Log 'Login'
-            log_message('info', date("Y-m-d H:i:s") . "\tUser logged in (session created): " . $username);
-           
+            log_message('info', $username . "\t logged in (session created)");
+           	log_message('info', 'login \t' . var_export($this->session->userdata('userid'), True));
             $this->_json_response($this->session->userdata('userid'));
         }
     }

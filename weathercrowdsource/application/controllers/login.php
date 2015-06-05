@@ -19,17 +19,11 @@ class Login extends CI_Controller {
 	   }else{
 	       $this->load->view('login');
 	   }
-        
-      
 	}
     public function logout(){
         $this->session->sess_destroy();
         redirect(base_url('index.php'));
     }
-   
-    
-    
-  
 }
 
 /* End of file welcome.php */

@@ -56,6 +56,7 @@ class Worker extends Convert {
      * @return	void
      */
     public function location_report(){
+    	log_message('info', 'location_report');
         if(!$this->session->userdata('signed_in')){
             $this->_json_response_(FALSE);
             return;
@@ -69,6 +70,8 @@ class Worker extends Convert {
             $address = $this->input->post('address');
             $address = removesign($address);
             $this->worker_model->location_report($userid,$lat,$lng,$address);
+            
+            log_message('info', 'location_report: \t' . $userid. '\t' . $lat . '\t' . $lng. '\t'. $address);
             $this->_json_response(TRUE);
         }           
     }

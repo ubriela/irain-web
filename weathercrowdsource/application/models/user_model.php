@@ -16,7 +16,7 @@ class User_model extends CI_Model {
 	 * @return	the user details, otherwise FALSE
 	 */
 	public function get_userinfo() {
-	
+		log_message('info', 'get_userinfo');
 		$userid = $this->session->userdata('userid');
 		
 		$this->db->select('username, avatar, firstname, lastname, created_date, userid');

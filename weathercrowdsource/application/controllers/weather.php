@@ -51,6 +51,7 @@ class Weather extends Convert{
             
     }
      public function rectangle_report(){
+     	log_message('info', 'rectangle_report');
         if ($this->form_validation->run('rectangle_report') == FALSE){
                 $this->_json_response(FALSE);
         }else{
@@ -58,9 +59,9 @@ class Weather extends Convert{
             $SW_lng = $this->input->post('swlng');//"-118.2927";
             $NE_lat = $this->input->post('nelat');//"34.219722";
             $NE_lng = $this->input->post('nelng');//"-118.092785";
-            
             $from = $this->input->post('startdate');
             $to = $this->input->post('enddate');
+            log_message('info', "rectangle_report: \t" . $SW_lat. "\t" . $SW_lng . "\t" . $NE_lat. "\t". $NE_lng. "\t". $from . "\t" . $to);
             $this->weather_model->spatiotemporal_query($SW_lat,$SW_lng,$NE_lat,$NE_lng,$from,$to);
         } 
     }  
