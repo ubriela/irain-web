@@ -55,11 +55,7 @@
         <a href="http://chrs.web.uci.edu" target="_blank"><img src="<?php echo base_url();?>img/CHRSlogo.png" height="70px" width="70px"/></a>
         <img src="<?php echo base_url();?>img/unnamed.jpg" height="70px" width="70px"/>
      </div>
-     <div id="" style="position: fixed;top: 50px;right: 0;z-index: 2;margin-right: 5px;">
-        <button type="button" class="btn btn-default" id="showlogin" style="width: 83px!important;margin-bottom: 5px;font-weight: bold;">Login</button><br />
-        <button type="button" class="btn btn-default" id="showregister" style="font-weight: bold;">Register</button>
-     </div>
-     
+          
     <div id="overlay">
      
         

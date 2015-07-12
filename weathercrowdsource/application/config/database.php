@@ -54,6 +54,7 @@ $db['default']['password'] = 'chrs2014';
 $db['default']['database'] = 'iraindb';
 $db['default']['dbdriver'] = 'postgre';
 $db['default']['port'] = '12347';
+//$db['default']['port'] = '5432';
 $db['default']['dbprefix'] = '';
 $db['default']['pconnect'] = false;
 $db['default']['db_debug'] = true;

@@ -80,14 +80,20 @@ class Weather_model extends CI_Model{
         $this->db->set('workerid',$userid);
         $this->db->insert('responses');
     }
-    public function spatiotemporal_query($SW_lat, $SW_lng, $NE_lat, $NE_lng, $from = '1979-01-01 00:00:00', $to = '2015-01-01 00:00:00') {
+    public function spatiotemporal_query($SW_lat, $SW_lng, $NE_lat, $NE_lng, $from = '1979-01-01 00:00:00', $to = '2015-01-01 00:00:00',$type = -1) {
     	log_message('info', "spatiotemporal_query: \t" . $SW_lat. "\t" . $SW_lng . "\t" . $NE_lat. "\t". $NE_lng. "\t". $from . "\t" . $to);
         //$region_str = "'POLYGON((" . $SW_lat . ' ' . $SW_lng . "," . $NE_lat . ' ' . $SW_lng . "," . $NE_lat . ' ' . $NE_lng . "," . $SW_lat . ' ' . $NE_lng . "," . $SW_lat . ' ' . $SW_lng . "))'";
         $start = $this->string_to_time($from);
         $end = $this -> string_to_time($to);
-        $condition = "response_date between '$start' and '$end'";
-		$this->db->select('ST_X(worker_location) AS lat, ST_Y(worker_location) AS lng,response_code,level,worker_place, response_date');
-		$this->db->limit(100);
+        $condition = '';
+        if($type==-1){
+            $condition = "response_date between '$start' and '$end'";
+        }else{
+            $condition = "response_date between '$start' and '$end' and response_code = '$type'";
+        }
+        
+		$this->db->select('ST_X(worker_location) AS lat, ST_Y(worker_location) AS lng,response_code,level,worker_place, response_date,id');
+		
 		//$this->db->distinct('worker_location');
 		$this->db->from('responses');  
 		$this->db->where($condition);

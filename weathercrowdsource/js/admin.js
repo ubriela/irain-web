@@ -1,6 +1,6 @@
 $(document).ready(function(){
     var loadTasks = false;
-    var loadResponses = false;
+    var loadUsers = false;
     var map;
     var markers = [];
     var xhr = null;
@@ -13,6 +13,11 @@ $(document).ready(function(){
     var snowlv2 = baseurl+"img/mark_snow_ic_lv2.png";
     var snowlv1 = baseurl+"img/mark_snow_ic_lv1.png";
     var noimage = baseurl+"img/noimage.png";
+    var numUsersPag = 0;
+    var numTasksPag = 0;
+    var currentUsersPag = 0;
+    var currentTasksPag = 0;
+
     $('#btnlogin').click(function(){
         var username = $('#username').val();
         var password = $('#password').val()
@@ -109,18 +114,11 @@ $(document).ready(function(){
             url: baseurl+'index.php/admin/getNumUsers',
             success:function(data){
                 if(data.status=='success'){
-                    var next = 0;
-                    var num = data.msg;
-                    for(i=0;i<num;i++){
-                        var pag = '<li rel="'+next+'"><a href="#">'+(i+1)+'</a></li>';
-                        if(i==0){
-                            pag = '<li class="active" rel="'+next+'"><a href="#">'+(i+1)+'</a></li>';
-                        }
-                        next+=15;
-                        $('#userspag li:last').before(pag);
-                    }
                     
-                    
+                    numUsersPag = data.msg;
+                    currentUsersPag = 1;
+                    $('#panel-users span.numpage').html(numUsersPag+"");
+                    $('#panel-users input').attr('max',''+numUsersPag);
                 } 
             }
         });
@@ -132,47 +130,129 @@ $(document).ready(function(){
             success:function(data){
                 if(data.status=='success'){
                     var next = 0;
-                    var num = data.msg;
-                    for(i=0;i<num;i++){
-                        var pag = '<li rel="'+next+'"><a href="#">'+(i+1)+'</a></li>';
-                        if(i==0){
-                            pag = '<li class="active" rel="'+next+'"><a href="#">'+(i+1)+'</a></li>';
-                        }
-                        next+=15;
-                        $('#taskspag li:last').before(pag);
-                    }
-                    
-                    
+                    numTasksPag = data.msg;
+                    currentTasksPag = 1;
+                    $('#panel-tasks span').html(numTasksPag+"");
+                    $('#panel-tasks input').attr('max',''+numTasksPag);
+                         
                 } 
             }
         });
     }
-    function getPagResponse(){
-        $.ajax({
-            type: 'POST',
-            url: baseurl+'index.php/admin/getNumResponses',
-            success:function(data){
-                if(data.status=='success'){
-                    var next = 0;
-                    var num = data.msg;
-                    if(num==0){
-                        return;
+    
+    function getmarker(SW_lat,SW_lng,NE_lat,NE_lng,number){
+         if(number==null){
+            number=0;
+        }
+        for (var i = 0, marker; marker = markers[i]; i++) {
+            marker.setMap(null);
+        }
+                    
+        markers = [];
+        if( xhr != null ) {
+            xhr.abort();
+            xhr = null;
+        }
+        var now = new Date();
+        //now.setHours(now.getHours() - number); 
+        var from = $('#weather-from').val()+" 00:00:00";
+        var to = $('#weather-to').val()+" 24:00:00";
+        var type = $('#weather-type').val();
+        xhr = $.ajax({
+        type: "POST",
+            url: baseurl+"index.php/weather/rectangle_report",
+            data:"swlat="+SW_lat+"&swlng="+SW_lng+"&nelat="+NE_lat+"&nelng="+NE_lng+"&startdate="+from+"&enddate="+to+'&type='+type,
+            dataType: 'json',
+            success: function(data){
+                $.each(data, function(i, item) {
+                    var location = new google.maps.LatLng(item.lat, item.lng);
+                    var icons=none;
+                    var weather = "NONE";
+                    var now = new Date();
+                    //var GMTdate = new Date(now.valueOf() + now.getTimezoneOffset() * 60000);
+                    var namelocation = item.worker_place;
+                    var responsedate = item.response_date;
+                    var id =item.id;
+                    var test = new Date(responsedate);
+                    //var diff = Math.abs(GMTdate - test);
+                    
+                    //hourtest = moment.duration(hourtest, 'milliseconds').asHours;
+                    
+                    if(item.response_code==0){
+                        icons = none;
+                        weather = "No Rain/Snow";
                     }
-                        for(i=0;i<num;i++){
-                            var pag = '<li rel="'+next+'"><a href="#">'+(i+1)+'</a></li>';
-                            if(i==0){
-                                pag = '<li class="active" rel="'+next+'"><a href="#">'+(i+1)+'</a></li>';
-                            }
-                            next+=15;
-                            $('#responsespag li:last').before(pag);
-                        }
-                    
-                    
-                    
-                    
-                } 
+                    if(item.response_code==1 && item.level==0){
+                        icons = rainlv3;
+                        weather = "LIGHT RAIN";
+                    }
+                    if(item.response_code==1 && item.level==1){
+                        icons = rainlv2;
+                        weather = "MODERATE RAIN";
+                    }
+                    if(item.response_code==1 && item.level==2){
+                        icons = rainlv1;
+                        weather = "HEAVY RAIN";
+                    }
+                     if(item.response_code==2 && item.level==0){
+                        icons = snowlv3;
+                        weather = "LIGHT SNOW";
+                    }
+                    if(item.response_code==2 && item.level==1){
+                        icons = snowlv2;
+                        weather = "MODERATE SNOW";
+                    }
+                    if(item.response_code==2 && item.level==2){
+                        icons = snowlv1;
+                        weather = "HEAVY SNOW";
+                    }
+                    var image = {
+                        url: icons
+                        
+                    };
+                        
+                              // Create a marker for each place.
+                    var marker = new MarkerWithLabel({
+                        map: map,
+                        icon: image,
+                        labelVisible:false,
+                        labelContent: namelocation,  
+                        position: location               
+                    });
+                    google.maps.event.addListener(marker, 'rightclick', function(event){
+                        var getlatlng = event.latLng;
+                        var lat = getlatlng.lat();
+                        var lng = getlatlng.lng();
+                        $('#lat').val(lat);
+                        $('#lng').val(lng);
+                        $.post(baseurl+'index.php/geocrowd/getplace',{lat:lat,lng:lng},function(data){
+                            $('#location').val(data);
+                            $('#btnposttask').attr('disabled',false); 
+                        });
+                        $('#overlay').show();
+                        $('#posttask').show();     
+                                                       
+                    });
+                    google.maps.event.addListener(marker, 'mouseover', function(event){
+                        var contentString = marker.get('labelContent');
+                        if(iw1!=null)
+                            iw1.close(map,this);
+                        iw1 = new google.maps.InfoWindow({
+                                    content: "<p style='text-align:center;min-width:250px;min-height:30px'><button type='button' class='btn btn-default btn-sm res-del' name='"+id+"'><span class='glyphicon glyphicon-trash'></span></button><b>"+namelocation+"</b><br/>"+weather+", "+responsedate+"</p>"                                
+                                }); 
+                        
+                        iw1.open(map,this);                              
+                    }); 
+                    google.maps.event.addListener(marker, 'mouseout', function(event){
+                                                     
+                    });            
+                                
+                    markers.push(marker);
+                   
+                });
+                         
             }
-        });
+        });             
     }
     function listResponses(offset){
         var target = document.getElementById('test');
@@ -191,8 +271,7 @@ $(document).ready(function(){
             data: "offset="+offset,
             success:function(data){
                 if(data.status=='success'){
-                    $('#tableresponses tbody tr').remove();
-                    $("#tableresponses tbody").append("<tr></tr>");
+                    
                     
                     var arr = data.msg;
                     $.each(arr, function(i, item) {
@@ -212,37 +291,37 @@ $(document).ready(function(){
                         if(item.response_code==0){
                             icons = none;
                             weather = "No Rain/Snow";
-                            response = "No Rain/Snow";
+                           
                         }
                         if(item.response_code==1 && item.level==0){
                             icons = rainlv3;
-                            weather = "LIGHT RAIN";
-                            response = "Rain(Light)";
+                            weather = "Light Rain";
+                           
                         }
                         if(item.response_code==1 && item.level==1){
                             icons = rainlv2;
-                            weather = "MODERATE RAIN";
-                            response = "Rain(Moderate)";
+                            weather = "Moderate Rain";
+                            
                         }
                         if(item.response_code==1 && item.level==2){
                             icons = rainlv1;
-                            weather = "HEAVY RAIN";
-                            response = "Rain(Heavy)";
+                            weather = "Heavy Rain";
+                            
                         }
                          if(item.response_code==2 && item.level==0){
                             icons = snowlv3;
-                            weather = "LIGHT SNOW";
-                            response = "Snow(Light)";
+                            weather = "Light Snow";
+                            
                         }
                         if(item.response_code==2 && item.level==1){
                             icons = snowlv2;
-                            weather = "MODERATE SNOW";
-                            response = "Snow(Moderate)";
+                            weather = "Moderate Snow";
+                            
                         }
                         if(item.response_code==2 && item.level==2){
                             icons = snowlv1;
-                            weather = "HEAVY SNOW";
-                            response = "Snow(Heavy)";
+                            weather = "Heavy Snow";
+                           
                         }
                         var image = {
                             url: icons
@@ -251,10 +330,7 @@ $(document).ready(function(){
                             
                                   // Create a marker for each place.
                         
-                        var actionDel = '<button type="button" class="btn btn-default btn-sm res-del" name="'+id+'"><span class="glyphicon glyphicon-trash"></span></button>';
-                        var actionView = '<button type="button" class="btn btn-default btn-sm res-view" name="'+i+'"><span class="glyphicon glyphicon-eye-open"></span></button>';
-                        var row = "<tr><td>"+locationresponse+"</td><td class='text-center'>"+response+"</td><td class='text-center'>"+responsedate+"</td><td class='text-center'>"+actionDel+actionView+"</td></tr>";
-                        $('#tableresponses tr:last').after(row);
+                       
                         var marker = new MarkerWithLabel({
                             map: map,
                             icon: image,
@@ -289,12 +365,14 @@ $(document).ready(function(){
             
         });
     }
+    initialize();
+    //listResponses(0);
+    //getPagResponse();
+   
     
-    listUsers(0);
-    getPagUser();
     
     
-    $("#tableresponses button.res-del").live("click",function(){
+    $("button.res-del").live("click",function(){
         var id = $(this).attr('name');
         var r = confirm("Do you want delete?");
          if (r == true) {
@@ -304,8 +382,8 @@ $(document).ready(function(){
                 data: "id="+id,
                 success:function(data){
                     if(data.status=='success'){
-                        var offset = $('#responsespag li.active').attr("rel");
-                            listResponses(offset);
+                        
+                            getmarker(0,0,0,0,24);
                        
                     } 
                 }
@@ -314,11 +392,7 @@ $(document).ready(function(){
         
         
     });
-    $("#tableresponses button.res-view").live("click",function(){
-        var pos = $(this).attr('name');
-        toLocation(pos);
-        
-    });
+   
     $("#tableusers button.info-del").live("click",function(){
         var r = confirm("Do you want delete?");
         var userid = $(this).attr('name');
@@ -375,6 +449,7 @@ $(document).ready(function(){
                     $('#info-channel').html(chanelid);
                     $('.label-info').html(username);
                     $('#info-image').attr('src',avatar);
+                    $('#viewresponse').attr('href',baseurl+'index.php/admin/userresponse/'+userid);
                 } 
                 spinner.stop();
             }
@@ -398,42 +473,14 @@ $(document).ready(function(){
             success:function(data){
                    
                     $('#info-response').html(data);
+                    
                 
             }
             
         });
     });
-    $('#userspag li:not(.next,.previous)').live("click",function(){
-        $('#userspag li.active').attr('class','');
-        $(this).attr('class','active');
-        var offset = $(this).attr("rel");
-        if(offset==null){
-            return;
-        }
-        listUsers(offset);
-    });
-    $('#taskspag li:not(.next,.previous)').live("click",function(){
-        $('#taskspag li.active').attr('class','');
-        $(this).attr('class','active');
-        var offset = $(this).attr("rel");
-        if(offset==null){
-            return;
-        }
-        listTasks(offset);
-    });
-    $('#responsespag li:not(.next,.previous)').live("click",function(){
-        $('#responsespag li.active').attr('class','');
-        $(this).attr('class','active');
-        var offset = $(this).attr("rel");
-        if(offset==null){
-            return;
-        }
-        listResponses(offset);
-    });
-    $('#responsespag li.next').live("click",function(){
-        alert("click");
-        return;
-    });
+   
+    
     $('#show-tasks').click(function(){
         if(!loadTasks){
             loadTasks = true;
@@ -443,17 +490,81 @@ $(document).ready(function(){
         }
         
     });
-    $('#show-responses').click(function(){
-        if(!loadResponses){
-            loadResponses = true;
-            initialize();
-            listResponses(0);
-            getPagResponse();  
+    $('#show-users').click(function(){
+        if(!loadUsers){
+            loadUsers = true;
+            listUsers(0);
+            getPagUser();
             
         }
         
         
     });
+   
+    $('#userspag li.next').click(function(){
+        if(currentUsersPag<numUsersPag){
+            listUsers(15*currentUsersPag);
+            
+            currentUsersPag++;
+            $('#panel-users input').val(''+currentUsersPag);
+        }else{
+            alert('max');
+        }
+        
+    });
+    $('#userspag li.previous').click(function(){
+        
+        if(currentUsersPag!=1){
+            listUsers(15*(currentUsersPag-2));
+            currentUsersPag--;
+            $('#panel-users input').val(''+currentUsersPag);
+        }else{
+            alert('min');
+        }
+        
+    });
+    $('#userspag li.go').click(function(){
+        var currentPage = parseInt($('#panel-users input').val());
+        if(currentPage!=1){
+            listUsers(15*(currentPage-1));
+            currentUsersPag = currentPage;
+            $('#panel-users input').val(''+currentPage);
+        }
+        
+    });
+
+    $('#taskspag li.next').click(function(){
+        
+        if(currentTasksPag<numTasksPag){
+            listTasks(15*currentTasksPag);
+            currentTasksPag++;
+            $('#panel-tasks input').val(''+currentTasksPag);
+        }else{
+            alert('max');
+        }
+        
+    });
+    $('#taskspag li.previous').click(function(){
+        
+        if(currentTasksPag!=1){
+            listTasks(15*(currentTasksPag-2));
+            currentTasksPag--;
+            $('#panel-tasks input').val(''+currentTasksPag);
+        }else{
+            alert('min');
+        }
+        
+    });
+    $('#taskspag li.go').click(function(){
+        var currentPage = parseInt($('#panel-tasks input').val());
+        if(currentPage!=1){
+            listTasks(15*(currentPage-1));
+            currentTasksPag = currentPage;
+            $('#panel-tasks input').val(''+currentTasksPag);
+        }
+        
+    });
+   
      function initialize() {
         var mapCanvas = document.getElementById('map-canvas');
         var mapOptions = {
@@ -462,15 +573,10 @@ $(document).ready(function(){
           mapTypeId: google.maps.MapTypeId.HYBRID
         }
         map = new google.maps.Map(mapCanvas, mapOptions);
+        getmarker(0,0,0,0,24);
      }
      
      
-     function toLocation(i){
-        $('#panel-element-319821').collapse('toggle');
-        var marker = markers[i];
-        var mylocation = marker.position;
-                        map.panTo(mylocation);
-     }
      $('input.btnback').click(function(){
         $('#overlay').hide();
         clearInfo();
@@ -487,5 +593,8 @@ $(document).ready(function(){
         $('.label-info').html('');
         $('#info-image').attr('src',noimage);
      }
-      
+     //$('#weather-from').val(new Date());
+     $('#weather-get').click(function(){
+        getmarker(0,0,0,0,24);
+     });
 })

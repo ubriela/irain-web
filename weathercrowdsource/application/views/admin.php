@@ -21,7 +21,7 @@
 
 <body>
 <?php
-    if(!$this->session->userdata('type') || $this->session->userdata('type')!=1){
+    if(!$this->session->userdata('username') || $this->session->userdata('username')!='irainadmin'){
         
         echo 
         '<div class="row clearfix">

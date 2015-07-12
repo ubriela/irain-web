@@ -56,7 +56,7 @@ class Worker extends Convert {
      * @return	void
      */
     public function location_report(){
-    	log_message('info', 'location_report');
+    	log_message('info' , 'location_report');
         if(!$this->session->userdata('signed_in')){
             $this->_json_response_(FALSE);
             return;
@@ -147,8 +147,17 @@ class Worker extends Convert {
                 }               	
             }
             $this->db->trans_complete();
-
-            
+            $log_arr = array(
+                'userid' => $userid,
+                'taskid' => $taskid,
+                'responsecode' => $code,
+                'level' => $level,
+                'time' => $time,
+                'latlng' => $lat.', '.$lng,
+                'address' => $address
+            );
+            log_message('info', 'task response');
+            log_message('info',var_export($log_arr, True));
             if($flag>0){
                 $this->_json_response(TRUE);
             }else{

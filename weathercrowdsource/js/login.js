@@ -111,7 +111,7 @@ $(document).ready(function(){
                     
                     if(item.response_code==0){
                         icons = none;
-                        weather = "NONE";
+                        weather = "No Rain/Snow";
                     }
                     if(item.response_code==1 && item.level==0){
                         icons = rainlv3;
@@ -209,8 +209,8 @@ $(document).ready(function(){
       };
       
       map = new google.maps.Map(document.getElementById('map-canvas'),mapOptions);
-     
       getmarker(0,0,0,0,24);
+      
       
       
       // Create the search box and link it to the UI element.
@@ -275,7 +275,12 @@ $(document).ready(function(){
       //for(i=0;i<24;i++){
             //map.overlayMapTypes.push(arraytiled[i]);
       //}
-      google.maps.event.addListener(map, 'ide', function() {
+      google.maps.event.addListener(map, 'idle', function() {
+        
+        
+        setTimeout(function(){
+            initAnimate(map,arraytiled);
+        },2000);
         
       });
       
@@ -670,7 +675,7 @@ $(document).ready(function(){
     
    //setTimeout(function(){
         //initAnimate(map,arraytiled);
-     //},7000);
+     //},3000);
      
    
     

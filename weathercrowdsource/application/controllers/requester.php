@@ -51,7 +51,6 @@ class Requester extends Geocrowd{
     public function submitted_tasks_type(){
         if(!$this->session->userdata('signed_in')){
             $this->_json_response(FALSE);
-            return;
         }else{
             $this->requester_model->submitted_task_type();
         }
@@ -121,7 +120,6 @@ class Requester extends Geocrowd{
     public function delete_tasks(){
         if(!$this->session->userdata('signed_in')){
             $this->_json_response(FALSE);
-            redirect(base_url('index.php'));
             return;
         }
         $type = $_POST['type'];
@@ -152,7 +150,6 @@ class Requester extends Geocrowd{
     public function list_pending_task(){
         if(!$this->session->userdata('signed_in')){
             $this->_json_response(FALSE);
-            redirect(base_url('index.php'));
             return;
         }
         $this->requester_model->list_pending_task();
@@ -166,7 +163,6 @@ class Requester extends Geocrowd{
     public function list_completed_task(){
         if(!$this->session->userdata('signed_in')){
             $this->_json_response(FALSE);
-            redirect(base_url('index.php'));
             return;
         }
         $this->requester_model->list_completed_task();
@@ -180,7 +176,6 @@ class Requester extends Geocrowd{
     public function list_expired_task(){
         if(!$this->session->userdata('signed_in')){
             $this->_json_response(FALSE);
-            redirect(base_url('index.php'));
             return;
         }
         $this->requester_model->list_expired_task();
@@ -188,7 +183,6 @@ class Requester extends Geocrowd{
     public function currentlocation(){
         if(!$this->session->userdata('signed_in')){
             $this->_json_response(FALSE);
-            redirect(base_url('index.php'));
             return;
         }
         $userid = $this->session->userdata('userid');

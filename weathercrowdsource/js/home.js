@@ -466,10 +466,11 @@ $(document).ready(function(){
         
       };
       map = new google.maps.Map(document.getElementById('map-canvas'),mapOptions);
-      
-      getmarker(0,0,0,0,24);
-      //get3dayMarker();
       currentlocation();
+        getmarker(0,0,0,0,24);
+      //getmarker(0,0,0,0,24);
+      //get3dayMarker();
+      
       
       // Create the search box and link it to the UI element.
       var input = /** @type {HTMLInputElement} */(document.getElementById('pac-input'));
@@ -579,7 +580,9 @@ $(document).ready(function(){
              }
        
       });
-      google.maps.event.addListener(map, 'ide', function() {
+      google.maps.event.addListener(map, 'idle', function() {
+        
+        initAnimate(map,arraytiled);
         
       });
        //map.overlayMapTypes.push(arraytiled[24]);
@@ -1177,7 +1180,5 @@ $(document).ready(function(){
      
     });
     
-   //setTimeout(function(){
-       //initAnimate(map,arraytiled);
-    //},8000);
+  
 })

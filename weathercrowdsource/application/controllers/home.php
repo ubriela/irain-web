@@ -15,7 +15,7 @@ class Home extends CI_Controller {
             $data = $this->user_model->get_userinfo();
             $this->load->view('home_view',$data);
         }else{
-            redirect(base_url('index.php'));
+            redirect(base_url());
         }
 	}
     public function logout(){
@@ -26,7 +26,7 @@ class Home extends CI_Controller {
             $this->db->update('users');
             $this->session->sess_destroy();
         }
-        redirect(base_url('index.php'));
+        redirect(base_url());
     }
    
     

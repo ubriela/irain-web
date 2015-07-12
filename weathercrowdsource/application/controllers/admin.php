@@ -35,8 +35,7 @@ class Admin extends CI_Controller{
                         'username' => $username,
                         'avatar' => $avatar,
                         'fullname' => $fullname,
-                        'signed_in' => True,
-                        'type' => 1
+                        'signed_in' => True
                     );    
                     log_message('debug', var_export($sess_array, True));
                     $this->db->set('islogout',0);
@@ -44,7 +43,7 @@ class Admin extends CI_Controller{
                     $this->db->update('users');
                     $this->session->set_userdata($sess_array);
                     
-                   $this->session->set_userdata($sess_array);
+                   
                    $this->_json_response(true);
                 }else{
                     $this->_json_response(false);
@@ -59,7 +58,10 @@ class Admin extends CI_Controller{
     }
     public function listUsers(){
         $query = $this->admin_model->listUsers();
-        $this->_json_response($query->result_array());
+        if($query){
+            $this->_json_response($query->result_array());
+        }
+        
     }
     public function getUserInfo(){
         $userid = $this->input->post('userid');

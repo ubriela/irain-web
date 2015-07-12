@@ -28,10 +28,8 @@ class Weather extends Convert{
     public function index(){
         $this->load->helper('form');
         $this->load->library('form_validation');
-        $signed = $this->session->userdata('signed_in'); 
-        if(!$signed){
+        if(!$this->session->userdata('signed_in')){
              $this->_json_response(FALSE);
-             redirect(base_url('index.php'));
              return;
         }
         if ($this->form_validation->run('report_location_weather') == FALSE){
@@ -61,8 +59,13 @@ class Weather extends Convert{
             $NE_lng = $this->input->post('nelng');//"-118.092785";
             $from = $this->input->post('startdate');
             $to = $this->input->post('enddate');
+            
+            $type = $this->input->post('type');
+            if($type==null){
+                $type = -1;
+            }
             log_message('info', "rectangle_report: \t" . $SW_lat. "\t" . $SW_lng . "\t" . $NE_lat. "\t". $NE_lng. "\t". $from . "\t" . $to);
-            $this->weather_model->spatiotemporal_query($SW_lat,$SW_lng,$NE_lat,$NE_lng,$from,$to);
+            $this->weather_model->spatiotemporal_query($SW_lat,$SW_lng,$NE_lat,$NE_lng,$from,$to,$type);
         } 
     }  
     public function rectangle_report_code(){

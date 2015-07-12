@@ -180,8 +180,7 @@ class User extends CI_Controller {
                     'username' => $username,
                     'avatar' => $avatar,
                     'fullname' => $fullname,
-                    'signed_in' => True,
-                    'type' => 0
+                    'signed_in' => True
                 );
                 
                     
