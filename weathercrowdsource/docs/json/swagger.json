@@ -1,0 +1,77 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "iRain API",
+        "description": "An API to access iRain data",
+        "termsOfService": "",
+        "contact": {
+            "name": "iRain Team",
+            "url": "http://irain.eng.uci.edu",
+            "email": "ubriela@gmail.com"
+        },
+        "version": "1.0.0"
+    },
+    "basePath": "/api",
+    "schemes": [
+        "http"
+    ],
+    "consumes": [
+        "application/json",
+        "application/x-www-form-urlencoded"
+    ],
+    "produces": [
+        "application/json",
+        "application/xml",
+        "text/csv",
+        "text/html"
+    ],
+    "paths": {
+        "/worker/taskid": {
+            "get": {
+                "tags": [
+                    "geoq"
+                ],
+                "summary": "Get current task id for an user",
+                "description": "Get current task id for an user",
+                "operationId": "taskid",
+                "responses": {
+                    "200": {
+                        "description": "Taskid successfully returned",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "Taskid not found"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "errorModel": {
+            "required": [
+                "code",
+                "message"
+            ],
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "message": {
+                    "type": "string"
+                }
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "worker",
+            "description": "Worker-related Operations"
+        }
+    ]
+}

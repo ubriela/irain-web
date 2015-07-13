@@ -24,7 +24,12 @@
    
     <script>
          var baseurl = '<?php echo base_url();?>';
+         var config = {
+        			docs: "<?php echo base_url(SWAGGER_DOCS); ?>"
+         };
     </script>
+    
+
    
     
     <script src="<?php echo base_url();?>js/login.js"></script>

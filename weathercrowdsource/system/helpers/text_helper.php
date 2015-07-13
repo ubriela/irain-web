@@ -5,8 +5,9 @@
  * An open source application development framework for PHP 5.1.6 or newer
  *
  * @package		CodeIgniter
- * @author		ExpressionEngine Dev Team
- * @copyright	Copyright (c) 2008 - 2011, EllisLab, Inc.
+ * @author		EllisLab Dev Team
+ * @copyright		Copyright (c) 2008 - 2014, EllisLab, Inc.
+ * @copyright		Copyright (c) 2014 - 2015, British Columbia Institute of Technology (http://bcit.ca/)
  * @license		http://codeigniter.com/user_guide/license.html
  * @link		http://codeigniter.com
  * @since		Version 1.0
@@ -21,7 +22,7 @@
  * @package		CodeIgniter
  * @subpackage	Helpers
  * @category	Helpers
- * @author		ExpressionEngine Dev Team
+ * @author		EllisLab Dev Team
  * @link		http://codeigniter.com/user_guide/helpers/text_helper.html
  */
 
@@ -299,15 +300,6 @@ if ( ! function_exists('highlight_code'))
 		// All the magic happens here, baby!
 		$str = highlight_string($str, TRUE);
 
-		// Prior to PHP 5, the highligh function used icky <font> tags
-		// so we'll replace them with <span> tags.
-
-		if (abs(PHP_VERSION) < 5)
-		{
-			$str = str_replace(array('<font ', '</font>'), array('<span ', '</span>'), $str);
-			$str = preg_replace('#color="(.*?)"#', 'style="color: \\1"', $str);
-		}
-
 		// Remove our artificially added PHP, and the syntax highlighting that came with it
 		$str = preg_replace('/<span style="color: #([A-Z0-9]+)">&lt;\?php(&nbsp;| )/i', '<span style="color: #$1">', $str);
 		$str = preg_replace('/(<span style="color: #[A-Z0-9]+">.*?)\?&gt;<\/span>\n<\/span>\n<\/code>/is', "$1</span>\n</span>\n</code>", $str);
@@ -530,47 +522,6 @@ if ( ! function_exists('ellipsize'))
 		return $beg.$ellipsis.$end;
 	}
 }
-if(!function_exists("removesign")){
-
-    function removesign($str)
-    {
-        $coDau=array("à","á","ạ","ả","ã","â","ầ","ấ","ậ","ẩ","ẫ","ă","ằ","ắ"
-        ,"ặ","ẳ","ẵ","è","é","ẹ","ẻ","ẽ","ê","ề","ế","ệ","ể","ễ","ì","í","ị","ỉ","ĩ",
-            "ò","ó","ọ","ỏ","õ","ô","ồ","ố","ộ","ổ","ỗ","ơ"
-        ,"ờ","ớ","ợ","ở","ỡ",
-            "ù","ú","ụ","ủ","ũ","ư","ừ","ứ","ự","ử","ữ",
-            "ỳ","ý","ỵ","ỷ","ỹ",
-            "đ",
-            "À","Á","Ạ","Ả","Ã","Â","Ầ","Ấ","Ậ","Ẩ","Ẫ","Ă"
-        ,"Ằ","Ắ","Ặ","Ẳ","Ẵ",
-            "È","É","Ẹ","Ẻ","Ẽ","Ê","Ề","Ế","Ệ","Ể","Ễ",
-            "Ì","Í","Ị","Ỉ","Ĩ",
-            "Ò","Ó","Ọ","Ỏ","Õ","Ô","Ồ","Ố","Ộ","Ổ","Ỗ","Ơ"
-        ,"Ờ","Ớ","Ợ","Ở","Ỡ",
-            "Ù","Ú","Ụ","Ủ","Ũ","Ư","Ừ","Ứ","Ự","Ử","Ữ",
-            "Ỳ","Ý","Ỵ","Ỷ","Ỹ",
-            "Đ","ê","ù","à");
-        $khongDau=array("a","a","a","a","a","a","a","a","a","a","a"
-        ,"a","a","a","a","a","a",
-            "e","e","e","e","e","e","e","e","e","e","e",
-            "i","i","i","i","i",
-            "o","o","o","o","o","o","o","o","o","o","o","o"
-        ,"o","o","o","o","o",
-            "u","u","u","u","u","u","u","u","u","u","u",
-            "y","y","y","y","y",
-            "d",
-            "A","A","A","A","A","A","A","A","A","A","A","A"
-        ,"A","A","A","A","A",
-            "E","E","E","E","E","E","E","E","E","E","E",
-            "I","I","I","I","I",
-            "O","O","O","O","O","O","O","O","O","O","O","O"
-        ,"O","O","O","O","O",
-            "U","U","U","U","U","U","U","U","U","U","U",
-            "Y","Y","Y","Y","Y",
-            "D","e","u","a");
-        return str_replace($coDau,$khongDau,$str);
-    }
-}  
 
 /* End of file text_helper.php */
 /* Location: ./system/helpers/text_helper.php */

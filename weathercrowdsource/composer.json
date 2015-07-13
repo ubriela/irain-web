@@ -1,0 +1,8 @@
+{
+    "require": {
+        "guzzlehttp/guzzle": "~5.0",
+        "zircote/swagger-php": "2.*@dev",
+        "phpdocumentor/phpdocumentor": "2.*",
+        "jmikola/geojson" : "~1.0"
+    }
+}

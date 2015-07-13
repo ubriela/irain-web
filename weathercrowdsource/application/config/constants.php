@@ -41,5 +41,8 @@ define('FOPEN_READ_WRITE_CREATE_STRICT',		'x+b');
 define('APP_NAME', 'iRain');
 define('EMAIL', 'ubriela@gmail.com');
 
+// Path of swagger.json output after executing ./vendor/bin/swagger application/controllers/api/ -o docs/json
+define ( 'SWAGGER_DOCS', "docs/json/swagger.json" );
+
 /* End of file constants.php */
 /* Location: ./application/config/constants.php */
