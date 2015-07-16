@@ -48,23 +48,29 @@
 $active_group = 'default';
 $active_record = TRUE;
 
-$db['default']['hostname'] = 'localhost';
-$db['default']['username'] = 'irain';
-$db['default']['password'] = 'chrs2014';
-$db['default']['database'] = 'iraindb';
-$db['default']['dbdriver'] = 'postgre';
-//$db['default']['port'] = '12347';
-$db['default']['port'] = '5432';
-$db['default']['dbprefix'] = '';
-$db['default']['pconnect'] = false;
-$db['default']['db_debug'] = true;
-$db['default']['cache_on'] = TRUE;
-$db['default']['cachedir'] = '';
-$db['default']['char_set'] = 'utf8';
-$db['default']['dbcollat'] = 'utf8_general_ci';
-$db['default']['swap_pre'] = '';
-$db['default']['autoinit'] = TRUE;
-$db['default']['stricton'] = FALSE;
+$db['default'] = array(
+		'dsn'	=> '',
+		'hostname' => 'localhost',
+		'username' => 'irain',
+		'password' => 'chrs2014',
+		'database' => 'iraindb',
+		'dbdriver' => 'postgre',
+		'port' => '5432',
+		'dbprefix' => '',
+		'pconnect' => FALSE,
+		'db_debug' => TRUE,
+		'cache_on' => FALSE,
+		'cachedir' => '',
+		'char_set' => 'utf8',
+		'dbcollat' => 'utf8_general_ci',
+		'swap_pre' => '',
+		'autoinit' => TRUE,
+		'encrypt' => FALSE,
+		'compress' => FALSE,
+		'stricton' => FALSE,
+		'failover' => array(),
+		'save_queries' => TRUE
+);
 
 
 

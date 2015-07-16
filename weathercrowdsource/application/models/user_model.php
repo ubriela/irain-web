@@ -128,7 +128,9 @@ class User_model extends CI_Model {
      * @return	TRUE if user creation was successfull, otherwise FALSE
      */
     public function create_user($username, $password, $channelid = FALSE) {
-
+    	// Load the uuid helper
+    	$this->load->helper ( 'uuid' );
+    	
         // Generate unique id from application/helpers/uuid_helper.php
         $uuid = gen_uuid();
 

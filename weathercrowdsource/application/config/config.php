@@ -1,5 +1,7 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
+
+//2ff748e8ee3b265df1140556770579f6ff32216fb569acbe428f4dbe99aebd77193791e43081387dc50d77585d114f882e2f7c9dd6f3a44f391c91a4bb6c3c10
 /*
 |--------------------------------------------------------------------------
 | Base Site URL
@@ -10,14 +12,13 @@
 |
 |	http://example.com/
 |
-| If this is not set then CodeIgniter will guess the protocol, domain and
-| path to your installation.
+| If this is not set then CodeIgniter will try to guess the protocol, domain
+| and path to your installation. However, you should always configure this
+| explicitly and never rely on auto-guessing, especially in production
+| environments.
 |
 */
-
-// Hien config
- $config['base_url']	= '';
-
+$config['base_url'] = '';
 
 /*
 |--------------------------------------------------------------------------
@@ -47,7 +48,7 @@ $config['index_page'] = 'index.php';
 | 'ORIG_PATH_INFO'	Uses the ORIG_PATH_INFO
 |
 */
-$config['uri_protocol']	= 'AUTO';
+$config['uri_protocol']	= 'PATH_INFO';
 
 /*
 |--------------------------------------------------------------------------
@@ -158,7 +159,7 @@ $config['permitted_uri_chars'] = 'a-z 0-9~%.:_\-';
 |
 */
 $config['allow_get_array']		= TRUE;
-$config['enable_query_strings'] = TRUE;
+$config['enable_query_strings'] = FALSE;
 $config['controller_trigger']	= 'c';
 $config['function_trigger']		= 'm';
 $config['directory_trigger']	= 'd'; // experimental not currently in use
@@ -183,7 +184,7 @@ $config['directory_trigger']	= 'd'; // experimental not currently in use
 | your log files will fill up very fast.
 |
 */
-$config['log_threshold'] = 3;
+$config['log_threshold'] = array(1,2);
 
 /*
 |--------------------------------------------------------------------------
@@ -227,7 +228,7 @@ $config['cache_path'] = '';
 | MUST set an encryption key.  See the user guide for info.
 |
 */
-$config['encryption_key'] = 'olivay40cSJZHa22iNhRJWPSDzaqStOn';
+$config['encryption_key'] = '1KYnQwh1cJlbdxl3fnEhpSYsJXxY2IQP';
 
 /*
 |--------------------------------------------------------------------------
@@ -248,13 +249,13 @@ $config['encryption_key'] = 'olivay40cSJZHa22iNhRJWPSDzaqStOn';
 |
 */
 $config['sess_cookie_name']		= 'ci_session';
-$config['sess_expiration']		= 60 * 60 * 24 * 256;
-$config['sess_expire_on_close']	= TRUE;
-$config['sess_encrypt_cookie']	= TRUE;
+$config['sess_expiration']		= 0;
+$config['sess_expire_on_close']	= FALSE;
+$config['sess_encrypt_cookie']	= FALSE;
 $config['sess_use_database']	= TRUE;
 $config['sess_table_name']		= 'ci_sessions';
 $config['sess_match_ip']		= FALSE;
-$config['sess_match_useragent']	= FALSE;
+$config['sess_match_useragent']	= TRUE;
 $config['sess_time_to_update']	= 300;
 
 /*
@@ -282,7 +283,7 @@ $config['cookie_secure']	= FALSE;
 | COOKIE data is encountered
 |
 */
-$config['global_xss_filtering'] = TRUE;
+$config['global_xss_filtering'] = FALSE;
 
 /*
 |--------------------------------------------------------------------------

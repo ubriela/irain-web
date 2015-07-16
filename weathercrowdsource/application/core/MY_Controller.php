@@ -52,11 +52,10 @@ class MY_Controller extends CI_Controller {
 	{
 		parent::__construct ();
 		
-		if ($this->session->has_userdata ( 'logged_in' ))
+		if ($this->session->userdata ( 'signed_in' ))
 		{
 			// Get logged in session
-			$session_data = $this->session->logged_in;
-			$this->userid = $session_data ['userid'];
+			$this->userid = $this->session->userdata('userid');;
 		}
 		
 		// Get request headers
@@ -141,12 +140,10 @@ class Authorized_Controller extends MY_Controller {
 			$this->redirect_to_last_page();
 		}
 		
-		// Get logged in session
-		$session_data = $this->session->logged_in;
 		
 		// All views need these data
-		$this->data ['userid'] = $session_data ['userid'];
-		$this->data ['username'] = $session_data ['username'];
+		$this->data ['userid'] = $this->session->userdata('userid');;
+		$this->data ['username'] = $this->session->userdata('username');
 		
 		// Close the session for the current request after no longer need it
 		// http://www.codeigniter.com/user_guide/libraries/sessions.html#a-note-about-concurrency
@@ -181,7 +178,6 @@ class API_Controller extends REST_Controller {
 	
 	// -----------------------------------------------------------------------------------------------------------------
 	public function __construct()
-	
 	{
 		parent::__construct ();
 		
@@ -192,8 +188,8 @@ class API_Controller extends REST_Controller {
 		// $this->methods ['user_post'] ['limit'] = 100; // 100 requests per hour per user/key
 		// $this->methods ['user_delete'] ['limit'] = 50; // 50 requests per hour per user/key
 		
-		$session_data = $this->session->logged_in;
-		
+		$session_data = $this->session->userdata();
+
 		if (! empty ( $session_data ))
 		{
 			$this->userid = $session_data ['userid'];

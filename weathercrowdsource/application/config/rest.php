@@ -99,7 +99,7 @@ $config['rest_auth'] = 'session';
 */
 
 //change this to '' for wildcard unit test
-$config['auth_source'] = 'logged_in';
+$config['auth_source'] = 'signed_in';
 
 /*
 |--------------------------------------------------------------------------
@@ -142,13 +142,11 @@ $config['auth_library_function'] = '';
 // $config['auth_override_class_method']['deals']['insert'] = 'digest';
 // $config['auth_override_class_method']['accounts']['user'] = 'basic';
 // $config['auth_override_class_method']['dashboard']['*'] = 'basic';
-$config['auth_override_class_method']['users']['register'] = 'none';
-$config['auth_override_class_method']['users']['login'] = 'none';
-$config['auth_override_class_method']['users']['logout'] = 'none';
-$config['auth_override_class_method']['users']['forgot_password'] = 'none';
-$config['auth_override_class_method']['users']['reset_password'] = 'none';
-$config['auth_override_class_method']['geoq']['metadata_video'] = 'none';
-$config['auth_override_class_method']['geoq']['metadata_fov'] = 'none';
+$config['auth_override_class_method']['user']['register'] = 'none';
+$config['auth_override_class_method']['user']['login'] = 'none';
+$config['auth_override_class_method']['user']['logout'] = 'none';
+$config['auth_override_class_method']['user']['forgot_password'] = 'none';
+$config['auth_override_class_method']['user']['reset_password'] = 'none';
 
 //---Uncomment list line for the wildard unit test
 //$config['auth_override_class_method']['wildcard_test_cases']['*'] = 'basic';

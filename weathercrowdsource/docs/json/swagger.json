@@ -26,23 +26,291 @@
         "text/html"
     ],
     "paths": {
+        "/user/test_swagger": {
+            "get": {
+                "tags": [
+                    "user"
+                ],
+                "summary": "Test",
+                "description": "Test",
+                "operationId": "test_swagger",
+                "produces": [
+                    "application/json",
+                    "application/xml",
+                    "text/html",
+                    "text/xml"
+                ]
+            }
+        },
+        "/user/register": {
+            "post": {
+                "tags": [
+                    "user"
+                ],
+                "summary": "Creates a new user",
+                "description": "Registers a new user given the details provided. Username and password",
+                "operationId": "register",
+                "parameters": [
+                    {
+                        "name": "username",
+                        "in": "formData",
+                        "description": "the username",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "channelid",
+                        "in": "formData",
+                        "description": "the channelid",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "password",
+                        "in": "formData",
+                        "description": "the user's password.",
+                        "required": true,
+                        "type": "string",
+                        "format": "password"
+                    },
+                    {
+                        "name": "repeatpw",
+                        "in": "formData",
+                        "description": "the repeated password",
+                        "required": true,
+                        "type": "string",
+                        "format": "password"
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "User registered successfully"
+                    },
+                    "400": {
+                        "description": "Invalid data supplied"
+                    },
+                    "409": {
+                        "description": "Failed to create new user"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
+        },
+        "/user/login": {
+            "post": {
+                "tags": [
+                    "user"
+                ],
+                "summary": "Login user to the system",
+                "description": "Authenticates user",
+                "operationId": "login",
+                "parameters": [
+                    {
+                        "name": "username",
+                        "in": "formData",
+                        "description": "the username",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "password",
+                        "in": "formData",
+                        "description": "the user's password.",
+                        "required": true,
+                        "type": "string",
+                        "format": "password"
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "User logged in successfully"
+                    },
+                    "400": {
+                        "description": "Invalid data supplied"
+                    },
+                    "409": {
+                        "description": "Failed to login"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
+        },
         "/worker/taskid": {
             "get": {
                 "tags": [
-                    "geoq"
+                    "worker"
                 ],
                 "summary": "Get current task id for an user",
                 "description": "Get current task id for an user",
                 "operationId": "taskid",
                 "responses": {
                     "200": {
-                        "description": "Taskid successfully returned",
-                        "schema": {
-                            "type": "string"
-                        }
+                        "description": "Taskid successfully returned"
                     },
                     "404": {
                         "description": "Taskid not found"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
+        },
+        "/worker/set_isactive": {
+            "put": {
+                "tags": [
+                    "worker"
+                ],
+                "summary": "Set user's status to online",
+                "description": "Set user's status to online",
+                "operationId": "set_isactive",
+                "parameters": [
+                    {
+                        "name": "isactive",
+                        "in": "formData",
+                        "description": "Set user's status, i.e., online or offline",
+                        "required": true,
+                        "type": "boolean"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Status changed successfully"
+                    },
+                    "400": {
+                        "description": "Invalid data supplied"
+                    },
+                    "404": {
+                        "description": "User not found"
+                    },
+                    "409": {
+                        "description": "Failed to change status"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
+        },
+        "/worker/location_report": {
+            "put": {
+                "tags": [
+                    "worker"
+                ],
+                "summary": "Update user location",
+                "description": "Update user location",
+                "operationId": "location_report",
+                "parameters": [
+                    {
+                        "name": "lat",
+                        "in": "formData",
+                        "description": "Latitude",
+                        "required": true,
+                        "type": "float"
+                    },
+                    {
+                        "name": "lng",
+                        "in": "formData",
+                        "description": "Longitude",
+                        "required": true,
+                        "type": "float"
+                    },
+                    {
+                        "name": "address",
+                        "in": "formData",
+                        "description": "Reverse geocodes the location",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Status changed successfully"
+                    },
+                    "400": {
+                        "description": "Invalid data supplied"
+                    },
+                    "404": {
+                        "description": "User not found"
+                    },
+                    "409": {
+                        "description": "Failed to change status"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
+        },
+        "/worker/task_response": {
+            "post": {
+                "tags": [
+                    "worker"
+                ],
+                "summary": "Worker response to a task",
+                "description": "Worker response to a task",
+                "operationId": "task_response",
+                "parameters": [
+                    {
+                        "name": "taskid",
+                        "in": "formData",
+                        "description": "Task ID",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "name": "responsecode",
+                        "in": "formData",
+                        "description": "Response code",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "level",
+                        "in": "formData",
+                        "description": "Level",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "responsedate",
+                        "in": "formData",
+                        "description": "Response date",
+                        "required": true,
+                        "type": "dateTime",
+                        "format": "date-time"
+                    },
+                    {
+                        "name": "lat",
+                        "in": "formData",
+                        "description": "Latitude",
+                        "required": true,
+                        "type": "float"
+                    },
+                    {
+                        "name": "lng",
+                        "in": "formData",
+                        "description": "Longitude",
+                        "required": true,
+                        "type": "float"
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Response created successfully"
+                    },
+                    "400": {
+                        "description": "Invalid data supplied"
+                    },
+                    "409": {
+                        "description": "Failed to create response"
                     },
                     "500": {
                         "description": "Internal server error"
@@ -66,9 +334,29 @@
                     "type": "string"
                 }
             }
+        },
+        "location": {
+            "required": [
+                "latitude",
+                "longitude"
+            ],
+            "properties": {
+                "latitude": {
+                    "type": "float",
+                    "format": "float"
+                },
+                "longitude": {
+                    "type": "float",
+                    "format": "float"
+                }
+            }
         }
     },
     "tags": [
+        {
+            "name": "user",
+            "description": "Users Operations"
+        },
         {
             "name": "worker",
             "description": "Worker-related Operations"
