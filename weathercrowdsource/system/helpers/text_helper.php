@@ -547,3 +547,7 @@ if ( ! function_exists('ellipsize'))
 		return $beg.$ellipsis.$end;
 	}
 }
+
+/* End of file text_helper.php */
+/* Location: ./system/helpers/text_helper.php */
+>>>>>>> bb1020603dbc2dde772e2956659e742af505fa2f
